@@ -98,6 +98,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 authenticationPath
             )
 
+            //OPTIONS
+            .and()
+            .ignoring()
+            .antMatchers(HttpMethod.OPTIONS)
+
             // allow anonymous resource requests
             .and()
             .ignoring()
