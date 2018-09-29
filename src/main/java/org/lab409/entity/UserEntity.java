@@ -1,13 +1,7 @@
 package org.lab409.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.io.Serializable;
 
 @Data
 public class UserEntity {
