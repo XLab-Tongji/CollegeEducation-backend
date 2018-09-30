@@ -1,7 +1,6 @@
 package org.lab409.entity;
 
 import lombok.Data;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 public class UserEntity {
@@ -18,8 +17,4 @@ public class UserEntity {
     private String studentID;
     private String admissionYear;
 
-    public UserEntity encode() {
-        this.password = new BCryptPasswordEncoder().encode(this.password);
-        return this;
-    }
 }
