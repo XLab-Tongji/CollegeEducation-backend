@@ -12,7 +12,7 @@ public class UserEntity {
     private String gender;
     private String email;
     private Integer universityID;
-    private Integer majorID;
+    private String majorID;
     private Integer auth;
     private String birthday;
     private String studentID;
