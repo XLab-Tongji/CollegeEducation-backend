@@ -16,7 +16,7 @@ public interface UniversityMapper {
             @Result(column = "university", property = "universityName")})
     List<UniversityEntity> getUniversities();
 
-    
+
     @Select(("SELECT id, major FROM education_major where univid = #{universityID}"))
     @Results({@Result(column = "id", property = "id"),
             @Result(column = "major", property = "majorName")})

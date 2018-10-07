@@ -5,11 +5,7 @@
         <id property="id" column="ID"/>
         <result property="username" column="USERNAME"/>
         <result property="password" column="PASSWORD"/>
-        <result property="firstname" column="FIRSTNAME"/>
-        <result property="lastname" column="LASTNAME"/>
         <result property="email" column="EMAIL"/>
-        <result property="enabled" column="ENABLED"/>
-        <result property="lastPasswordResetDate" column="LASTPASSWORDRESETDATE"/>
         <collection property="authorities" ofType="org.lab409.model.security.Authority">
             <result column="name" property="name"/>
         </collection>
