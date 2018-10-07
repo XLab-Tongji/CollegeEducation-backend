@@ -11,10 +11,9 @@ public class UserEntity {
     private String gender;
     private String email;
     private Integer universityID;
-    private String majorID;
+    private Integer majorID;
     private Integer auth;
     private String birthday;
     private String studentID;
     private String admissionYear;
-
 }
