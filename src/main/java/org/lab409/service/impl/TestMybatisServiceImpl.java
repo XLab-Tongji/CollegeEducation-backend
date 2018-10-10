@@ -16,8 +16,10 @@ public class TestMybatisServiceImpl implements TestMybatisService {
 
     @Autowired
     private TestMybatisMapper testMybatisMapper;
-
     public ArrayList<MybatisEntity> getMybatis(){
+
         return testMybatisMapper.getMybatis();
     }
+
+
 }

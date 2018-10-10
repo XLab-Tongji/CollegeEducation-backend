@@ -1,9 +1,6 @@
 package org.lab409.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 import org.lab409.entity.*;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +33,17 @@ public interface UserMapper {
 
     @Insert("INSERT INTO USER_AUTHORITY(USER_ID,AUTHORITY_ID) VALUES(#{userID},#{auth})")
     int insertUserAuth(@Param("userID") int userID, @Param("auth") int auth);
+
+    @Select("SELECT ID, USERNAME, EMAIL, ADMISSIONYEAR, STUDENTID, GENDER, BIRTHDAY, UNIVERSITYID, MAJORID " +
+            "FROM USER WHERE USERNAME = #{username}")
+    @Results({@Result(column = "ID", property = "userID"),
+            @Result(column = "USERNAME", property = "username"),
+            @Result(column = "EMAIL", property = "email"),
+            @Result(column = "ADMISSIONYEAR", property = "admissionYear"),
+            @Result(column = "STUDENTID", property = "studentID"),
+            @Result(column = "GENDER", property = "gender"),
+            @Result(column = "BIRTHDAY", property = "birthday"),
+            @Result(column = "universityID", property = "universityID"),
+            @Result(column = "MAJORID", property = "majorID")})
+    UserEntity getUserByName(@Param("username") String username);
 }
