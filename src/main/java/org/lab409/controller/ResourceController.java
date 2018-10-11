@@ -22,8 +22,14 @@ public class ResourceController {
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
     public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource,
                                                     @RequestParam(name = "resourceName") String resourceName,
-                                                    @RequestParam(name = "description") String description ) {
-        Pair<Boolean, String> success = resourceService.uploadResource(uploadResource, resourceName, description);
+                                                    @RequestParam(name = "description") String description,
+                                                    @RequestParam(name = "categoryID") Integer categoryID,
+                                                    @RequestParam(name = "resourceMajorID") Integer resourceMajorID) {
+        Pair<Boolean, String> success = resourceService.uploadResource(uploadResource,
+                                                                        resourceName,
+                                                                        description,
+                                                                        categoryID,
+                                                                        resourceMajorID);
         if (success.getKey()) {
             return new ResponseMessage<>(success.getValue()).success();
         }
@@ -68,5 +74,15 @@ public class ResourceController {
         else {
             return new ResponseMessage<>(null).success();
         }
+    }
+
+    @RequestMapping(path = "/resourceCategories", method = RequestMethod.GET)
+    public ResponseMessage resourceCategoriesController() {
+        return new ResponseMessage<>(resourceService.getResourceCategories()).success();
+    }
+
+    @RequestMapping(path = "/resourceMajors", method = RequestMethod.GET)
+    public ResponseMessage resourceMajorsController() {
+        return new ResponseMessage<>(resourceService.getResourceMajors()).success();
     }
 }
