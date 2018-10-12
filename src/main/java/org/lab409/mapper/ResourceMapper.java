@@ -24,12 +24,24 @@ public interface ResourceMapper {
             "resourceID, " +
             "uploaderID," +
             "categoryID, " +
-            "resourceMajorID) VALUES (" +
+            "resourceMajorID," +
+            "resourceName," +
+            "description) VALUES (" +
             "#{resourceID}, " +
             "#{uploaderID}, " +
             "#{categoryID}, " +
-            "#{resourceMajorID})")
+            "#{resourceMajorID}," +
+            "#{resourceName}," +
+            "#{description})")
     int uploadResource(ResourceEntity resourceEntity);
+
+    @Update("UPDATE resource SET " +
+            "categoryID = #{categoryID}, " +
+            "resourceMajorID = #{resourceMajorID}," +
+            "resourceName = #{resourceName}," +
+            "description = #{description} " +
+            "WHERE resourceID = #{resourceID}")
+    int updateResourceMetaData(ResourceEntity resourceEntity);
 
     @Delete("DELETE FROM resource WHERE resourceID=#{resourceID}")
     int deleteResource(@Param("resourceID") String resourceID);

@@ -34,27 +34,19 @@ public class ResourceServiceImpl implements ResourceService {
     ResourceMapper resourceMapper;
 
     @Override
-    public Pair<Boolean, String> uploadResource(MultipartFile resource,
-                                                String resourceName,
-                                                String description,
-                                                Integer categoryID,
-                                                Integer resourceMajorID) {
+    public Pair<Boolean, String> uploadResource(MultipartFile resource) {
 
         UserEntity currentUser = userUtil.getCurrentUser();
         InputStream inputStream = null;
         try {
             inputStream = resource.getInputStream();
             BasicDBObject metaData = new BasicDBObject();
-            metaData.put("description", description);
-            metaData.put("resourceName", resourceName);
             metaData.put("uploader", currentUser.getUserID());
             String info = gridFsTemplate.store(inputStream,
                     resource.getOriginalFilename(),
                     resource.getContentType(),
                     metaData).toString();
-            ResourceEntity resourceEntity = new ResourceEntity(info, currentUser.getUserID(),
-                                                                categoryID,resourceMajorID);
-
+            ResourceEntity resourceEntity = new ResourceEntity(info, currentUser.getUserID());
             resourceMapper.uploadResource(resourceEntity);
             return new Pair<>(true, info);
         }
@@ -72,6 +64,15 @@ public class ResourceServiceImpl implements ResourceService {
             }
         }
         return new Pair<>(false, "");
+    }
+
+    @Override
+    public boolean uploadResourceMetaData(ResourceEntity resourceEntity) {
+        int success = resourceMapper.updateResourceMetaData(resourceEntity);
+        if (success == 1) {
+            return true;
+        }
+        return false;
     }
 
     @Override

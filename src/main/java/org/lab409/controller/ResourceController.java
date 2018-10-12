@@ -1,6 +1,7 @@
 package org.lab409.controller;
 
 import javafx.util.Pair;
+import org.lab409.entity.ResourceEntity;
 import org.lab409.entity.ResponseMessage;
 import org.lab409.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +21,26 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
-    public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource,
-                                                    @RequestParam(name = "resourceName") String resourceName,
-                                                    @RequestParam(name = "description") String description,
-                                                    @RequestParam(name = "categoryID") Integer categoryID,
-                                                    @RequestParam(name = "resourceMajorID") Integer resourceMajorID) {
-        Pair<Boolean, String> success = resourceService.uploadResource(uploadResource,
-                                                                        resourceName,
-                                                                        description,
-                                                                        categoryID,
-                                                                        resourceMajorID);
+    public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
+
+        Pair<Boolean, String> success = resourceService.uploadResource(uploadResource);
         if (success.getKey()) {
             return new ResponseMessage<>(success.getValue()).success();
         }
         else {
             return new ResponseMessage<>(success.getValue()).error(202, "upload fail");
+        }
+    }
+
+    @RequestMapping(path = "/uploadResourceMetaData", method = RequestMethod.POST)
+    public ResponseMessage uploadResourceController(@RequestBody ResourceEntity resourceEntity){
+
+        boolean success = resourceService.uploadResourceMetaData(resourceEntity);
+        if (success) {
+            return new ResponseMessage<String>(null).success();
+        }
+        else {
+            return new ResponseMessage<String>(null).error(202, "upload fail");
         }
     }
 
