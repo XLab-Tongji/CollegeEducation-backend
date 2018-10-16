@@ -11,6 +11,8 @@ public class ResourceEntity {
     private Integer resourceMajorID;
     private String resourceName;
     private String description;
+    private Integer downloadTimes = 0;
+    private String uploadTime;
 
     public ResourceEntity(String resourceID,
                           Integer uploaderID,

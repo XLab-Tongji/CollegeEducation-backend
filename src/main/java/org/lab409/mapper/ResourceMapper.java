@@ -26,12 +26,16 @@ public interface ResourceMapper {
             "categoryID, " +
             "resourceMajorID," +
             "resourceName," +
+            "downloadTimes," +
+            "uploadTime," +
             "description) VALUES (" +
             "#{resourceID}, " +
             "#{uploaderID}, " +
             "#{categoryID}, " +
             "#{resourceMajorID}," +
             "#{resourceName}," +
+            "#{downloadTimes}," +
+            "#{uploadTime}," +
             "#{description})")
     int uploadResource(ResourceEntity resourceEntity);
 
@@ -42,6 +46,9 @@ public interface ResourceMapper {
             "description = #{description} " +
             "WHERE resourceID = #{resourceID}")
     int updateResourceMetaData(ResourceEntity resourceEntity);
+
+    @Update("UPDATE resource SET downloadTimes = downloadTimes + 1 WHERE resourceID = #{resourceID}")
+    int increaseDownloadTimes(@Param("resourceID") String resourceID);
 
     @Delete("DELETE FROM resource WHERE resourceID=#{resourceID}")
     int deleteResource(@Param("resourceID") String resourceID);

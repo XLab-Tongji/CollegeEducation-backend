@@ -9,6 +9,7 @@ import org.lab409.entity.ResourceMajorEntity;
 import org.lab409.entity.UserEntity;
 import org.lab409.mapper.ResourceMapper;
 import org.lab409.service.ResourceService;
+import org.lab409.util.FormatDateUtil;
 import org.lab409.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,6 +22,7 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Date;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -31,7 +33,23 @@ public class ResourceServiceImpl implements ResourceService {
     private UserUtil userUtil;
 
     @Autowired
-    ResourceMapper resourceMapper;
+    private ResourceMapper resourceMapper;
+
+    @Autowired
+    private FormatDateUtil formatDateUtil;
+
+    class increaseDownloadTimes implements Runnable {
+        private String resourceID;
+
+        public increaseDownloadTimes(String resourceID) {
+            this.resourceID = resourceID;
+        }
+
+        @Override
+        public void run() {
+            resourceMapper.increaseDownloadTimes(this.resourceID);
+        }
+    }
 
     @Override
     public Pair<Boolean, String> uploadResource(MultipartFile resource) {
@@ -47,6 +65,7 @@ public class ResourceServiceImpl implements ResourceService {
                     resource.getContentType(),
                     metaData).toString();
             ResourceEntity resourceEntity = new ResourceEntity(info, currentUser.getUserID());
+            resourceEntity.setUploadTime(formatDateUtil.formatDate(new Date()));
             resourceMapper.uploadResource(resourceEntity);
             return new Pair<>(true, info);
         }
@@ -85,6 +104,8 @@ public class ResourceServiceImpl implements ResourceService {
         GridFsResource[] gridFsResources = gridFsTemplate.getResources(gridFileName);
         for(GridFsResource gridFsResource : gridFsResources ) {
             if (gridFsResource.getId().toString().equals(gridFSFile.getId().toString())){
+                Thread increaseDownloadTimes = new Thread(new increaseDownloadTimes(resourceID));
+                increaseDownloadTimes.start();
                 return new Pair<>(true, gridFsResource);
             }
         }
