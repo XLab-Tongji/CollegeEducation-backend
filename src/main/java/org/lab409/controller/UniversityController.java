@@ -20,6 +20,7 @@ public class UniversityController {
 
     @RequestMapping(path = "register/university", method = RequestMethod.GET)
     public ResponseMessage universityController() {
+
         List<UniversityEntity> universities = universityService.getUniversities();
         return new ResponseMessage<>(universities).success();
     }
