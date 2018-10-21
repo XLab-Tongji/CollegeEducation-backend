@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class ResourceController {
@@ -90,5 +91,19 @@ public class ResourceController {
     @RequestMapping(path = "/resourceMajors", method = RequestMethod.GET)
     public ResponseMessage resourceMajorsController() {
         return new ResponseMessage<>(resourceService.getResourceMajors()).success();
+    }
+
+    @RequestMapping(path = "/searchResource/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
+    public ResponseMessage keywordResourceController(@PathVariable("resourceMajorID") Integer resourceMajorID,
+                                                     @PathVariable("categoryID") Integer categoryID,
+                                                     @RequestParam("keyword") String keyword,
+                                                     @PathVariable("pageID") Integer pageID) {
+        List<ResourceEntity> resourceEntityList = resourceService.keywordSearchPage(keyword, categoryID, resourceMajorID, pageID);
+        if(resourceEntityList != null) {
+            return new ResponseMessage<>(resourceEntityList).success();
+        }
+        else {
+            return  new ResponseMessage<>(null).error(202,"file not found");
+        }
     }
 }

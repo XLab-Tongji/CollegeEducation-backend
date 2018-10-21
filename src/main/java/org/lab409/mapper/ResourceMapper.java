@@ -37,6 +37,7 @@ public interface ResourceMapper {
             "#{downloadTimes}," +
             "#{uploadTime}," +
             "#{description})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int uploadResource(ResourceEntity resourceEntity);
 
     @Update("UPDATE resource SET " +
@@ -53,4 +54,6 @@ public interface ResourceMapper {
     @Delete("DELETE FROM resource WHERE resourceID=#{resourceID}")
     int deleteResource(@Param("resourceID") String resourceID);
 
+    @Select("SELECT * FROM resource WHERE resourceID = #{resourceID} ")
+    ResourceEntity getResourceFromID(@Param("resourceID") String resourceID);
 }

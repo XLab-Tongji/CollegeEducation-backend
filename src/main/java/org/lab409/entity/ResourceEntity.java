@@ -1,11 +1,18 @@
 package org.lab409.entity;
 
 import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Mapping;
+
+import java.io.Serializable;
 
 @Data
-public class ResourceEntity {
-    private Integer id;
+@Document(indexName = "resource", type = "resource")
+@Mapping(mappingPath = "resource_search.json")
+public class ResourceEntity implements Serializable {
+
     private String resourceID;
+    private Integer id;
     private Integer uploaderID;
     private Integer categoryID;
     private Integer resourceMajorID;
