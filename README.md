@@ -7,7 +7,7 @@ ElasticSearch 6.4.2
 IkAnalyzer 6.4.2
 
 
-###ElasticSearch config 
+ElasticSearch config 
 
 This simple config is for testing on my mac 
 
