@@ -34,4 +34,12 @@ public class Article {
     private Integer favorite_count;
     private String SectorName;
     private String SectorState;
+
+    public String getTopicText() {
+        return TopicText;
+    }
+
+    public void setTopicText(String topicText) {
+        TopicText = topicText;
+    }
 }

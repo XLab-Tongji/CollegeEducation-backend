@@ -15,6 +15,15 @@ public class Blackboard {
     private Integer sector_id;       //分类id
     private String blackboard_name;
     private String blackboard_text;
+
+    public String getBlackboard_text() {
+        return blackboard_text;
+    }
+
+    public void setBlackboard_text(String blackboard_text) {
+        this.blackboard_text = blackboard_text;
+    }
+
     private Timestamp blackboard_date;
     private Integer reply_count;
     private Integer clicking_rate;

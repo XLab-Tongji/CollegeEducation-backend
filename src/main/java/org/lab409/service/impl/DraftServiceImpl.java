@@ -1,5 +1,6 @@
 package org.lab409.service.impl;
 
+import com.github.binarywang.java.emoji.EmojiConverter;
 import org.lab409.entity.Draft;
 import org.lab409.mapper.DraftMapper;
 import org.lab409.service.DraftService;
@@ -17,6 +18,10 @@ public class DraftServiceImpl implements DraftService {
 
     @Override
     public boolean saveDraft(Draft draft) {
+        //emoji表情转换器，避免 Emoji 存储出现问题
+        EmojiConverter emojiConverter=EmojiConverter.getInstance();
+        //将blackboard中的Blackboard_text转换
+        draft.setDraft_text(emojiConverter.toHtml(draft.getDraft_text()));
         if(draftMapper.saveDraft(draft)!=1){
             return false;
         }

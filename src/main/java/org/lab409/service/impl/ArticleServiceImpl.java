@@ -5,6 +5,7 @@ import org.lab409.mapper.ArticleMapper;
 import org.lab409.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.github.binarywang.java.emoji.EmojiConverter;
 
 
 import java.util.List;
@@ -32,6 +33,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean saveTopic(Article article){
+        //emoji表情转换器，避免 Emoji 存储出现问题
+        EmojiConverter emojiConverter=EmojiConverter.getInstance();
+        //将article中的TopicText转换
+        article.setTopicText(emojiConverter.toHtml(article.getTopicText()));
         if(articleMapper.saveTopic(article)!=1){
             return false;
         }

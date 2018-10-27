@@ -15,4 +15,12 @@ public class Draft {
     private String draft_name;
     private String draft_text;
     private Timestamp write_date;
+
+    public String getDraft_text() {
+        return draft_text;
+    }
+
+    public void setDraft_text(String draft_text) {
+        this.draft_text = draft_text;
+    }
 }

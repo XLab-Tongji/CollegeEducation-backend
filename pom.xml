@@ -34,6 +34,13 @@
     </properties>
 
     <dependencies>
+        <!--Java emoji converter-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>java-emoji-converter</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
         <!--lombok dependency-->
         <dependency>
             <groupId>org.projectlombok</groupId>
