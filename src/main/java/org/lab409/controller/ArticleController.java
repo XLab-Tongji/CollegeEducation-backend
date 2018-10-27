@@ -33,4 +33,12 @@ public class ArticleController {
         List<Article> articles = articleService.getArticle();
         return new ResponseMessage<>(articles).success();
     }
+    //向 forum_topic 表中添加数据
+    @RequestMapping(path="article/save",method = RequestMethod.POST)
+    public ResponseMessage saveTopic(@RequestBody Article article){
+        if(articleService.saveTopic(article)){
+            return new ResponseMessage<Article>(null).success();
+        }
+        return new ResponseMessage<Article>(null).error(202,"can't save");
+    }
 }

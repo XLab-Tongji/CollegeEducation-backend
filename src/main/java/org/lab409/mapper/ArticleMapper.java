@@ -59,4 +59,30 @@ public interface ArticleMapper {
             @Result(column="PraiseCount",property="PraiseCount")
     })
     List<Article> getArticle();
+
+    @Insert("INSERT INTO forum_topic " +
+            "(publish_id," +
+            "publish_type_id," +
+            "UserId," +
+            "SectorId," +
+            "TopicTitle," +
+            "TopicText," +
+            "TopicDate," +
+            "ReplyCount," +
+            "ClickingRate," +
+            "PraiseCount," +
+            "favorite_count) " +
+            "VALUES(" +
+            "#{publish_id}," +
+            "#{publish_type_id}," +
+            "#{UserId}," +
+            "#{SectorId}," +
+            "#{TopicTitle}," +
+            "#{TopicText}," +
+            "#{TopicDate}," +
+            "#{ReplyCount}," +
+            "#{ClickingRate}," +
+            "#{PraiseCount}," +
+            "#{favorite_count})")
+    int saveTopic(Article article);
 }

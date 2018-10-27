@@ -30,5 +30,12 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.getArticle();
     }
 
+    @Override
+    public boolean saveTopic(Article article){
+        if(articleMapper.saveTopic(article)!=1){
+            return false;
+        }
+        return true;
+    }
 }
 
