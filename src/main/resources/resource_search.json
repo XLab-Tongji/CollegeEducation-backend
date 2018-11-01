@@ -55,6 +55,12 @@
             },
             "uploaderID":{
                 "type":"long"
+            },
+            "points":{
+                "type":"long"
+            },
+            "favouriteNum":{
+                "type":"long"
             }
         }
     }

@@ -16,4 +16,5 @@ public class UserEntity {
     private String birthday;
     private String studentID;
     private String admissionYear;
+    private Integer points = 100;
 }

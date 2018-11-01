@@ -34,7 +34,7 @@ public interface UserMapper {
     @Insert("INSERT INTO USER_AUTHORITY(USER_ID,AUTHORITY_ID) VALUES(#{userID},#{auth})")
     int insertUserAuth(@Param("userID") int userID, @Param("auth") int auth);
 
-    @Select("SELECT ID, USERNAME, EMAIL, ADMISSIONYEAR, STUDENTID, GENDER, BIRTHDAY, UNIVERSITYID, MAJORID " +
+    @Select("SELECT ID, USERNAME, EMAIL, ADMISSIONYEAR, STUDENTID, GENDER, BIRTHDAY, UNIVERSITYID, MAJORID, POINTS " +
             "FROM USER WHERE USERNAME = #{username}")
     @Results({@Result(column = "ID", property = "userID"),
             @Result(column = "USERNAME", property = "username"),
@@ -44,6 +44,7 @@ public interface UserMapper {
             @Result(column = "GENDER", property = "gender"),
             @Result(column = "BIRTHDAY", property = "birthday"),
             @Result(column = "universityID", property = "universityID"),
-            @Result(column = "MAJORID", property = "majorID")})
+            @Result(column = "MAJORID", property = "majorID"),
+            @Result(column = "POINTS", property = "points")})
     UserEntity getUserByName(@Param("username") String username);
 }
