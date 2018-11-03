@@ -1,6 +1,9 @@
 package org.lab409.entity;
 
+import java.util.Date;
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /*
@@ -24,7 +27,8 @@ public class Blackboard {
         this.blackboard_text = blackboard_text;
     }
 
-    private Timestamp blackboard_date;
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    private Date blackboard_date;
     private Integer reply_count;
     private Integer clicking_rate;
     private Integer praise_count;

@@ -1,5 +1,8 @@
 package org.lab409.entity;
+import java.util.Date;
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /*
@@ -14,7 +17,8 @@ public class Draft {
     private Integer sector_id;          //分类id
     private String draft_name;
     private String draft_text;
-    private Timestamp write_date;
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    private Date write_date;
 
     public String getDraft_text() {
         return draft_text;

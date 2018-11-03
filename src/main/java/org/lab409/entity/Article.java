@@ -1,6 +1,9 @@
 package org.lab409.entity;
 
+import java.util.Date;
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -12,17 +15,20 @@ import lombok.Data;
 public class Article {
     private Integer publish_id=0;       //发布编号，暂时为0
     private Integer publish_type_id=0;  //发布类型编号，0位
+
     @JsonProperty(value="TopicId")
     private Integer TopicId;            //在数据库中此为自增项
-
     @JsonProperty(value = "UserId")
     private Integer UserId;
     @JsonProperty(value = "TopicTitle")
     private String TopicTitle;
     @JsonProperty(value = "TopicText")
     private String TopicText;
+
     @JsonProperty(value = "TopicDate")
-    private Timestamp TopicDate;
+    @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
+    private Date TopicDate;
+
     @JsonProperty(value = "ReplyCount")
     private Integer ReplyCount;
     @JsonProperty(value = "ClickingRate")
@@ -32,6 +38,7 @@ public class Article {
     @JsonProperty(value = "PraiseCount")
     private Integer PraiseCount;
     @JsonProperty(value = "favorite_count")
+
     private Integer favorite_count;
     private String SectorName;
     private String SectorState;
