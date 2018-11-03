@@ -33,7 +33,7 @@ public class ResourceController {
         }
     }
 
-    @RequestMapping(path = "/uploadResourceMetaData", method = RequestMethod.POST)
+    @RequestMapping(path = "/uploadResourceMetaData", method = RequestMethod.PUT)
     public ResponseMessage uploadResourceController(@RequestBody ResourceEntity resourceEntity){
 
         boolean success = resourceService.uploadResourceMetaData(resourceEntity);
@@ -106,4 +106,40 @@ public class ResourceController {
             return  new ResponseMessage<>(null).error(202,"file not found");
         }
     }
+
+    @RequestMapping(path = "/resource/favourite/like/{resourceID}", method = RequestMethod.POST)
+    public ResponseMessage likeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
+       if(resourceService.likeResource(resourceID)) {
+           return new ResponseMessage<>(null).success();
+       }
+       return new ResponseMessage<>(null).error(202, "unknown error");
+    }
+
+    @RequestMapping(path = "resource/favourite/dislike/{resourceID}", method = RequestMethod.DELETE)
+    public ResponseMessage unlikeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
+        if(resourceService.dislikeResource(resourceID)) {
+            return new ResponseMessage<>(null).success();
+        }
+        return new ResponseMessage<>(null).error(202, "unknown error");
+    }
+
+    @RequestMapping(path = "/resource/myFavourite", method = RequestMethod.GET)
+    public ResponseMessage getMyFavouriteResourceController() {
+        List<ResourceEntity> resourceEntities = resourceService.getFavouriteResources();
+        return new ResponseMessage<>(resourceEntities).success();
+    }
+
+    @RequestMapping(path = "/resource/myDownload", method = RequestMethod.GET)
+    public ResponseMessage getMyDownloadResourceController() {
+        List<ResourceEntity> resourceEntities = resourceService.getDownloadResources();
+        return new ResponseMessage<>(resourceEntities).success();
+    }
+
+    @RequestMapping(path = "/resource/myUpload", method = RequestMethod.GET)
+    public ResponseMessage getMyUploadResourceController() {
+        List<ResourceEntity> resourceEntities = resourceService.getUploadResources();
+        return new ResponseMessage<>(resourceEntities).success();
+    }
+
+
 }

@@ -2,15 +2,12 @@ package org.lab409.service.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.oracle.tools.packager.Log;
+//import com.oracle.tools.packager.Log;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
-import org.lab409.entity.ResourceCategoryEntity;
-import org.lab409.entity.ResourceEntity;
-import org.lab409.entity.ResourceMajorEntity;
-import org.lab409.entity.UserEntity;
+import org.lab409.entity.*;
 import org.lab409.mapper.ResourceMapper;
 import org.lab409.service.ResourceElasticSearchRepo;
 import org.lab409.service.ResourceService;
@@ -27,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import javafx.util.Pair;
 import java.io.IOException;
@@ -37,6 +35,7 @@ import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -73,6 +72,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Pair<Boolean, String> uploadResource(MultipartFile resource) {
 
         UserEntity currentUser = userUtil.getCurrentUser();
@@ -93,7 +93,7 @@ public class ResourceServiceImpl implements ResourceService {
             return new Pair<>(false, "");
         }
         catch (IOException e) {
-            Log.debug("inputStream get error" + e.getMessage());
+            //Log.debug("inputStream get error" + e.getMessage());
             e.printStackTrace();
         }
         finally {
@@ -102,7 +102,7 @@ public class ResourceServiceImpl implements ResourceService {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    Log.debug("inputStream close error:" + e.getMessage());
+                    //Log.debug("inputStream close error:" + e.getMessage());
                 }
             }
         }
@@ -117,7 +117,6 @@ public class ResourceServiceImpl implements ResourceService {
             resourceEntity.setId(dbEntity.getId());
             resourceEntity.setUploaderID(dbEntity.getUploaderID());
             resourceEntity.setUploadTime(dbEntity.getUploadTime());
-            resourceEntity.setDownloadTimes(dbEntity.getDownloadTimes());
         }
         else {
             return false;
@@ -131,21 +130,39 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Pair<Boolean, GridFsResource> downloadResource(String resourceID) {
+        ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
+        UserEntity currentUser = userUtil.getCurrentUser();
+        Integer delta = resourceEntity.getPoints();
+        if(delta > currentUser.getPoints()) {
+            return new Pair<>(false, null);
+        }
         GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceID)));
         if (gridFSFile == null) {
             return new Pair<>(false, null);
         }
+        Integer uploaderID = resourceEntity.getUploaderID();
         String gridFileName = gridFSFile.getFilename();
         GridFsResource[] gridFsResources = gridFsTemplate.getResources(gridFileName);
+
         for(GridFsResource gridFsResource : gridFsResources ) {
             if (gridFsResource.getId().toString().equals(gridFSFile.getId().toString())){
-                cachedResourceThread.get(RESOURCE_SERVICE.UPDATE_RESOURCE).execute(()->resourceMapper.increaseDownloadTimes(resourceID));
                 cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
-                    ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
                     resourceEntity.setDownloadTimes(resourceEntity.getDownloadTimes() + 1);
                     saveResourceDoc(resourceEntity);
                 });
+                int a1 = resourceMapper.increaseDownloadTimes(resourceID);
+                int a2 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
+                int a3 = resourceMapper.updateLeftPoints(delta, uploaderID);
+                if(a1 != 1 || a2 != 1 || a3 != 1) {
+                    return new Pair<>(false, null);
+                }
+                DownloadResourceEntity downloadResourceEntity = new DownloadResourceEntity();
+                downloadResourceEntity.setResourceID(resourceID);
+                downloadResourceEntity.setUserID(currentUser.getUserID());
+                downloadResourceEntity.setId(currentUser.getUserID() + resourceID);
+                resourceMapper.insertIntoDownloadResource(downloadResourceEntity);
                 return new Pair<>(true, gridFsResource);
             }
         }
@@ -155,10 +172,12 @@ public class ResourceServiceImpl implements ResourceService {
     /*
     -1: can't find file
     -2: no authority
+    -3: db error
      0: ok
+    delete on cascade
     */
     @Override
-
+    @Transactional
     public int deleteResource(String resourceID) {
         UserEntity userEntity = userUtil.getCurrentUser();
         Query query = new Query(Criteria.where("_id").is(resourceID));
@@ -166,13 +185,56 @@ public class ResourceServiceImpl implements ResourceService {
         if (gridFSFile == null) {
             return -1;
         }
-        if (gridFSFile.getMetadata().get("uploader") != userEntity.getUserID() ) {
+        if (!gridFSFile.getMetadata().get("uploader").equals(userEntity.getUserID())) {
             return -2;
         }
         gridFsTemplate.delete(query);
-        resourceMapper.deleteResource(resourceID);
+        int a = resourceMapper.deleteResource(resourceID);
+        if(a != 1) {
+            return -3;
+        }
         cachedDocThread.get(DOCUMENT_SERVICE.DELETE_DOC).execute(()->deleteResourceDoc(resourceID));
         return 0;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean dislikeResource(String resourceID) {
+        int a2 = resourceMapper.deleteFavouriteResource(resourceID, userUtil.getCurrentUser().getUserID());
+        if( a2 != 1) {
+            return false;
+        }
+        int a1 = resourceMapper.decreaseFavouriteNum(resourceID);
+        if( a1 != 1) {
+            return false;
+        }
+        cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
+            ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
+            resourceEntity.setFavouriteNum(resourceEntity.getFavouriteNum() - 1);
+            saveResourceDoc(resourceEntity);
+        });
+        return true;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean likeResource(String resourceID) {
+        Integer currentUserID = userUtil.getCurrentUser().getUserID();
+        FavouriteResourceEntity favouriteResourceEntity = new FavouriteResourceEntity();
+        favouriteResourceEntity.setResourceID(resourceID);
+        favouriteResourceEntity.setUserID(currentUserID);
+        favouriteResourceEntity.setId(currentUserID + resourceID);
+        int a1 = resourceMapper.insertIntoFavouriteResource(favouriteResourceEntity);
+        if(a1 != 1) {
+            return false;
+        }
+        resourceMapper.increaseFavouriteNum(resourceID);
+        cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
+            ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
+            resourceEntity.setFavouriteNum(resourceEntity.getFavouriteNum() + 1);
+            saveResourceDoc(resourceEntity);
+        });
+        return true;
     }
 
     @Override
@@ -183,6 +245,24 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public List<ResourceMajorEntity> getResourceMajors() {
         return resourceMapper.getResourceMajors();
+    }
+
+    @Override
+    public List<ResourceEntity> getDownloadResources() {
+        UserEntity userEntity = userUtil.getCurrentUser();
+        return resourceMapper.getDownloadResourceList(userEntity.getUserID());
+    }
+
+    @Override
+    public List<ResourceEntity> getFavouriteResources() {
+        UserEntity userEntity = userUtil.getCurrentUser();
+        return resourceMapper.getFavouriteResourceList(userEntity.getUserID());
+    }
+
+    @Override
+    public List<ResourceEntity> getUploadResources() {
+        UserEntity userEntity = userUtil.getCurrentUser();
+        return resourceMapper.getUploadResourceList(userEntity.getUserID());
     }
 
     @Override
@@ -199,13 +279,18 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.should(QueryBuilders.matchQuery("resourceName", keyword).fuzziness(Fuzziness.AUTO))
                 .should(QueryBuilders.matchQuery("description", keyword).fuzziness(Fuzziness.AUTO))
-                .minimumShouldMatch(1)
                 .must(QueryBuilders.termQuery("categoryID", categoryID))
                 .must(QueryBuilders.termQuery("resourceMajorID", resourceMajorID));
-
+        if(keyword.equals("")) {
+            boolQueryBuilder.minimumShouldMatch(0);
+        }
+        else {
+            boolQueryBuilder.minimumShouldMatch(1);
+        }
         FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQueryBuilder).setMinScore(2);
         PageRequest pageRequest = PageRequest.of(pageID, PAGE_SIZE);
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()

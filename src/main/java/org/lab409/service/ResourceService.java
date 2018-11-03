@@ -29,5 +29,10 @@ public interface ResourceService {
     List<ResourceMajorEntity> getResourceMajors();
     void saveResourceDoc(ResourceEntity resourceEntity);
     void deleteResourceDoc(String resourceID);
+    List<ResourceEntity> getFavouriteResources();
+    List<ResourceEntity> getDownloadResources();
+    List<ResourceEntity> getUploadResources();
+    boolean likeResource(String resourceID);
+    boolean dislikeResource(String resourceID);
     List<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
 }

@@ -19,6 +19,8 @@ public class ResourceEntity implements Serializable {
     private String resourceName;
     private String description;
     private Integer downloadTimes = 0;
+    private Integer points = 0;
+    private Integer favouriteNum = 0;
     private String uploadTime;
 
     public ResourceEntity(String resourceID,
@@ -26,17 +28,19 @@ public class ResourceEntity implements Serializable {
                           Integer categoryID,
                           Integer resourceMajorID,
                           String resourceName,
-                          String description ) {
-        this(categoryID, resourceMajorID, resourceName, description);
+                          String description,
+                          Integer points) {
+        this(categoryID, resourceMajorID, resourceName, description, points);
         this.resourceID = resourceID;
         this.uploaderID = uploaderID;
     }
 
-    public ResourceEntity(Integer categoryID, Integer resourceMajorID, String resourceName, String description) {
+    public ResourceEntity(Integer categoryID, Integer resourceMajorID, String resourceName, String description, Integer points) {
         this.categoryID = categoryID;
         this.resourceMajorID = resourceMajorID;
         this.resourceName = resourceName;
         this.description = description;
+        this.points = points;
     }
 
 
@@ -55,8 +59,9 @@ public class ResourceEntity implements Serializable {
                           Integer categoryID,
                           Integer resourceMajorID,
                           String resourceName,
-                          String description) {
-        this(resourceID, uploaderID, categoryID, resourceMajorID, resourceName, description);
+                          String description,
+                          Integer points) {
+        this(resourceID, uploaderID, categoryID, resourceMajorID, resourceName, description, points);
         this.id = id;
     }
 }

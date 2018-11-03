@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MyBatisScannerConfig {
     @Bean
-    public MapperScannerConfigurer MapperScannerConfigurer() {
+    public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         mapperScannerConfigurer.setBasePackage("org.lab409.security.repository");
         mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
