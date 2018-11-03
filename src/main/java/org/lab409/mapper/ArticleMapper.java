@@ -85,4 +85,8 @@ public interface ArticleMapper {
             "#{PraiseCount}," +
             "#{favorite_count})")
     int saveTopic(Article article);
+
+    //点赞某篇文章
+    @Update("UPDATE forum_topic SET PraiseCount=PraiseCount+1 WHERE TopicId=#{TopicId}")
+    int likeTopic(Article article);
 }

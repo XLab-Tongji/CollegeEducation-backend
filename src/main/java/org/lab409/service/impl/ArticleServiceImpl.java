@@ -42,5 +42,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return true;
     }
+
+    //点赞文章
+    @Override
+    public boolean likeTopic(Article article){
+        if(articleMapper.likeTopic(article)!=1){
+            return false;
+        }
+        return true;
+    }
 }
 

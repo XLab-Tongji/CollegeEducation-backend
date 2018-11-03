@@ -41,4 +41,13 @@ public class ArticleController {
         }
         return new ResponseMessage<Article>(null).error(202,"can't save");
     }
+
+    //点赞 forum_topic 表中的内容
+    @RequestMapping(path="article/like",method = RequestMethod.POST)
+    public ResponseMessage likeTopic(@RequestBody Article article){
+        if(articleService.likeTopic(article)){
+            return new ResponseMessage<Article>(null).success();
+        }
+        return new ResponseMessage<Article>(null).error(202,"error");
+    }
 }

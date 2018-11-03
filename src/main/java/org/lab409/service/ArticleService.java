@@ -8,4 +8,5 @@ public interface ArticleService {
     List<Article> getArticleBySectorAndKeyword(String SectorName,String SectorState,Integer userID,Integer SectorId, Integer page, Integer count,String keywords);
     List<Article> getArticle();
     boolean saveTopic(Article article);
+    boolean likeTopic(Article article);
 }
