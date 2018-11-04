@@ -24,17 +24,20 @@ public class ArticleController {
     ArticleService articleService;
 
 
-
+    //获取文章
     @RequestMapping(path = "article/all", method = RequestMethod.GET)
     public ResponseMessage getArticleBySectorAndKeyword(String SectorName,String SectorState,@RequestParam(value = "userID", defaultValue = "0") Integer userID,@RequestParam(value = "SectorId", defaultValue = "-1") Integer SectorId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "count", defaultValue = "6") Integer count, String keywords) {
         List<Article> articles = articleService.getArticleBySectorAndKeyword(SectorName,SectorState,userID,SectorId, page, count, keywords);
         return new ResponseMessage<>(articles).success();
     }
+
+    //测试获取文章的 api
     @RequestMapping(path = "article/all/test", method = RequestMethod.GET)
     public ResponseMessage getArticle() {
         List<Article> articles = articleService.getArticle();
         return new ResponseMessage<>(articles).success();
     }
+
     //向 forum_topic 表中添加数据
     @RequestMapping(path="article/save",method = RequestMethod.POST)
     public ResponseMessage saveTopic(@RequestBody Article article){
@@ -46,8 +49,9 @@ public class ArticleController {
 
     //点赞 forum_topic 表中的某条内容
     @RequestMapping(path="article/like",method = RequestMethod.POST)
-    public ResponseMessage likeTopic(@RequestBody Article article){
-        if(articleService.likeTopic(article)){
+    public ResponseMessage likeTopic(@RequestBody Article article,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
+        // userID 代表点赞人的 ID
+        if(articleService.likeTopic(article,userID)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"error");

@@ -50,4 +50,12 @@ public class Article {
     public void setTopicText(String topicText) {
         TopicText = topicText;
     }
+
+    public Integer getTopicId() {
+        return TopicId;
+    }
+
+    public void setTopicId(Integer topicId) {
+        TopicId = topicId;
+    }
 }
