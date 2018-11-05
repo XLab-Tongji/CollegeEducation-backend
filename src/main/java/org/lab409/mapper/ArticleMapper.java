@@ -16,22 +16,27 @@ public interface ArticleMapper {
 
     @Select("<script>"
                 + "SELECT "
-                + "a.SectorId,a.UserId,a.TopicId,b.`SectorName`,b.`SectorState`,a.`TopicTitle`,a.`TopicText`,a.`TopicDate`,a.`ReplyCount`,a.`ClickingRate`,a.PraiseCount "
-                + "FROM forum_topic a, forum_sector b "
-                + "WHERE a.SectorId=b.SectorID "
-                + "<if test='userID!=0'>"
-                + "AND a.UserId=#{userID}"
-                + "</if>"
+                + "a.sector_use_id,a.UserId,a.TopicId,c.`SectorName`,c.`SectorState`,a.`TopicTitle`,a.`TopicText`,a.`TopicDate`,a.`ReplyCount`,a.`ClickingRate`,a.PraiseCount,d.praise_id,e.favourite_id "
+                + "FROM (forum_topic a LEFT JOIN (forum_sector_use b, forum_sector c) "
+                + "ON b.sector_id=c.SectorId) "
+                + "LEFT JOIN forum_praise d ON (a.TopicId=d.type_id AND d.user_id=#{userID}) "
+                + "LEFT JOIN forum_favorite e ON (a.TopicId=e.topic_id AND e.user_id=#{userID}) "
+                + "WHERE a.TopicId=b.topic_id "
+                + "<if test='SectorId!=2'>"
                 + "<if test='keywords!=null'>"
                 + "AND a.TopicTitle LIKE concat('%',#{keywords},'%')"
                 + "</if>"
+                + "</if>"
+                + "<if test='SectorId!=1'>"
                 + "<if test='SectorName!=null'>"
-                + "AND b.SectorName LIKE concat('%',#{SectorName},'%')"
+                + "AND ("
+                +   "<foreach collection='SectorName' item='item' index='index' separator=' OR '>"
+                +       "c.SectorName = #{item}"
+                +   "</foreach>"
+                + ") "
                 + "</if>"
-                + "<if test='SectorState!=null'>"
-                + "AND b.SectorState LIKE concat('%',#{SectorState},'%')"
                 + "</if>"
-                + "ORDER BY a.TopicDate DESC limit #{start},#{count}"
+                + "ORDER BY a.TopicDate DESC"
                 + "</script>")
     @Results({@Result(column="UserId",property="UserId"),
             @Result(column="TopicId",property="TopicId"),
@@ -43,9 +48,11 @@ public interface ArticleMapper {
             @Result(column="ReplyCount",property="ReplyCount"),
             @Result(column="ClickingRate",property="ClickingRate"),
             @Result(column="PraiseCount",property="PraiseCount"),
-            @Result(column="SectorId",property="SectorId")
+            @Result(column="SectorId",property="SectorId"),
+            @Result(column="praise_id",property="praise_id"),
+            @Result(column="favourite_id",property="favourite_id")
     })
-    List<Article> getArticleBySectorAndKeyword(@Param("SectorName") String SectorName,@Param("SectorState") String SectorState,@Param("SectorId") Integer SectorId, @Param("start") Integer start, @Param("count") Integer count, @Param("userID") Integer userID,@Param("keywords") String keywords);
+    List<Article> getArticleBySectorAndKeyword(@Param("SectorName") String[] SectorName,@Param("SectorState") String SectorState,@Param("SectorId") Integer SectorId, @Param("userID") Integer userID,@Param("keywords") String keywords);
 
     @Select("SELECT * FROM forum_topic")
     @Results({@Result(column="TopicId",property="TopicId"),
@@ -64,7 +71,7 @@ public interface ArticleMapper {
             "(publish_id," +
             "publish_type_id," +
             "UserId," +
-            "SectorId," +
+            "sector_use_id," +
             "TopicTitle," +
             "TopicText," +
             "TopicDate," +
@@ -76,7 +83,7 @@ public interface ArticleMapper {
             "#{publish_id}," +
             "#{publish_type_id}," +
             "#{UserId}," +
-            "#{SectorId}," +
+            "#{sector_use_id}," +
             "#{TopicTitle}," +
             "#{TopicText}," +
             "#{TopicDate}," +

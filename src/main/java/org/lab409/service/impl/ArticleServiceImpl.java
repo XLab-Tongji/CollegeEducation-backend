@@ -32,9 +32,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     PraiseMapper praiseMapper;
     @Override
-    public List<Article> getArticleBySectorAndKeyword(String SectorName,String SectorState,Integer userID,Integer SectorId, Integer page, Integer count,String keywords) {
-        int start = (page - 1) * count;
-        return articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, start, count, userID,keywords);
+    public List<Article> getArticleBySectorAndKeyword(String[] SectorName,String SectorState,Integer userID,Integer SectorId,String keywords) {
+        return articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, userID,keywords);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService {
     //点赞文章
     @Override
     public boolean likeTopic(Article article,Integer userID){
-        if(userID==-1){return false;}       //保证 userId 参数存在
+        if(userID==0){return false;}       //保证 userId 参数存在
         Praise praise=new Praise();
         praise.setType(0);
         praise.setType_id(article.getTopicId());
