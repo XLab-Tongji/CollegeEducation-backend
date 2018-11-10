@@ -31,6 +31,7 @@ public class ArticleServiceImpl implements ArticleService {
     ReplyMapper replyMapper;
     @Autowired
     PraiseMapper praiseMapper;
+
     @Override
     public List<Article> getArticleBySectorAndKeyword(String[] SectorName,String SectorState,Integer userID,Integer SectorId,String keywords) {
         return articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, userID,keywords);
@@ -98,6 +99,11 @@ public class ArticleServiceImpl implements ArticleService {
             return false;
         }
         return true;
+    }
+    //获取某篇文章的评论
+    @Override
+    public List<Reply> getReply(Article article){
+        return replyMapper.getReply(article);
     }
 }
 

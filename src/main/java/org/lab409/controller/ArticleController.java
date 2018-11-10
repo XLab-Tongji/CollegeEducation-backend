@@ -92,4 +92,11 @@ public class ArticleController {
         }
         return new ResponseMessage<Reply>(null).error(202,"error");
     }
+
+    //获取某篇文章的所有评论
+    @RequestMapping(path = "article/reply/get",method = RequestMethod.GET)
+    public ResponseMessage getReply(@RequestBody Article article){
+        List<Reply> replies=articleService.getReply(article);
+        return new ResponseMessage<>(replies).success();
+    }
 }

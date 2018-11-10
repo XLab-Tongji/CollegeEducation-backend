@@ -2,9 +2,13 @@ package org.lab409.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.lab409.entity.Article;
 import org.lab409.entity.Reply;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Mapper
 @Repository
@@ -26,4 +30,8 @@ public interface ReplyMapper {
             "#{ClickingRate}," +
             "#{PraiseCount})")
     int replyTopic(Reply reply);
+
+    //获取某篇文章的评论
+    @Select("SELECT * FROM forum_reply WHERE TopicId=#{TopicId}")
+    List<Reply> getReply(Article article);
 }
