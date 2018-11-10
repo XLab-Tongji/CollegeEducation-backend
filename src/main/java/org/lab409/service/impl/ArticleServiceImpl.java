@@ -68,6 +68,21 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return false;
     }
+    //取消点赞
+    @Override
+    public boolean deletePraise(Article article,Integer userID){
+        if(userID==0){return false;}
+        Praise praise=new Praise();
+        praise.setType(0);
+        praise.setType_id(article.getTopicId());
+        praise.setUser_id(userID);
+        //若两个操作都完成，则返回 true
+        if(articleMapper.deletePraise(article)==1&&praiseMapper.deletePraise(praise)==1){
+            return true;
+        }
+        return false;
+    }
+
     //收藏文章
     @Override
     public boolean collectTopic(Favorite favorite){

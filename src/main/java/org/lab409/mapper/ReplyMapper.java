@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Repository
 public interface ReplyMapper {
 
-    //添加回复到 forum_reply 表中
+    //添加评论到 forum_reply 表中
     @Insert("INSERT forum_reply " +
             "(TopicId," +
             "UserId," +

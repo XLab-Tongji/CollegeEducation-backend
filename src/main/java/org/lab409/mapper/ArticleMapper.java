@@ -96,4 +96,7 @@ public interface ArticleMapper {
     //点赞某篇文章
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount+1 WHERE TopicId=#{TopicId}")
     int likeTopic(Article article);
+    //取消点赞
+    @Update("UPDATE forum_topic SET PraiseCount=PraiseCount-1 WHERE TopicId=#{TopicId}")
+    int deletePraise(Article article);
 }

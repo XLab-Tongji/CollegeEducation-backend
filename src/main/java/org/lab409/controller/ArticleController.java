@@ -7,6 +7,7 @@ import org.lab409.entity.Reply;
 import org.lab409.entity.ResponseMessage;
 import org.lab409.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,7 +29,7 @@ public class ArticleController {
     //userID 当前用户ID
     //SectorId 用来区分搜索的方式，0 为全部，1 为按标题，2 为按标签，默认值是0
     //keywords 用来按标题搜索
-    //SectorName 用来按标签搜索，用 List<String> 接收(暂定)
+    //SectorName 用来按标签搜索，用 String[] 接收(暂定)
     //SectorState 范围较大的标签，暂时没有使用
     @RequestMapping(path = "article/all", method = RequestMethod.GET)
     public ResponseMessage getArticleBySectorAndKeyword(@RequestParam(value = "SectorName",required = false) String[] SectorName,String SectorState,@RequestParam(value = "userID", defaultValue = "0") Integer userID,@RequestParam(value = "SectorId", defaultValue = "0") Integer SectorId, @RequestParam(value = "keywords",required = false)String keywords) {
@@ -53,10 +54,22 @@ public class ArticleController {
     }
 
     //点赞 forum_topic 表中的某条内容
+    @Transactional
     @RequestMapping(path="article/like",method = RequestMethod.POST)
     public ResponseMessage likeTopic(@RequestBody Article article,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
         // userID 代表点赞人的 ID
         if(articleService.likeTopic(article,userID)){
+            return new ResponseMessage<Article>(null).success();
+        }
+        return new ResponseMessage<Article>(null).error(202,"error");
+    }
+
+    //取消点赞
+    @Transactional
+    @RequestMapping(path = "article/like/delete",method = RequestMethod.POST)
+    public ResponseMessage deletePraise(@RequestBody Article article,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
+        // userID 代表点赞人的 ID
+        if(articleService.deletePraise(article,userID)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"error");

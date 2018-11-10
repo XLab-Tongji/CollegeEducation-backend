@@ -17,13 +17,9 @@ public class Article {
     private Integer publish_id=0;       //发布编号，暂时为0
     private Integer publish_type_id=0;  //发布类型编号，0位
 
-
     private Integer TopicId;            //在数据库中此为自增项
-
     private Integer UserId;
-
     private String TopicTitle;
-
     private String TopicText;
 
 
