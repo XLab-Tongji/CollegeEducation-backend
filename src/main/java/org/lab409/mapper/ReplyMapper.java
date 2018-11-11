@@ -2,6 +2,7 @@ package org.lab409.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.lab409.entity.Article;
 import org.lab409.entity.Reply;
@@ -33,5 +34,5 @@ public interface ReplyMapper {
 
     //获取某篇文章的评论
     @Select("SELECT * FROM forum_reply WHERE TopicId=#{TopicId}")
-    List<Reply> getReply(Article article);
+    List<Reply> getReply(@Param("TopicId")Integer TopicId);
 }
