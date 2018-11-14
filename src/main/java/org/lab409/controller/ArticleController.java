@@ -76,6 +76,7 @@ public class ArticleController {
     }
 
     //收藏 forum_topic 表中的某条内容
+    @Transactional
     @RequestMapping(path = "article/collect",method = RequestMethod.POST)
     public ResponseMessage collectTopic(@RequestBody Favorite favorite){
         if(articleService.collectTopic(favorite)){
@@ -83,6 +84,17 @@ public class ArticleController {
         }
         return new ResponseMessage<Favorite>(null).error(202,"error");
     }
+
+    //delete collection
+    @Transactional
+    @RequestMapping(path = "article/collect/delete",method = RequestMethod.POST)
+    public ResponseMessage deleteReply(@RequestBody Favorite favorite){
+        if(articleService.deleteCollection(favorite)){
+            return new ResponseMessage<Favorite>(null).success();
+        }
+        return new ResponseMessage<Favorite>(null).error(202,"error");
+    }
+
 
     //评论 forum_topic 表中的某条内容
     @RequestMapping(path = "article/reply",method = RequestMethod.POST)

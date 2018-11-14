@@ -87,10 +87,18 @@ public class ArticleServiceImpl implements ArticleService {
     //收藏文章
     @Override
     public boolean collectTopic(Favorite favorite){
-        if(favoriteMapper.collectTopic(favorite)!=1){
-            return false;
+        if(favoriteMapper.collectTopic(favorite)==1&&articleMapper.collectTopic(favorite)==1){
+            return true;
         }
-        return true;
+        return false;
+    }
+    //delete collection
+    @Override
+    public boolean deleteCollection(Favorite favorite){
+        if(favoriteMapper.deleteCollection(favorite)==1&&articleMapper.deleteCollection(favorite)==1){
+            return true;
+        }
+        return false;
     }
     //评论文章
     @Override
