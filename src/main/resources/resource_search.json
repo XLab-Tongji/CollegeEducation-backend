@@ -15,9 +15,6 @@
                     }
                 }
             },
-            "downloadTimes":{
-                "type":"long"
-            },
             "id":{
                 "type":"long"
             },
@@ -57,9 +54,6 @@
                 "type":"long"
             },
             "points":{
-                "type":"long"
-            },
-            "favouriteNum":{
                 "type":"long"
             }
         }

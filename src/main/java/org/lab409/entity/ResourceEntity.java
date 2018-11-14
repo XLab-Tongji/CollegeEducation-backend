@@ -18,9 +18,7 @@ public class ResourceEntity implements Serializable {
     private Integer resourceMajorID;
     private String resourceName;
     private String description;
-    private Integer downloadTimes = 0;
     private Integer points = 0;
-    private Integer favouriteNum = 0;
     private String uploadTime;
 
     public ResourceEntity(String resourceID,

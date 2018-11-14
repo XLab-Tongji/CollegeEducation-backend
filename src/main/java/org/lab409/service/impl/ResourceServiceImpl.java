@@ -1,8 +1,9 @@
 package org.lab409.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
-//import com.oracle.tools.packager.Log;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -29,13 +30,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javafx.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -47,11 +46,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     private ResourceMapper resourceMapper;
-
-    @Autowired
-    private FormatDateUtil formatDateUtil;
-
-    public static final int PAGE_SIZE = 10;
 
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
@@ -86,14 +80,13 @@ public class ResourceServiceImpl implements ResourceService {
                     resource.getContentType(),
                     metaData).toString();
             ResourceEntity resourceEntity = new ResourceEntity(info, currentUser.getUserID());
-            resourceEntity.setUploadTime(formatDateUtil.formatDate(new Date()));
+            resourceEntity.setUploadTime(FormatDateUtil.formatDate(new Date()));
             if(resourceMapper.uploadResource(resourceEntity) == 1 ) {
                 return new Pair<>(true, info);
             }
             return new Pair<>(false, "");
         }
         catch (IOException e) {
-            //Log.debug("inputStream get error" + e.getMessage());
             e.printStackTrace();
         }
         finally {
@@ -102,7 +95,7 @@ public class ResourceServiceImpl implements ResourceService {
                     inputStream.close();
                 }
                 catch (IOException e) {
-                    //Log.debug("inputStream close error:" + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
@@ -110,6 +103,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean uploadResourceMetaData(ResourceEntity resourceEntity) {
         UserEntity currentUser = userUtil.getCurrentUser();
         ResourceEntity dbEntity = resourceMapper.getResourceFromID(resourceEntity.getResourceID());
@@ -148,21 +142,18 @@ public class ResourceServiceImpl implements ResourceService {
 
         for(GridFsResource gridFsResource : gridFsResources ) {
             if (gridFsResource.getId().toString().equals(gridFSFile.getId().toString())){
-                cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
-                    resourceEntity.setDownloadTimes(resourceEntity.getDownloadTimes() + 1);
-                    saveResourceDoc(resourceEntity);
-                });
-                int a1 = resourceMapper.increaseDownloadTimes(resourceID);
-                int a2 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
-                int a3 = resourceMapper.updateLeftPoints(delta, uploaderID);
-                if(a1 != 1 || a2 != 1 || a3 != 1) {
+                int success1 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
+                int success2 = resourceMapper.updateLeftPoints(delta, uploaderID);
+                if(success1 != 1 || success2 != 1) {
                     return new Pair<>(false, null);
                 }
-                DownloadResourceEntity downloadResourceEntity = new DownloadResourceEntity();
-                downloadResourceEntity.setResourceID(resourceID);
-                downloadResourceEntity.setUserID(currentUser.getUserID());
-                downloadResourceEntity.setId(currentUser.getUserID() + resourceID);
-                resourceMapper.insertIntoDownloadResource(downloadResourceEntity);
+                cachedResourceThread.get(RESOURCE_SERVICE.UPDATE_RESOURCE).execute(()->{
+                    DownloadResourceEntity downloadResourceEntity = new DownloadResourceEntity();
+                    downloadResourceEntity.setResourceID(resourceID);
+                    downloadResourceEntity.setUserID(currentUser.getUserID());
+                    downloadResourceEntity.setId(currentUser.getUserID() + resourceID);
+                    resourceMapper.insertIntoDownloadResource(downloadResourceEntity);
+                });
                 return new Pair<>(true, gridFsResource);
             }
         }
@@ -199,42 +190,58 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean dislikeResource(String resourceID) {
-        int a2 = resourceMapper.deleteFavouriteResource(resourceID, userUtil.getCurrentUser().getUserID());
-        if( a2 != 1) {
-            return false;
-        }
-        int a1 = resourceMapper.decreaseFavouriteNum(resourceID);
-        if( a1 != 1) {
-            return false;
-        }
-        cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
-            ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
-            resourceEntity.setFavouriteNum(resourceEntity.getFavouriteNum() - 1);
-            saveResourceDoc(resourceEntity);
-        });
-        return true;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public boolean likeResource(String resourceID) {
         Integer currentUserID = userUtil.getCurrentUser().getUserID();
         FavouriteResourceEntity favouriteResourceEntity = new FavouriteResourceEntity();
         favouriteResourceEntity.setResourceID(resourceID);
         favouriteResourceEntity.setUserID(currentUserID);
         favouriteResourceEntity.setId(currentUserID + resourceID);
-        int a1 = resourceMapper.insertIntoFavouriteResource(favouriteResourceEntity);
-        if(a1 != 1) {
-            return false;
-        }
-        resourceMapper.increaseFavouriteNum(resourceID);
-        cachedDocThread.get(DOCUMENT_SERVICE.UPDATE_DOC).execute(()->{
-            ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
-            resourceEntity.setFavouriteNum(resourceEntity.getFavouriteNum() + 1);
-            saveResourceDoc(resourceEntity);
-        });
-        return true;
+        int success = resourceMapper.insertIntoFavouriteResource(favouriteResourceEntity);
+        return success == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean dislikeResource(String resourceID) {
+        int success = resourceMapper.deleteFavouriteResource(resourceID, userUtil.getCurrentUser().getUserID());
+        return success == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean suggestResource(String resourceID) {
+        Integer currentUserID = userUtil.getCurrentUser().getUserID();
+        SuggestedResource suggestedResource = new SuggestedResource();
+        suggestedResource.setId(currentUserID + resourceID);
+        suggestedResource.setResourceID(resourceID);
+        suggestedResource.setUserID(currentUserID);
+        int success = resourceMapper.insertIntoSuggestedResource(suggestedResource);
+        return success == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean undoSuggestResource(String resourceID) {
+        int success = resourceMapper.deleteSuggestedResource(resourceID, userUtil.getCurrentUser().getUserID());
+        return success == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean commentResource(ResourceComment resourceComment) {
+        Integer currentUserID = userUtil.getCurrentUser().getUserID();
+        resourceComment.setUserID(currentUserID);
+        resourceComment.setCommentTime(FormatDateUtil.formatDate(new Date()));
+        int success = resourceMapper.insertIntoResourceComment(resourceComment);
+        return success == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteResourceComment(Integer commentID) {
+        Integer currentUserID = userUtil.getCurrentUser().getUserID();
+        int success = resourceMapper.deleteResourceComment(commentID, currentUserID);
+        return success == 1;
     }
 
     @Override
@@ -248,21 +255,50 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceEntity> getDownloadResources() {
+    public PageInfo<ResourceEntity> getDownloadResources(Integer pageID) {
         UserEntity userEntity = userUtil.getCurrentUser();
-        return resourceMapper.getDownloadResourceList(userEntity.getUserID());
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceEntity> resourceEntities = resourceMapper.getDownloadResourceList(userEntity.getUserID());
+        return new PageInfo<>(resourceEntities);
     }
 
     @Override
-    public List<ResourceEntity> getFavouriteResources() {
+    public PageInfo<ResourceEntity> getFavouriteResources(Integer pageID) {
         UserEntity userEntity = userUtil.getCurrentUser();
-        return resourceMapper.getFavouriteResourceList(userEntity.getUserID());
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceEntity> resourceEntities = resourceMapper.getFavouriteResourceList(userEntity.getUserID());
+       return new PageInfo<>(resourceEntities);
     }
 
     @Override
-    public List<ResourceEntity> getUploadResources() {
+    public PageInfo<ResourceEntity> getUploadResources(Integer pageID) {
         UserEntity userEntity = userUtil.getCurrentUser();
-        return resourceMapper.getUploadResourceList(userEntity.getUserID());
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceEntity> resourceEntities = resourceMapper.getUploadResourceList(userEntity.getUserID());
+        return new PageInfo<>(resourceEntities);
+    }
+
+    @Override
+    public PageInfo<ResourceEntity> getSuggestedResources(Integer pageID) {
+        UserEntity userEntity = userUtil.getCurrentUser();
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceEntity> resourceEntities = resourceMapper.getSuggestedResourceList(userEntity.getUserID());
+        return new PageInfo<>(resourceEntities);
+    }
+
+    @Override
+    public PageInfo<ResourceComment> getResourceComments(Integer pageID, String resourceID) {
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceComment> resourceComments = resourceMapper.getResourceCommentList(resourceID);
+        return new PageInfo<>(resourceComments);
+    }
+
+    @Override
+    public PageInfo<ResourceComment> getCommentResources(Integer pageID) {
+        UserEntity userEntity = userUtil.getCurrentUser();
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceComment> resourceComments = resourceMapper.getMyResourceCommentList(userEntity.getUserID());
+        return new PageInfo<>(resourceComments);
     }
 
     @Override
@@ -278,7 +314,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+    public Page<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
 
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.should(QueryBuilders.matchQuery("resourceName", keyword).fuzziness(Fuzziness.AUTO))
@@ -297,11 +333,7 @@ public class ResourceServiceImpl implements ResourceService {
                 .withQuery(functionScoreQueryBuilder)
                 .withPageable(pageRequest);
         NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.build();
-        Page<ResourceEntity> resourceEntityPage = elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class);
-        List<ResourceEntity> resourceEntities = new ArrayList<>();
-        for(ResourceEntity resourceEntity: resourceEntityPage) {
-            resourceEntities.add(resourceEntity);
-        }
+        Page<ResourceEntity> resourceEntities = elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class);
         return resourceEntities;
     }
 }
