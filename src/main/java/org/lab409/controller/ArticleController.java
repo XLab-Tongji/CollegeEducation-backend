@@ -1,10 +1,7 @@
 package org.lab409.controller;
 
 
-import org.lab409.entity.Article;
-import org.lab409.entity.Favorite;
-import org.lab409.entity.Reply;
-import org.lab409.entity.ResponseMessage;
+import org.lab409.entity.*;
 import org.lab409.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +30,8 @@ public class ArticleController {
     //SectorState 范围较大的标签，暂时没有使用
     @RequestMapping(path = "article/all", method = RequestMethod.GET)
     public ResponseMessage getArticleBySectorAndKeyword(@RequestParam(value = "SectorName",required = false) String[] SectorName,String SectorState,@RequestParam(value = "userID", defaultValue = "0") Integer userID,@RequestParam(value = "SectorId", defaultValue = "0") Integer SectorId, @RequestParam(value = "keywords",required = false)String keywords) {
-        List<Article> articles = articleService.getArticleBySectorAndKeyword(SectorName,SectorState,userID,SectorId,keywords);
-        return new ResponseMessage<>(articles).success();
+        List<ArticleOutput> articlesOutput = articleService.getArticleBySectorAndKeyword(SectorName,SectorState,userID,SectorId,keywords);
+        return new ResponseMessage<>(articlesOutput).success();
     }
 
     //测试获取文章的 api
