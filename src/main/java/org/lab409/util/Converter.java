@@ -11,7 +11,7 @@ import java.util.List;
 public class Converter {
 
     //convert Article to ArticleOutput
-    public static List<ArticleOutput> convertArticleToArticleOutput(List<Article> articles){
+    public static List<ArticleOutput> convertArticleToArticleOutput(List<Article> articles,int sectorNameCount){
         List<ArticleOutput> articlesOutput=new ArrayList<>();
         for(int i=0;i<articles.size();i++){
             if(articles.isEmpty()){
@@ -19,7 +19,7 @@ public class Converter {
             }
             else if(0==i){
                 ArticleOutput articleOutput=new ArticleOutput();
-
+                // copy information to articleOutput
                 articleOutput.setClickingRate(articles.get(i).getClickingRate());
                 articleOutput.setFavorite_count(articles.get(i).getFavorite_count());
                 articleOutput.setFavourite_id(articles.get(i).getFavourite_id());
@@ -45,7 +45,7 @@ public class Converter {
                 }
                 else{
                     ArticleOutput articleOutput=new ArticleOutput();
-
+                    // copy information to articleOutput
                     articleOutput.setClickingRate(articles.get(i).getClickingRate());
                     articleOutput.setFavorite_count(articles.get(i).getFavorite_count());
                     articleOutput.setFavourite_id(articles.get(i).getFavourite_id());
@@ -66,6 +66,14 @@ public class Converter {
                     articlesOutput.add(articleOutput);
                 }
 
+            }
+        }
+        //delete article where the size of sectorName doesn't equal sectorNameCount
+        if(sectorNameCount>1){
+            for(int i=articlesOutput.size()-1;i>=0;i--){
+                if(articlesOutput.get(i).getSectorName().size()!=sectorNameCount){
+                    articlesOutput.remove(i);
+                }
             }
         }
         return articlesOutput;

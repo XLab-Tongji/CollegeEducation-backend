@@ -35,7 +35,12 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleOutput> getArticleBySectorAndKeyword(String[] SectorName, String SectorState, Integer userID, Integer SectorId, String keywords) {
         List<Article> articles=articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, userID,keywords);
         //convert Article to ArticleOutput
-        return Converter.convertArticleToArticleOutput(articles);
+        int sectorNameCount=0;
+        if(SectorName!=null)
+        {
+            sectorNameCount = SectorName.length;
+        }
+        return Converter.convertArticleToArticleOutput(articles,sectorNameCount);
     }
 
     @Override
