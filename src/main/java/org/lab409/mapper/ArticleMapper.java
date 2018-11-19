@@ -3,6 +3,7 @@ package org.lab409.mapper;
 import org.apache.ibatis.annotations.*;
 
 import org.lab409.entity.Article;
+import org.lab409.entity.ArticleOutput;
 import org.lab409.entity.Favorite;
 import org.springframework.stereotype.Repository;
 
@@ -107,10 +108,10 @@ public interface ArticleMapper {
 
     //点赞某篇文章
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount+1 WHERE TopicId=#{TopicId}")
-    int likeTopic(Article article);
+    int likeTopic(ArticleOutput articleOutput);
     //取消点赞
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount-1 WHERE TopicId=#{TopicId}")
-    int deletePraise(Article article);
+    int deletePraise(ArticleOutput articleOutput);
 
     //collect a article
     @Update("UPDATE forum_topic SET favorite_count=favorite_count+1 WHERE TopicId=#{topic_id}")

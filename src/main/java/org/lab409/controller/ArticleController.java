@@ -53,9 +53,9 @@ public class ArticleController {
     //点赞 forum_topic 表中的某条内容
     @Transactional
     @RequestMapping(path="article/like",method = RequestMethod.POST)
-    public ResponseMessage likeTopic(@RequestBody Article article,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
+    public ResponseMessage likeTopic(@RequestBody ArticleOutput articleOutput,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
         // userID 代表点赞人的 ID
-        if(articleService.likeTopic(article,userID)){
+        if(articleService.likeTopic(articleOutput,userID)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"error");
@@ -64,9 +64,9 @@ public class ArticleController {
     //取消点赞
     @Transactional
     @RequestMapping(path = "article/like/delete",method = RequestMethod.POST)
-    public ResponseMessage deletePraise(@RequestBody Article article,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
+    public ResponseMessage deletePraise(@RequestBody ArticleOutput articleOutput,@RequestParam(value = "userID",defaultValue = "0")Integer userID){
         // userID 代表点赞人的 ID
-        if(articleService.deletePraise(article,userID)){
+        if(articleService.deletePraise(articleOutput,userID)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"error");
