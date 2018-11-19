@@ -8,8 +8,8 @@ import org.lab409.entity.ResourceEntity;
 import org.lab409.entity.ResourceMajorEntity;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.web.multipart.MultipartFile;
-import javafx.util.Pair;
 
+import java.util.AbstractMap;
 import java.util.List;
 
 public interface ResourceService {
@@ -27,8 +27,8 @@ public interface ResourceService {
     //for test paging
     int PAGE_SIZE = 3;
 
-    Pair<Boolean, String> uploadResource(MultipartFile resource);
-    Pair<Boolean, GridFsResource> downloadResource(String resourceID);
+    AbstractMap.SimpleEntry<Boolean, String> uploadResource(MultipartFile resource);
+    AbstractMap.SimpleEntry<Boolean, GridFsResource> downloadResource(String resourceID);
     boolean uploadResourceMetaData(ResourceEntity resourceEntity);
     int deleteResource(String resourceID);
     List<ResourceCategoryEntity> getResourceCategories();

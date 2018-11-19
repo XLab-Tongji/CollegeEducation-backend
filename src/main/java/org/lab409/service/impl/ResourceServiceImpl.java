@@ -27,9 +27,9 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import javafx.util.Pair;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,7 +67,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Pair<Boolean, String> uploadResource(MultipartFile resource) {
+    public AbstractMap.SimpleEntry<Boolean, String> uploadResource(MultipartFile resource) {
 
         UserEntity currentUser = userUtil.getCurrentUser();
         InputStream inputStream = null;
@@ -82,9 +82,10 @@ public class ResourceServiceImpl implements ResourceService {
             ResourceEntity resourceEntity = new ResourceEntity(info, currentUser.getUserID());
             resourceEntity.setUploadTime(FormatDateUtil.formatDate(new Date()));
             if(resourceMapper.uploadResource(resourceEntity) == 1 ) {
-                return new Pair<>(true, info);
+                return new AbstractMap.SimpleEntry<>(true, info);
+                //return new Pair<>(true, info);
             }
-            return new Pair<>(false, "");
+            return new AbstractMap.SimpleEntry<>(false, "");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -99,7 +100,7 @@ public class ResourceServiceImpl implements ResourceService {
                 }
             }
         }
-        return new Pair<>(false, "");
+        return new AbstractMap.SimpleEntry<>(false, "");
     }
 
     @Override
@@ -125,16 +126,16 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Pair<Boolean, GridFsResource> downloadResource(String resourceID) {
+    public AbstractMap.SimpleEntry<Boolean, GridFsResource> downloadResource(String resourceID) {
         ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
         UserEntity currentUser = userUtil.getCurrentUser();
         Integer delta = resourceEntity.getPoints();
         if(delta > currentUser.getPoints()) {
-            return new Pair<>(false, null);
+            return new AbstractMap.SimpleEntry<>(false, null);
         }
         GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceID)));
         if (gridFSFile == null) {
-            return new Pair<>(false, null);
+            return new AbstractMap.SimpleEntry<>(false, null);
         }
         Integer uploaderID = resourceEntity.getUploaderID();
         String gridFileName = gridFSFile.getFilename();
@@ -145,7 +146,7 @@ public class ResourceServiceImpl implements ResourceService {
                 int success1 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
                 int success2 = resourceMapper.updateLeftPoints(delta, uploaderID);
                 if(success1 != 1 || success2 != 1) {
-                    return new Pair<>(false, null);
+                    return new AbstractMap.SimpleEntry<>(false, null);
                 }
                 cachedResourceThread.get(RESOURCE_SERVICE.UPDATE_RESOURCE).execute(()->{
                     DownloadResourceEntity downloadResourceEntity = new DownloadResourceEntity();
@@ -154,10 +155,10 @@ public class ResourceServiceImpl implements ResourceService {
                     downloadResourceEntity.setId(currentUser.getUserID() + resourceID);
                     resourceMapper.insertIntoDownloadResource(downloadResourceEntity);
                 });
-                return new Pair<>(true, gridFsResource);
+                return new AbstractMap.SimpleEntry<>(true, gridFsResource);
             }
         }
-        return new Pair<>(false, null);
+        return new AbstractMap.SimpleEntry<>(false, null);
     }
 
     /*

@@ -1,7 +1,6 @@
 package org.lab409.controller;
 
 import com.github.pagehelper.PageInfo;
-import javafx.util.Pair;
 import org.lab409.entity.ResourceComment;
 import org.lab409.entity.ResourceEntity;
 import org.lab409.entity.ResponseMessage;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.AbstractMap;
 
 @RestController
 public class ResourceController {
@@ -25,7 +25,7 @@ public class ResourceController {
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
     public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
 
-        Pair<Boolean, String> success = resourceService.uploadResource(uploadResource);
+        AbstractMap.SimpleEntry<Boolean, String> success = resourceService.uploadResource(uploadResource);
         if (success.getKey()) {
             return new ResponseMessage<>(success.getValue()).success();
         }
@@ -48,7 +48,7 @@ public class ResourceController {
 
     @RequestMapping(path = "/downloadResource/{resourceID}", method = RequestMethod.GET)
     public ResponseEntity downloadResourceController(@PathVariable("resourceID") String resourceID) {
-        Pair<Boolean, GridFsResource> success = resourceService.downloadResource(resourceID);
+        AbstractMap.SimpleEntry<Boolean, GridFsResource> success = resourceService.downloadResource(resourceID);
         if (success.getKey()) {
             GridFsResource gridFsResource = success.getValue();
             try {
