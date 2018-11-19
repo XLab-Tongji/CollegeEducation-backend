@@ -1,19 +1,18 @@
 package org.lab409.entity;
 
-import java.util.Date;
-import java.sql.Timestamp;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
- * Created by jiao on 2018/10/16
+ * Created by jiao on 2018/11/14
  */
 @Data
-public class Article {
+public class ArticleOutput {
     private Integer publish_id=0;       //发布编号，暂时为0
     private Integer publish_type_id=0;  //发布类型编号，0位
 
@@ -36,7 +35,7 @@ public class Article {
     private Integer favorite_count;
 
     private Integer sector_use_id=0;       //暂设默认值为0，该字段暂时没什么用
-    private String SectorName;
+    private List<String> SectorName=new ArrayList<>();
     private String SectorState;
     private Integer praise_id=-1;          //用来表示该文章是否被当前用户点赞，默认值为-1，代表没有被点赞
     private Integer favourite_id=-1;       //用来表示该文章是否被当前用户收藏，默认值为-1，代表没有被收藏
@@ -138,11 +137,11 @@ public class Article {
         this.sector_use_id = sector_use_id;
     }
 
-    public String getSectorName() {
+    public List<String> getSectorName() {
         return SectorName;
     }
 
-    public void setSectorName(String sectorName) {
+    public void setSectorName(List<String> sectorName) {
         SectorName = sectorName;
     }
 

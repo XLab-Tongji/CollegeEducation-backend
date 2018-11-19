@@ -3,6 +3,7 @@ package org.lab409.mapper;
 import org.apache.ibatis.annotations.*;
 
 import org.lab409.entity.Article;
+import org.lab409.entity.Favorite;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public interface ArticleMapper {
                 + "LEFT JOIN forum_favorite e ON (a.TopicId=e.topic_id AND e.user_id=#{userID}) "
                 + "WHERE a.TopicId=b.topic_id "
                 + "<if test='SectorId==0'>"
+                + "<if test='SectorName!=null'>"
                 + "AND ("
                 +   "<foreach collection='SectorName' item='item' index='index' separator=' OR '>"
                 +       "c.SectorName LIKE concat('%',#{item},'%')"
@@ -32,6 +34,7 @@ public interface ArticleMapper {
                 +       "a.TopicTitle LIKE concat('%',#{item},'%')"
                 +   "</foreach>"
                 + ") "
+                + "</if>"
                 + "</if>"
                 + "<if test='SectorId==1'>"
                 + "AND a.TopicTitle LIKE concat('%',#{keywords},'%')"
@@ -108,4 +111,11 @@ public interface ArticleMapper {
     //取消点赞
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount-1 WHERE TopicId=#{TopicId}")
     int deletePraise(Article article);
+
+    //collect a article
+    @Update("UPDATE forum_topic SET favorite_count=favorite_count+1 WHERE TopicId=#{topic_id}")
+    int collectTopic(Favorite favorite);
+    //delete collection
+    @Update("UPDATE forum_topic SET favorite_count=favorite_count-1 WHERE TopicId=#{topic_id}")
+    int deleteCollection(Favorite favorite);
 }

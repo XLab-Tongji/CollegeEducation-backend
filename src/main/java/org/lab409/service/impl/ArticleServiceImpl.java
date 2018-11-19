@@ -1,19 +1,18 @@
 package org.lab409.service.impl;
 
-import org.lab409.entity.Article;
-import org.lab409.entity.Favorite;
-import org.lab409.entity.Praise;
-import org.lab409.entity.Reply;
+import org.lab409.entity.*;
 import org.lab409.mapper.ArticleMapper;
 import org.lab409.mapper.FavoriteMapper;
 import org.lab409.mapper.PraiseMapper;
 import org.lab409.mapper.ReplyMapper;
 import org.lab409.service.ArticleService;
+import org.lab409.util.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.github.binarywang.java.emoji.EmojiConverter;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,8 +32,15 @@ public class ArticleServiceImpl implements ArticleService {
     PraiseMapper praiseMapper;
 
     @Override
-    public List<Article> getArticleBySectorAndKeyword(String[] SectorName,String SectorState,Integer userID,Integer SectorId,String keywords) {
-        return articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, userID,keywords);
+    public List<ArticleOutput> getArticleBySectorAndKeyword(String[] SectorName, String SectorState, Integer userID, Integer SectorId, String keywords) {
+        List<Article> articles=articleMapper.getArticleBySectorAndKeyword(SectorName,SectorState,SectorId, userID,keywords);
+        //convert Article to ArticleOutput
+        int sectorNameCount=0;
+        if(SectorName!=null)
+        {
+            sectorNameCount = SectorName.length;
+        }
+        return Converter.convertArticleToArticleOutput(articles,sectorNameCount);
     }
 
     @Override
@@ -87,10 +93,18 @@ public class ArticleServiceImpl implements ArticleService {
     //收藏文章
     @Override
     public boolean collectTopic(Favorite favorite){
-        if(favoriteMapper.collectTopic(favorite)!=1){
-            return false;
+        if(favoriteMapper.collectTopic(favorite)==1&&articleMapper.collectTopic(favorite)==1){
+            return true;
         }
-        return true;
+        return false;
+    }
+    //delete collection
+    @Override
+    public boolean deleteCollection(Favorite favorite){
+        if(favoriteMapper.deleteCollection(favorite)==1&&articleMapper.deleteCollection(favorite)==1){
+            return true;
+        }
+        return false;
     }
     //评论文章
     @Override
