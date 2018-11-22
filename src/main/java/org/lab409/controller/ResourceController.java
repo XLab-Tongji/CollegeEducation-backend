@@ -81,8 +81,8 @@ public class ResourceController {
 
     @RequestMapping(path = "/resourceCategories", method = RequestMethod.GET)
     public ResponseMessage resourceCategoriesController() {
-        List<ResourceCategoryEntity> resourceCategoryEntites = resourceService.getResourceCategories();
-        return resourceCategoryEntites != null? new ResponseMessage<>(resourceCategoryEntites).success():
+        List<ResourceCategoryEntity> resourceCategoryEntities = resourceService.getResourceCategories();
+        return resourceCategoryEntities != null? new ResponseMessage<>(resourceCategoryEntities).success():
                 new ResponseMessage<>(null).error(202, "can't get category");
     }
 
@@ -112,7 +112,8 @@ public class ResourceController {
                                                        @PathVariable("resourceMajorID") Integer resourceMajorID,
                                                        @PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.relativeRecommend(pageID, categoryID, resourceMajorID);
-        return new ResponseMessage<>(resourceEntities).success();
+        return resourceEntities != null? new ResponseMessage<>(resourceEntities).success():
+                new ResponseMessage<>(null).error(202, "recommend fail");
     }
 
     @RequestMapping(path = "/resource/favourite/like/{resourceID}", method = RequestMethod.POST)
@@ -181,54 +182,63 @@ public class ResourceController {
     @RequestMapping(path = "/resource/myFavourite/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMyFavouriteResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getFavouriteResources(pageID);
-        return new ResponseMessage<>(resourceEntities).success();
+        return resourceEntities != null? new ResponseMessage<>(resourceEntities).success():
+                new ResponseMessage<>(null).error(202, "can't get my favourite resource");
     }
 
     @RequestMapping(path = "/resource/myDownload/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMyDownloadResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getDownloadResources(pageID);
-        return new ResponseMessage<>(resourceEntities).success();
+        return resourceEntities != null ? new ResponseMessage<>(resourceEntities).success():
+                new ResponseMessage<>(null).error(202, "can't get my download resource");
     }
 
     @RequestMapping(path = "/resource/myUpload/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMyUploadResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getUploadResources(pageID);
-        return new ResponseMessage<>(resourceEntities).success();
+        return resourceEntities != null ? new ResponseMessage<>(resourceEntities).success():
+                new ResponseMessage<>(null).error(202, "can't get my upload resource");
     }
 
     @RequestMapping(path = "/resource/comments/{resourceID}/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getResourceCommentsController(@PathVariable("resourceID") String resourceID, @PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceComment> resourceComments = resourceService.getResourceComments(pageID, resourceID);
-        return new ResponseMessage<>(resourceComments).success();
+        return resourceComments != null ? new ResponseMessage<>(resourceComments).success():
+                new ResponseMessage<>(null).error(202, "can't get resource comment");
     }
 
     @RequestMapping(path = "/resource/myComment/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMyCommentedResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceComment> resourceComments = resourceService.getCommentResources(pageID);
-        return new ResponseMessage<>(resourceComments).success();
+        return resourceComments != null ?new ResponseMessage<>(resourceComments).success():
+                new ResponseMessage<>(null).error(202, "can't get my comment");
     }
 
     @RequestMapping(path = "/resource/mySuggest/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMySuggestedResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceComments = resourceService.getSuggestedResources(pageID);
-        return new ResponseMessage<>(resourceComments).success();
+        return resourceComments != null ? new ResponseMessage<>(resourceComments).success():
+                new ResponseMessage<>(null).error(202, "can't get my suggested resource");
     }
 
     @RequestMapping(path = "/resource/user/history/{resourceID}", method = RequestMethod.GET)
     public ResponseMessage getUserHistoryOnResourceController(@PathVariable("resourceID") String resourceID) {
         Map<String, Integer> map = resourceService.getUserHistoryOnResource(resourceID);
-        return new ResponseMessage<>(map).success();
+        return map != null ? new ResponseMessage<>(map).success():
+                new ResponseMessage<>(null).error(202, "can't get my history on this resource");
     }
 
     @RequestMapping(path ="/resource/detail/{resourceID}", method = RequestMethod.GET)
     public ResponseMessage getResourceDetailController(@PathVariable("resourceID") String resourceID) {
         ResourceDetail resourceDetail = resourceService.getResourceDetail(resourceID);
-        return new ResponseMessage<>(resourceDetail).success();
+        return resourceDetail != null ? new ResponseMessage<>(resourceDetail).success():
+                new ResponseMessage<>(null).error(202, "can't resource detail info");
     }
 
     @RequestMapping(path ="/user/detail", method = RequestMethod.GET)
     public ResponseMessage myDetailController() {
         UserDetail userDetail = resourceService.getMyDetail();
-        return new ResponseMessage<>(userDetail).success();
+        return userDetail != null ? new ResponseMessage<>(userDetail).success():
+                new ResponseMessage<>(null).error(202, "can't get my detail info");
     }
 }
