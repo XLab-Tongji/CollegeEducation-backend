@@ -1,5 +1,7 @@
 package org.lab409.mapper;
 
+
+import java.util.Map;
 import org.apache.ibatis.annotations.*;
 import org.lab409.entity.*;
 import org.springframework.stereotype.Repository;
@@ -17,7 +19,8 @@ public interface UserMapper {
             "UNIVERSITYID," +
             "MAJORID, " +
             "STUDENTID, " +
-            "ADMISSIONYEAR) VALUES(" +
+            "ADMISSIONYEAR，" +
+            "ICON) VALUES(" +
             "#{username}," +
             "#{password}," +
             "#{gender},"+
@@ -26,7 +29,8 @@ public interface UserMapper {
             "#{universityID}," +
             "#{majorID}," +
             "#{studentID}," +
-            "#{admissionYear})"
+            "#{admissionYear}," +
+            "#{ICON})"
     )
     @Options(useGeneratedKeys = true, keyProperty = "userID", keyColumn = "ID")
     int insertUser(UserEntity user);
@@ -47,4 +51,8 @@ public interface UserMapper {
             @Result(column = "MAJORID", property = "majorID"),
             @Result(column = "POINTS", property = "points")})
     UserEntity getUserByName(@Param("username") String username);
+
+    @Select("SELECT USERNAME FROM USER WHERE ID = #{userID}")
+    @Results({@Result(column = "USERNAME", property = "username")})
+    UserEntity getUserNameByID(@Param("userID") Integer userID);
 }

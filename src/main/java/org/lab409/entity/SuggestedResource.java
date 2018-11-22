@@ -7,4 +7,6 @@ public class SuggestedResource {
     String id;
     Integer userID;
     String resourceID;
+    String suggestTime;
+    Integer suggested;
 }

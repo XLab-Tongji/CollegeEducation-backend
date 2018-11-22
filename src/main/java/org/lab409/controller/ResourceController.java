@@ -1,9 +1,7 @@
 package org.lab409.controller;
 
 import com.github.pagehelper.PageInfo;
-import org.lab409.entity.ResourceComment;
-import org.lab409.entity.ResourceEntity;
-import org.lab409.entity.ResponseMessage;
+import org.lab409.entity.*;
 import org.lab409.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,31 +23,31 @@ public class ResourceController {
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
     public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
 
-        AbstractMap.SimpleEntry<Boolean, String> success = resourceService.uploadResource(uploadResource);
-        if (success.getKey()) {
+        AbstractMap.SimpleEntry<String, String> success = resourceService.uploadResource(uploadResource);
+        if (success.getKey().equals(resourceService.OK)) {
             return new ResponseMessage<>(success.getValue()).success();
         }
         else {
-            return new ResponseMessage<>(success.getValue()).error(202, "upload fail");
+            return new ResponseMessage<>(success.getValue()).error(202, success.getValue());
         }
     }
 
     @RequestMapping(path = "/uploadResourceMetaData", method = RequestMethod.PUT)
     public ResponseMessage uploadResourceController(@RequestBody ResourceEntity resourceEntity){
 
-        boolean success = resourceService.uploadResourceMetaData(resourceEntity);
-        if (success) {
+        String success = resourceService.uploadResourceMetaData(resourceEntity);
+        if (success.equals(resourceService.OK)) {
             return new ResponseMessage<String>(null).success();
         }
         else {
-            return new ResponseMessage<String>(null).error(202, "upload fail");
+            return new ResponseMessage<String>(null).error(202, success);
         }
     }
 
     @RequestMapping(path = "/downloadResource/{resourceID}", method = RequestMethod.GET)
     public ResponseEntity downloadResourceController(@PathVariable("resourceID") String resourceID) {
-        AbstractMap.SimpleEntry<Boolean, GridFsResource> success = resourceService.downloadResource(resourceID);
-        if (success.getKey()) {
+        AbstractMap.SimpleEntry<String, GridFsResource> success = resourceService.downloadResource(resourceID);
+        if (success.getKey().equals(resourceService.OK)) {
             GridFsResource gridFsResource = success.getValue();
             try {
                 HttpHeaders headers = new HttpHeaders();
@@ -72,16 +70,11 @@ public class ResourceController {
 
     @RequestMapping(path = "/deleteResource/{resourceID}", method = RequestMethod.DELETE)
     public ResponseMessage deleteResourceController(@PathVariable("resourceID") String resourceID) {
-        int success = resourceService.deleteResource(resourceID);
-        if (success == -1) {
-            return new ResponseMessage<>(null).error(202, "file not found");
-        }
-        else if (success == -2) {
-            return new ResponseMessage<>(null).error(401, "unauthorized deletion");
-        }
-        else {
+        String success = resourceService.deleteResource(resourceID);
+        if (success.equals(resourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
+        return new ResponseMessage<>(null ).error(202, success);
     }
 
     @RequestMapping(path = "/resourceCategories", method = RequestMethod.GET)
@@ -108,6 +101,15 @@ public class ResourceController {
         }
     }
 
+    @RequestMapping(path = "/resource/recommend/{categoryID}/{resourceMajorID}/{pageID}", method = RequestMethod.GET)
+    public ResponseMessage recommendResourceController(@PathVariable("categoryID") Integer categoryID,
+                                                       @PathVariable("resourceMajorID") Integer resourceMajorID,
+                                                       @PathVariable("pageID") Integer pageID) {
+        PageInfo<ResourceEntity> resourceEntities = resourceService.relativeRecommend(pageID, categoryID, resourceMajorID);
+        return new ResponseMessage<>(resourceEntities).success();
+    }
+
+
     @RequestMapping(path = "/resource/favourite/like/{resourceID}", method = RequestMethod.POST)
     public ResponseMessage likeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
        if(resourceService.likeResource(resourceID)) {
@@ -126,7 +128,15 @@ public class ResourceController {
 
     @RequestMapping(path = "/resource/suggest/make/{resourceID}", method = RequestMethod.POST)
     public ResponseMessage suggestResourceController(@PathVariable("resourceID") String resourceID) {
-        if(resourceService.suggestResource(resourceID)) {
+        if(resourceService.suggestResource(resourceID, 1)) {
+            return new ResponseMessage<>(null).success();
+        }
+        return new ResponseMessage<>(null).error(202, "unknown error");
+    }
+
+    @RequestMapping(path = "/resource/suggest/dislike/{resourceID}", method = RequestMethod.POST)
+    public ResponseMessage disSuggestResourceController(@PathVariable("resourceID") String resourceID) {
+        if(resourceService.suggestResource(resourceID, 0)) {
             return new ResponseMessage<>(null).success();
         }
         return new ResponseMessage<>(null).error(202, "unknown error");
@@ -142,18 +152,20 @@ public class ResourceController {
 
     @RequestMapping(path = "/resource/comment/make", method = RequestMethod.POST)
     public ResponseMessage commentResourceController(@RequestBody ResourceComment resourceComment) {
-        if(resourceService.commentResource(resourceComment)) {
+        String success = resourceService.commentResource(resourceComment);
+        if(success.equals(ResourceService.OK)) {
             return new ResponseMessage<>(resourceComment).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/comment/delete/{commentID}", method = RequestMethod.DELETE)
     public ResponseMessage deleteResourceCommentController(@PathVariable("commentID") Integer commentID) {
-        if(resourceService.deleteResourceComment(commentID)) {
+        String success = resourceService.deleteResourceComment(commentID);
+        if(success.equals(resourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/myFavourite/{pageID}", method = RequestMethod.GET)
@@ -191,4 +203,17 @@ public class ResourceController {
         PageInfo<ResourceEntity>  resourceComments = resourceService.getSuggestedResources(pageID);
         return new ResponseMessage<>(resourceComments).success();
     }
+
+    @RequestMapping(path ="/resource/detail/{resourceID}", method = RequestMethod.GET)
+    public ResponseMessage getResourceDetailController(@PathVariable("resourceID") String resourceID) {
+        ResourceDetail resourceDetail = resourceService.getResourceDetail(resourceID);
+        return new ResponseMessage<>(resourceDetail).success();
+    }
+
+    @RequestMapping(path ="/user/detail", method = RequestMethod.GET)
+    public ResponseMessage myDetailController() {
+        UserDetail userDetail = resourceService.getMyDetail();
+        return new ResponseMessage<>(userDetail).success();
+    }
+
 }

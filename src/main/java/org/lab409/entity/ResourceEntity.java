@@ -21,6 +21,9 @@ public class ResourceEntity implements Serializable {
     private Integer points = 0;
     private String uploadTime;
 
+    //split by " "
+    private String tags;
+
     public ResourceEntity(String resourceID,
                           Integer uploaderID,
                           Integer categoryID,

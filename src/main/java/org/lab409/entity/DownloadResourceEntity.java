@@ -8,4 +8,5 @@ public class DownloadResourceEntity {
     Integer userID;
     String resourceID;
     Integer downloadTimes;
+    String downloadTime;
 }

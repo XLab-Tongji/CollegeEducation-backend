@@ -17,4 +17,7 @@ public class UserEntity {
     private String studentID;
     private String admissionYear;
     private Integer points = 100;
+
+    //data url base64
+    private String icon;
 }

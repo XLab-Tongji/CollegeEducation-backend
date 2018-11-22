@@ -55,6 +55,9 @@
             },
             "points":{
                 "type":"long"
+            },
+            "tags":{
+                "type":"text"
             }
         }
     }

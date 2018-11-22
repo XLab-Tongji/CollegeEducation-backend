@@ -1,11 +1,8 @@
 package org.lab409.service;
 
+import org.lab409.entity.*;
 import org.springframework.data.domain.Page;
 import com.github.pagehelper.PageInfo;
-import org.lab409.entity.ResourceCategoryEntity;
-import org.lab409.entity.ResourceComment;
-import org.lab409.entity.ResourceEntity;
-import org.lab409.entity.ResourceMajorEntity;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,11 +23,15 @@ public interface ResourceService {
     }
     //for test paging
     int PAGE_SIZE = 3;
+    int MIN_SCORE = 0;
+    int MAX_SCORE = 5;
 
-    AbstractMap.SimpleEntry<Boolean, String> uploadResource(MultipartFile resource);
-    AbstractMap.SimpleEntry<Boolean, GridFsResource> downloadResource(String resourceID);
-    boolean uploadResourceMetaData(ResourceEntity resourceEntity);
-    int deleteResource(String resourceID);
+    String OK = "OK";
+
+    AbstractMap.SimpleEntry<String, String> uploadResource(MultipartFile resource);
+    AbstractMap.SimpleEntry<String, GridFsResource> downloadResource(String resourceID);
+    String uploadResourceMetaData(ResourceEntity resourceEntity);
+    String deleteResource(String resourceID);
     List<ResourceCategoryEntity> getResourceCategories();
     List<ResourceMajorEntity> getResourceMajors();
     void saveResourceDoc(ResourceEntity resourceEntity);
@@ -41,11 +42,15 @@ public interface ResourceService {
     PageInfo<ResourceEntity> getSuggestedResources(Integer pageID);
     PageInfo<ResourceComment> getResourceComments(Integer pageID, String resourceID);
     PageInfo<ResourceComment> getCommentResources(Integer pageID);
+    ResourceDetail getResourceDetail(String resourceID);
+    UserDetail getUserDetail(Integer userID);
+    UserDetail getMyDetail();
     boolean likeResource(String resourceID);
     boolean dislikeResource(String resourceID);
-    boolean suggestResource(String resourceID);
+    boolean suggestResource(String resourceID, int suggested);
     boolean undoSuggestResource(String resourceID);
-    boolean commentResource(ResourceComment resourceComment);
-    boolean deleteResourceComment(Integer commentID);
+    String commentResource(ResourceComment resourceComment);
+    String deleteResourceComment(Integer commentID);
     Page<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    PageInfo<ResourceEntity> relativeRecommend(Integer pageID, Integer categoryID, Integer resourceMajorID);
 }

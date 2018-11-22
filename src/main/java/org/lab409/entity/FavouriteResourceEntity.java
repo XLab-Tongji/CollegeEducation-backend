@@ -7,4 +7,5 @@ public class FavouriteResourceEntity {
     String id;
     Integer userID;
     String resourceID;
+    String favouriteTime;
 }
