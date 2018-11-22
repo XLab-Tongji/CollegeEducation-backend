@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ResourceController {
@@ -79,12 +81,16 @@ public class ResourceController {
 
     @RequestMapping(path = "/resourceCategories", method = RequestMethod.GET)
     public ResponseMessage resourceCategoriesController() {
-        return new ResponseMessage<>(resourceService.getResourceCategories()).success();
+        List<ResourceCategoryEntity> resourceCategoryEntites = resourceService.getResourceCategories();
+        return resourceCategoryEntites != null? new ResponseMessage<>(resourceCategoryEntites).success():
+                new ResponseMessage<>(null).error(202, "can't get category");
     }
 
     @RequestMapping(path = "/resourceMajors", method = RequestMethod.GET)
     public ResponseMessage resourceMajorsController() {
-        return new ResponseMessage<>(resourceService.getResourceMajors()).success();
+        List<ResourceMajorEntity> resourceMajorEntities = resourceService.getResourceMajors();
+        return resourceMajorEntities != null? new ResponseMessage<>(resourceMajorEntities).success():
+                new ResponseMessage<>(null).error(202,"can't get majors");
     }
 
     @RequestMapping(path = "/searchResource/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
@@ -97,11 +103,11 @@ public class ResourceController {
             return new ResponseMessage<>(resourceEntityList).success();
         }
         else {
-            return  new ResponseMessage<>(null).error(202,"file not found");
+            return new ResponseMessage<>(null).error(202,"file not found");
         }
     }
 
-    @RequestMapping(path = "/resource/recommend/{categoryID}/{resourceMajorID}/{pageID}", method = RequestMethod.GET)
+    @RequestMapping(path = "/resource/recommend/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
     public ResponseMessage recommendResourceController(@PathVariable("categoryID") Integer categoryID,
                                                        @PathVariable("resourceMajorID") Integer resourceMajorID,
                                                        @PathVariable("pageID") Integer pageID) {
@@ -109,45 +115,49 @@ public class ResourceController {
         return new ResponseMessage<>(resourceEntities).success();
     }
 
-
     @RequestMapping(path = "/resource/favourite/like/{resourceID}", method = RequestMethod.POST)
     public ResponseMessage likeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
-       if(resourceService.likeResource(resourceID)) {
+        String success = resourceService.likeResource(resourceID);
+       if(success.equals(ResourceService.OK)) {
            return new ResponseMessage<>(null).success();
        }
-       return new ResponseMessage<>(null).error(202, "unknown error");
+       return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/favourite/dislike/{resourceID}", method = RequestMethod.DELETE)
     public ResponseMessage unlikeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
-        if(resourceService.dislikeResource(resourceID)) {
+        String success = resourceService.dislikeResource(resourceID);
+        if(success.equals(ResourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/suggest/make/{resourceID}", method = RequestMethod.POST)
     public ResponseMessage suggestResourceController(@PathVariable("resourceID") String resourceID) {
-        if(resourceService.suggestResource(resourceID, 1)) {
+        String success = resourceService.suggestResource(resourceID, 1);
+        if(success.equals(ResourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/suggest/dislike/{resourceID}", method = RequestMethod.POST)
     public ResponseMessage disSuggestResourceController(@PathVariable("resourceID") String resourceID) {
-        if(resourceService.suggestResource(resourceID, 0)) {
+        String success = resourceService.suggestResource(resourceID, 0);
+        if(success.equals(ResourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/suggest/undo/{resourceID}", method = RequestMethod.DELETE)
     public ResponseMessage undoSuggestsResourceController(@PathVariable("resourceID") String resourceID) {
-        if(resourceService.undoSuggestResource(resourceID)) {
+        String success = resourceService.undoSuggestResource(resourceID);
+        if(success.equals(ResourceService.OK)) {
             return new ResponseMessage<>(null).success();
         }
-        return new ResponseMessage<>(null).error(202, "unknown error");
+        return new ResponseMessage<>(null).error(202, success);
     }
 
     @RequestMapping(path = "/resource/comment/make", method = RequestMethod.POST)
@@ -200,8 +210,14 @@ public class ResourceController {
 
     @RequestMapping(path = "/resource/mySuggest/{pageID}", method = RequestMethod.GET)
     public ResponseMessage getMySuggestedResourceController(@PathVariable("pageID") Integer pageID) {
-        PageInfo<ResourceEntity>  resourceComments = resourceService.getSuggestedResources(pageID);
+        PageInfo<ResourceEntity> resourceComments = resourceService.getSuggestedResources(pageID);
         return new ResponseMessage<>(resourceComments).success();
+    }
+
+    @RequestMapping(path = "/resource/user/history/{resourceID}", method = RequestMethod.GET)
+    public ResponseMessage getUserHistoryOnResourceController(@PathVariable("resourceID") String resourceID) {
+        Map<String, Integer> map = resourceService.getUserHistoryOnResource(resourceID);
+        return new ResponseMessage<>(map).success();
     }
 
     @RequestMapping(path ="/resource/detail/{resourceID}", method = RequestMethod.GET)
@@ -215,5 +231,4 @@ public class ResourceController {
         UserDetail userDetail = resourceService.getMyDetail();
         return new ResponseMessage<>(userDetail).success();
     }
-
 }

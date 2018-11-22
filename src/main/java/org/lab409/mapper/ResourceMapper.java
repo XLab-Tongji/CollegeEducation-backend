@@ -136,9 +136,6 @@ public interface ResourceMapper {
     @Select("SELECT * FROM resourceComment WHERE userID = #{userID} ORDER BY commentTime DESC")
     List<ResourceComment> getMyResourceCommentList(@Param("userID") Integer userID);
 
-
-
-
     @Select("SELECT r.* FROM resource r INNER JOIN resourceComment c ON (r.resourceID = c.resourceID AND c.userID = #{userID} )")
     List<ResourceEntity> getCommentResourceList(@Param("userID") Integer userID);
 
@@ -147,8 +144,8 @@ public interface ResourceMapper {
 
     //暂时这么写
     @Select("SELECT r.* FROM (SELECT * FROM resource WHERE categoryID = #{categoryID} AND resourceMajorID = #{resourceMajorID}) AS r " +
-            "INNER JOIN (SELECT resourceID, AVG(r1.score) as avgScore FROM resourceComment " +
-            "GROUP BY resourceID) AS a ON r.resourceID = a.resourceID ORDER BY a.score DESC")
+            "INNER JOIN (SELECT resourceID, AVG(score) as avgScore FROM resourceComment " +
+            "GROUP BY resourceID ) AS a ON r.resourceID = a.resourceID ORDER BY a.avgScore DESC")
     List<ResourceEntity> getRecommendResourceList(@Param("categoryID") Integer categoryID, @Param("resourceMajorID") Integer resourceMajorID);
 
     /*@Select("SELECT r.* FROM resource r WHERE r.resourceID in ${keywordEntity}" +
@@ -165,9 +162,6 @@ public interface ResourceMapper {
     @Select("SELECT COUNT(*) FROM (SELECT id FROM favouriteResource WHERE resourceID = #{resourceID}) as f")
     Integer getFavouriteNum(@Param("resourceID") String resourceID);
 
-    /*@Select("SELECT r.uploaderID, u.USERNAME " +
-            "FROM (SELECT uploaderID FROM resource WHERE resourceID = #{resourceID}) r " +
-            "INNER JOIN USER u on r.uploaderID = u.ID")*/
     @Select("SELECT r.uploaderID, u.USERNAME " +
             "FROM resource r " +
             "INNER JOIN USER u on (r.uploaderID = u.ID AND r.resourceID = #{resourceID})")
@@ -205,4 +199,11 @@ public interface ResourceMapper {
     @Select("SELECT SUM(suggested)/COUNT(*) FROM (SELECT suggested FROM suggestedResource INNER JOIN " +
             "resource WHERE uploaderID = #{userID}) as s")
     Double getMyResourceSuggestedRate(@Param("userID") Integer userID);
+
+    @Select("SELECT EXISTS (SELECT * FROM favouriteResource WHERE resourceID = #{resourceID} AND userID = #{userID})")
+    Integer isUserFavouriteResource(@Param("resourceID") String resourceID, @Param("userID") Integer userID);
+
+    @Select("SELECT suggested FROM suggestedResource WHERE resourceID = #{resourceID} AND userID = #{userID}")
+    @Results({@Result(column = "suggested", property = "suggested")})
+    SuggestedResource isUserSuggestedResource(@Param("resourceID") String resourceID, @Param("userID") Integer userID);
 }

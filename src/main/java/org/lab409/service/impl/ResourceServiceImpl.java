@@ -30,10 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -203,7 +200,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean likeResource(String resourceID) {
+    public String likeResource(String resourceID) {
         Integer currentUserID = userUtil.getCurrentUser().getUserID();
         FavouriteResourceEntity favouriteResourceEntity = new FavouriteResourceEntity();
         favouriteResourceEntity.setResourceID(resourceID);
@@ -211,19 +208,19 @@ public class ResourceServiceImpl implements ResourceService {
         favouriteResourceEntity.setId(currentUserID + resourceID);
         favouriteResourceEntity.setFavouriteTime(FormatDateUtil.formatDate(new Date()));
         int success = resourceMapper.insertIntoFavouriteResource(favouriteResourceEntity);
-        return success == 1;
+        return success == 1? OK:"add to favourite fail";
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean dislikeResource(String resourceID) {
+    public String dislikeResource(String resourceID) {
         int success = resourceMapper.deleteFavouriteResource(resourceID, userUtil.getCurrentUser().getUserID());
-        return success == 1;
+        return success == 1? OK:"remove from favourite fail";
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean suggestResource(String resourceID, int suggested) {
+    public String suggestResource(String resourceID, int suggested) {
         Integer currentUserID = userUtil.getCurrentUser().getUserID();
         SuggestedResource suggestedResource = new SuggestedResource();
         suggestedResource.setId(currentUserID + resourceID);
@@ -232,14 +229,14 @@ public class ResourceServiceImpl implements ResourceService {
         suggestedResource.setSuggestTime(FormatDateUtil.formatDate(new Date()));
         suggestedResource.setSuggested(suggested);
         int success = resourceMapper.insertIntoSuggestedResourceAndSuggest(suggestedResource);
-        return success > 0;
+        return success > 0? OK:"suggest resource fail";
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean undoSuggestResource(String resourceID) {
+    public String undoSuggestResource(String resourceID) {
         int success = resourceMapper.deleteSuggestedResource(resourceID, userUtil.getCurrentUser().getUserID());
-        return success == 1;
+        return success == 1? OK:"undo suggest resource fail";
     }
 
     @Override
@@ -415,6 +412,34 @@ public class ResourceServiceImpl implements ResourceService {
     public UserDetail getMyDetail() {
         Integer userID = userUtil.getCurrentUser().getUserID();
         return getUserDetail(userID);
+    }
+
+    public Map<String, Integer> getUserHistoryOnResource(String resourceID) {
+        Integer userID = userUtil.getCurrentUser().getUserID();
+        Map<String, Integer> map = new HashMap<>();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        List<Callable<Object>> callableList = new ArrayList<>();
+
+        final AtomicReference<Integer> favourite = new AtomicReference<>();
+        final AtomicReference<Integer> suggested = new AtomicReference<>();
+
+        callableList.add(Executors.callable(()->{
+            favourite.set(resourceMapper.isUserFavouriteResource(resourceID, userID));
+        }));
+        callableList.add(Executors.callable(()->{
+            SuggestedResource suggestedResource = resourceMapper.isUserSuggestedResource(resourceID, userID);
+            suggested.set(suggestedResource == null? 0:suggestedResource.getSuggested());
+        }));
+        try {
+            executorService.invokeAll(callableList);
+            map.put("favourite", favourite.get());
+            map.put("suggested", suggested.get());
+            return map;
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

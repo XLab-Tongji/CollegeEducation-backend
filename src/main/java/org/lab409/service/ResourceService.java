@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import com.github.pagehelper.PageInfo;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Map;
 import java.util.AbstractMap;
 import java.util.List;
 
@@ -45,10 +45,11 @@ public interface ResourceService {
     ResourceDetail getResourceDetail(String resourceID);
     UserDetail getUserDetail(Integer userID);
     UserDetail getMyDetail();
-    boolean likeResource(String resourceID);
-    boolean dislikeResource(String resourceID);
-    boolean suggestResource(String resourceID, int suggested);
-    boolean undoSuggestResource(String resourceID);
+    Map<String,Integer> getUserHistoryOnResource(String resourceID);
+    String likeResource(String resourceID);
+    String dislikeResource(String resourceID);
+    String suggestResource(String resourceID, int suggested);
+    String undoSuggestResource(String resourceID);
     String commentResource(ResourceComment resourceComment);
     String deleteResourceComment(Integer commentID);
     Page<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
