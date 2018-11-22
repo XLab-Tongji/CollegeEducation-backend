@@ -12,8 +12,8 @@ public interface ArticleService {
     List<Article> getArticle();
     List<Reply> getReply(Integer TopicId);  //获取某篇文章的评论
     boolean saveTopic(Article article);     //存文章
-    boolean likeTopic(Article article,Integer userID);     //点赞
-    boolean deletePraise(Article article,Integer userID);  //取消点赞
+    boolean likeTopic(ArticleOutput articleOutput,Integer userID);     //点赞
+    boolean deletePraise(ArticleOutput articleOutput,Integer userID);  //取消点赞
     boolean collectTopic(Favorite favorite);//收藏
     boolean deleteCollection(Favorite favorite);//delete collection
     boolean replyTopic(Reply reply);        //评论

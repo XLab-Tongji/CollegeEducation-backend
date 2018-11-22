@@ -63,28 +63,28 @@ public class ArticleServiceImpl implements ArticleService {
 
     //点赞文章
     @Override
-    public boolean likeTopic(Article article,Integer userID){
+    public boolean likeTopic(ArticleOutput articleOutput,Integer userID){
         if(userID==0){return false;}       //保证 userId 参数存在
         Praise praise=new Praise();
         praise.setType(0);
-        praise.setType_id(article.getTopicId());
+        praise.setType_id(articleOutput.getTopicId());
         praise.setUser_id(userID);
         //若两个操作都完成，则返回 true
-        if(articleMapper.likeTopic(article)==1&&praiseMapper.addPraise(praise)==1){
+        if(articleMapper.likeTopic(articleOutput)==1&&praiseMapper.addPraise(praise)==1){
             return true;
         }
         return false;
     }
     //取消点赞
     @Override
-    public boolean deletePraise(Article article,Integer userID){
+    public boolean deletePraise(ArticleOutput articleOutput,Integer userID){
         if(userID==0){return false;}
         Praise praise=new Praise();
         praise.setType(0);
-        praise.setType_id(article.getTopicId());
+        praise.setType_id(articleOutput.getTopicId());
         praise.setUser_id(userID);
         //若两个操作都完成，则返回 true
-        if(articleMapper.deletePraise(article)==1&&praiseMapper.deletePraise(praise)==1){
+        if(articleMapper.deletePraise(articleOutput)==1&&praiseMapper.deletePraise(praise)==1){
             return true;
         }
         return false;
