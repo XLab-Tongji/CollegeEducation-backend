@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
+import org.apache.tika.Tika;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -14,6 +15,7 @@ import org.lab409.mapper.UserMapper;
 import org.lab409.service.ResourceElasticSearchRepo;
 import org.lab409.service.ResourceService;
 import org.lab409.util.FormatDateUtil;
+import org.lab409.util.MimeTypes;
 import org.lab409.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,8 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -59,6 +63,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     private static ConcurrentHashMap<DOCUMENT_SERVICE,ExecutorService> cachedDocThread;
     private static ConcurrentHashMap<RESOURCE_SERVICE, ExecutorService> cachedResourceThread;
+    private static final Tika tika = new Tika();
 
     static {
         cachedDocThread = new ConcurrentHashMap<>();
@@ -77,9 +82,16 @@ public class ResourceServiceImpl implements ResourceService {
         InputStream inputStream = null;
         try {
             inputStream = resource.getInputStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+            bufferedInputStream.mark(0);
+            String type = tika.detect(bufferedInputStream);
+            bufferedInputStream.reset();
+            if (!MimeTypes.isResourceValid(type)) {
+                return new AbstractMap.SimpleEntry<>("resource type invalid", "");
+            }
             BasicDBObject metaData = new BasicDBObject();
             metaData.put("uploader", currentUser.getUserID());
-            String info = gridFsTemplate.store(inputStream,
+            String info = gridFsTemplate.store(bufferedInputStream,
                     resource.getOriginalFilename(),
                     resource.getContentType(),
                     metaData).toString();
