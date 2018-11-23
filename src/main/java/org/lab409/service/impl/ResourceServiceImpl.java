@@ -157,9 +157,6 @@ public class ResourceServiceImpl implements ResourceService {
         ResourceEntity resourceEntity = resourceMapper.getResourceFromID(resourceID);
         UserEntity currentUser = userUtil.getCurrentUser();
         Integer delta = resourceEntity.getPoints();
-        if(delta > currentUser.getPoints()) {
-            return new AbstractMap.SimpleEntry<>("you don't have enough points", null);
-        }
         GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceID)));
         if (gridFSFile == null) {
             return new AbstractMap.SimpleEntry<>("resource not found", null);
@@ -170,10 +167,15 @@ public class ResourceServiceImpl implements ResourceService {
 
         for(GridFsResource gridFsResource : gridFsResources ) {
             if (gridFsResource.getId().toString().equals(gridFSFile.getId().toString())){
-                int success1 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
-                int success2 = resourceMapper.updateLeftPoints(delta, uploaderID);
-                if(success1 != 1 || success2 != 1) {
-                    return new AbstractMap.SimpleEntry<>("user points error", null);
+                if (resourceMapper.isUserDownloadResource(resourceID, currentUser.getUserID()) == 0) {
+                    if(delta > currentUser.getPoints()) {
+                        return new AbstractMap.SimpleEntry<>("you don't have enough points", null);
+                    }
+                    int success1 = resourceMapper.updateLeftPoints(-delta, currentUser.getUserID());
+                    int success2 = resourceMapper.updateLeftPoints(delta, uploaderID);
+                    if(success1 != 1 || success2 != 1) {
+                        return new AbstractMap.SimpleEntry<>("user points error", null);
+                    }
                 }
                 cachedResourceThread.get(RESOURCE_SERVICE.UPDATE_RESOURCE).execute(()->{
                     DownloadResourceEntity downloadResourceEntity = new DownloadResourceEntity();

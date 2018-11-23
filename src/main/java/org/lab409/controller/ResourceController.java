@@ -66,7 +66,7 @@ public class ResourceController {
             }
         }
         else {
-            return new ResponseEntity((HttpStatus.NOT_FOUND));
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success.getKey()));
         }
     }
 

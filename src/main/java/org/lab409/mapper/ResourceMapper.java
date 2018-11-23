@@ -79,6 +79,9 @@ public interface ResourceMapper {
             "ON DUPlICATE KEY UPDATE downloadTimes = downloadTimes + 1")
     int insertIntoDownloadResource(DownloadResourceEntity downloadResourceEntity);
 
+    @Select("SELECT EXISTS (SELECT * FROM downloadResource WHERE resourceID = #{resourceID} AND userID = #{userID})")
+    int isUserDownloadResource(@Param("resourceID") String resourceID, @Param("userID") Integer userID);
+
     @Insert("INSERT IGNORE INTO suggestedResource(" +
             "id, " +
             "userID," +
