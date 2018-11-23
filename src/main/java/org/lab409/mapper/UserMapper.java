@@ -18,8 +18,8 @@ public interface UserMapper {
             "EMAIL," +
             "UNIVERSITYID," +
             "MAJORID, " +
-            "STUDENTID, " +
-            "ADMISSIONYEAR，" +
+            "STUDENTID," +
+            "ADMISSIONYEAR," +
             "ICON) VALUES(" +
             "#{username}," +
             "#{password}," +
@@ -30,10 +30,23 @@ public interface UserMapper {
             "#{majorID}," +
             "#{studentID}," +
             "#{admissionYear}," +
-            "#{ICON})"
+            "#{icon})"
     )
     @Options(useGeneratedKeys = true, keyProperty = "userID", keyColumn = "ID")
     int insertUser(UserEntity user);
+
+    @Update("UPDATE USER SET " +
+            "USERNAME = #{username}, " +
+            "EMAIL = #{email}, " +
+            "ADMISSIONYEAR = # " +
+            "{admissionYear}," +
+            "UNIVERSITYID = #{universityID}," +
+            " MAJORID = #{majorID}, " +
+            "BIRTHDAY = #{birthday}," +
+            "GENDER = #{gender}," +
+            "STUDENTID = #{studentID}, " +
+            "ICON = #{icon} WHERE ID = #{userID}")
+    int updateUserInfo(UserEntity user);
 
     @Insert("INSERT INTO USER_AUTHORITY(USER_ID,AUTHORITY_ID) VALUES(#{userID},#{auth})")
     int insertUserAuth(@Param("userID") int userID, @Param("auth") int auth);
@@ -51,6 +64,13 @@ public interface UserMapper {
             @Result(column = "MAJORID", property = "majorID"),
             @Result(column = "POINTS", property = "points")})
     UserEntity getUserByName(@Param("username") String username);
+
+    @Select("SELECT PASSWORD FROM USER WHERE USERNAME = #{username}")
+    @Results({@Result(column = "PASSWORD", property = "password")})
+    UserEntity getCurrentPassword(@Param("username") String username);
+
+    @Update("UPDATE USER SET PASSWORD = #{password} WHERE USERNAME = #{username}")
+    int setPassword(@Param("password") String password, @Param("username") String username);
 
     @Select("SELECT USERNAME FROM USER WHERE ID = #{userID}")
     @Results({@Result(column = "USERNAME", property = "username")})

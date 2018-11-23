@@ -1,5 +1,6 @@
 package org.lab409.service;
 
+import org.apache.tika.Tika;
 import org.lab409.entity.*;
 import org.springframework.data.domain.Page;
 import com.github.pagehelper.PageInfo;
@@ -27,6 +28,8 @@ public interface ResourceService {
     int MAX_SCORE = 5;
 
     String OK = "OK";
+
+    Tika tika = new Tika();
 
     AbstractMap.SimpleEntry<String, String> uploadResource(MultipartFile resource);
     AbstractMap.SimpleEntry<String, GridFsResource> downloadResource(String resourceID);

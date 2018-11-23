@@ -63,7 +63,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     private static ConcurrentHashMap<DOCUMENT_SERVICE,ExecutorService> cachedDocThread;
     private static ConcurrentHashMap<RESOURCE_SERVICE, ExecutorService> cachedResourceThread;
-    private static final Tika tika = new Tika();
+    //public static final Tika tika = new Tika();
 
     static {
         cachedDocThread = new ConcurrentHashMap<>();
