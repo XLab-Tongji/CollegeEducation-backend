@@ -19,8 +19,8 @@ public interface UserMapper {
             "UNIVERSITYID," +
             "MAJORID, " +
             "STUDENTID," +
-            "ADMISSIONYEAR," +
-            "ICON) VALUES(" +
+            "ADMISSIONYEAR)" +
+            " VALUES(" +
             "#{username}," +
             "#{password}," +
             "#{gender},"+
@@ -29,8 +29,7 @@ public interface UserMapper {
             "#{universityID}," +
             "#{majorID}," +
             "#{studentID}," +
-            "#{admissionYear}," +
-            "#{icon})"
+            "#{admissionYear})"
     )
     @Options(useGeneratedKeys = true, keyProperty = "userID", keyColumn = "ID")
     int insertUser(UserEntity user);
@@ -38,20 +37,20 @@ public interface UserMapper {
     @Update("UPDATE USER SET " +
             "USERNAME = #{username}, " +
             "EMAIL = #{email}, " +
-            "ADMISSIONYEAR = # " +
-            "{admissionYear}," +
+            "ADMISSIONYEAR = #{admissionYear}," +
             "UNIVERSITYID = #{universityID}," +
-            " MAJORID = #{majorID}, " +
+            "MAJORID = #{majorID}, " +
             "BIRTHDAY = #{birthday}," +
             "GENDER = #{gender}," +
-            "STUDENTID = #{studentID}, " +
-            "ICON = #{icon} WHERE ID = #{userID}")
+            "STUDENTID = #{studentID} " +
+            "WHERE ID = #{userID}")
     int updateUserInfo(UserEntity user);
 
     @Insert("INSERT INTO USER_AUTHORITY(USER_ID,AUTHORITY_ID) VALUES(#{userID},#{auth})")
     int insertUserAuth(@Param("userID") int userID, @Param("auth") int auth);
 
-    @Select("SELECT ID, USERNAME, EMAIL, ADMISSIONYEAR, STUDENTID, GENDER, BIRTHDAY, UNIVERSITYID, MAJORID, POINTS " +
+    @Select("SELECT ID, USERNAME, EMAIL, ADMISSIONYEAR, STUDENTID, " +
+            "GENDER, BIRTHDAY, UNIVERSITYID, MAJORID, POINTS " +
             "FROM USER WHERE USERNAME = #{username}")
     @Results({@Result(column = "ID", property = "userID"),
             @Result(column = "USERNAME", property = "username"),
@@ -60,7 +59,7 @@ public interface UserMapper {
             @Result(column = "STUDENTID", property = "studentID"),
             @Result(column = "GENDER", property = "gender"),
             @Result(column = "BIRTHDAY", property = "birthday"),
-            @Result(column = "universityID", property = "universityID"),
+            @Result(column = "UNIVERSITYID", property = "universityID"),
             @Result(column = "MAJORID", property = "majorID"),
             @Result(column = "POINTS", property = "points")})
     UserEntity getUserByName(@Param("username") String username);
@@ -76,10 +75,16 @@ public interface UserMapper {
     @Results({@Result(column = "USERNAME", property = "username")})
     UserEntity getUserNameByID(@Param("userID") Integer userID);
 
-    @Update("UPDATE USER SET ICON = #{icon} WHERE ID = #{userID}")
+    @Insert("INSERT INTO userICON (" +
+            "userID," +
+            "icon)" +
+            "VALUES(" +
+            "#{userID}," +
+            "#{icon})" +
+            "ON DUPLICATE KEY UPDATE icon = #{icon}")
     int uploadIcon(@Param("icon") String icon, @Param("userID") Integer userID);
 
-    @Select("SELECT ICON FROM USER WHERE ID = #{userID}")
+    @Select("SELECT icon FROM userICON WHERE userID = #{userID}")
     @Results({@Result(column = "ICON", property = "icon")})
     UserEntity getIcon(@Param("userID") Integer userID);
 }
