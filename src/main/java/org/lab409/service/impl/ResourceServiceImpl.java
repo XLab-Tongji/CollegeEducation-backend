@@ -2,6 +2,7 @@ package org.lab409.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.apache.tika.Tika;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.swing.event.ListSelectionListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -468,9 +471,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceElasticSearchRepo.deleteAll(resourceElasticSearchRepo.search(builder));
     }
 
-    @Override
-    public Page<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-
+    private NativeSearchQuery keywordSearch(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.should(QueryBuilders.matchQuery("resourceName", keyword).fuzziness(Fuzziness.AUTO))
                 .should(QueryBuilders.matchQuery("description", keyword).fuzziness(Fuzziness.AUTO))
@@ -489,8 +490,44 @@ public class ResourceServiceImpl implements ResourceService {
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
                 .withQuery(functionScoreQueryBuilder)
                 .withPageable(pageRequest);
-        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.build();
+        return nativeSearchQueryBuilder.build();
+    }
+
+    private List<ResourceEntity> keywordSearchList(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        NativeSearchQuery nativeSearchQuery = keywordSearch(keyword, categoryID, resourceMajorID, pageID);
+        return elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class).getContent();
+    }
+
+    @Override
+    public Page<ResourceEntity> keywordSearchAll(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        NativeSearchQuery nativeSearchQuery = keywordSearch(keyword, categoryID, resourceMajorID, pageID);
         return elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class);
+    }
+
+    @Override
+    public List<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
+        if (ans == null) {
+            return null;
+        }
+        ArrayList<ResourceEntity> entities = new ArrayList<>(ans);
+        entities.sort((ResourceEntity entityA, ResourceEntity entityB)->entityB.getUploadTime().compareTo(entityA.getUploadTime()));
+        return entities;
+    }
+
+    @Override
+    public List<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
+        if (ans == null) {
+            return null;
+        }
+        List<String> idList = new ArrayList<>();
+        for(ResourceEntity resourceEntity: ans) {
+            idList.add("\""+resourceEntity.getResourceID()+"\"");
+        }
+        String beforeStrip = idList.toString();
+        String searchList = idList.toString().substring(1, beforeStrip.length()-1);
+        return resourceMapper.getKeyWordResourceOrderByScore(searchList);
     }
 
     @Override

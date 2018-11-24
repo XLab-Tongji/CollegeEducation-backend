@@ -151,13 +151,10 @@ public interface ResourceMapper {
             "GROUP BY resourceID ) AS a ON r.resourceID = a.resourceID ORDER BY a.avgScore DESC")
     List<ResourceEntity> getRecommendResourceList(@Param("categoryID") Integer categoryID, @Param("resourceMajorID") Integer resourceMajorID);
 
-    /*@Select("SELECT r.* FROM resource r WHERE r.resourceID in ${keywordEntity}" +
-            "INNER JOIN (SELECT resourceID, AVG(r1.score) as avgScore FROM resourceComment" +
-            "GROUP BY resourceID) AS a ON r.resourceID = a.resourceID ORDER BY a.score DESC")
-    List<ResourceEntity> getKeyWordResourceOrderByTime(@Param("keywordEntity") ResourceEntity resourceEntity);
-
-    @Select()
-    List<ResourceEntity> getKeyWordResourceOrderByScore(@Param("keywordEntity") ResourceEntity resourceEntity);*/
+    @Select("SELECT r.* FROM resource r " +
+            "INNER JOIN (SELECT resourceID, AVG(score) as avgScore FROM resourceComment " +
+            "GROUP BY resourceID HAVING resourceID in (${resourceList})) AS a ON r.resourceID = a.resourceID ORDER BY a.avgScore DESC")
+    List<ResourceEntity> getKeyWordResourceOrderByScore(@Param("resourceList") String resourceList);
 
     @Select("SELECT COUNT(*) FROM (SELECT id FROM downloadResource WHERE resourceID = #{resourceID}) as d")
     Integer getDownloadTimes(@Param("resourceID") String resourceID);
