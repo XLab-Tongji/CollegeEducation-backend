@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/userLogout", method = RequestMethod.POST)
-    public ResponseEntity userLogOutController(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    public ResponseEntity userLogOutController() {
         //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         //new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         userService.userLogOut();
