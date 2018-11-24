@@ -75,4 +75,11 @@ public interface UserMapper {
     @Select("SELECT USERNAME FROM USER WHERE ID = #{userID}")
     @Results({@Result(column = "USERNAME", property = "username")})
     UserEntity getUserNameByID(@Param("userID") Integer userID);
+
+    @Update("UPDATE USER SET ICON = #{icon} WHERE ID = #{userID}")
+    int uploadIcon(@Param("icon") String icon, @Param("userID") Integer userID);
+
+    @Select("SELECT ICON FROM USER WHERE ID = #{userID}")
+    @Results({@Result(column = "ICON", property = "icon")})
+    UserEntity getIcon(@Param("userID") Integer userID);
 }

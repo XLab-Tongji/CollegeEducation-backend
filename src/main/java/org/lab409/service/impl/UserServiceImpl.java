@@ -9,6 +9,7 @@ import org.lab409.service.UserService;
 import org.lab409.util.MimeTypes;
 import org.lab409.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Base64;
 
@@ -38,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String insertUser(UserEntity user) {
-        /*byte[] bytes = Base64.getDecoder().decode(user.getIcon());
+        /*byte[] bytes = Base64.getUrlDecoder().decode(user.getIcon());
         String type = ResourceService.tika.detect(bytes);
         if (!MimeTypes.isIconValid(type)) {
             return "icon type wrong";
@@ -58,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String updateUserInfo(UserEntity user) {
-        /*byte[] bytes = Base64.getDecoder().decode(user.getIcon());
+        /*byte[] bytes = Base64.getUrlDecoder().decode(user.getIcon());
         String type = ResourceService.tika.detect(bytes);
         if (!MimeTypes.isIconValid(type)) {
             return "icon type wrong";
@@ -83,5 +90,32 @@ public class UserServiceImpl implements UserService {
         UserDetails userDetails = userUtil.getUserHelperInfo();
         //new SecurityContextLogoutHandler().l
         jwtTokenUtil.generateToken(userDetails);
+    }
+
+    @Override
+    public String uploadIcon(MultipartFile icon) {
+        try {
+            byte[] iconBytes = icon.getBytes();
+            String type = ResourceService.tika.detect(iconBytes);
+            if (!MimeTypes.isIconValid(type)) {
+                return "icon type wrong";
+            }
+            String dataURL = Base64.getUrlEncoder().encodeToString(iconBytes);
+            return userMapper.uploadIcon(dataURL, userUtil.getCurrentUser().getUserID()) == 1?
+            ResourceService.OK:"upload icon fail";
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "upload icon fail";
+    }
+
+    @Override
+    public byte[] getIcon() {
+        String dataURL = userMapper.getIcon(userUtil.getCurrentUser().getUserID()).getIcon();
+        if(dataURL == null) {
+            return null;
+        }
+        return Base64.getUrlDecoder().decode(dataURL);
     }
 }
