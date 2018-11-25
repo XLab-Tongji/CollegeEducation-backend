@@ -23,33 +23,33 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
-    public ResponseMessage uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
+    public ResponseEntity uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
 
         AbstractMap.SimpleEntry<String, String> success = resourceService.uploadResource(uploadResource);
-        if (success.getKey().equals(resourceService.OK)) {
-            return new ResponseMessage<>(success.getValue()).success();
+        if (success.getKey().equals(ResourceService.OK)) {
+            return ResponseEntity.ok(new ResponseMessage<>(success.getValue()).success());
         }
         else {
-            return new ResponseMessage<>(success.getValue()).error(202, success.getKey());
+            return ResponseEntity.status(202).body(new ResponseMessage<>(success.getValue()).error(202, success.getKey()));
         }
     }
 
     @RequestMapping(path = "/uploadResourceMetaData", method = RequestMethod.PUT)
-    public ResponseMessage uploadResourceController(@RequestBody ResourceEntity resourceEntity){
+    public ResponseEntity uploadResourceController(@RequestBody ResourceEntity resourceEntity){
 
         String success = resourceService.uploadResourceMetaData(resourceEntity);
-        if (success.equals(resourceService.OK)) {
-            return new ResponseMessage<String>(null).success();
+        if (success.equals(ResourceService.OK)) {
+            return ResponseEntity.ok(new ResponseMessage<String>(null).success());
         }
         else {
-            return new ResponseMessage<String>(null).error(202, success);
+            return ResponseEntity.status(202).body(new ResponseMessage<String>(null).error(202, success));
         }
     }
 
     @RequestMapping(path = "/downloadResource/{resourceID}", method = RequestMethod.GET)
     public ResponseEntity downloadResourceController(@PathVariable("resourceID") String resourceID) {
         AbstractMap.SimpleEntry<String, GridFsResource> success = resourceService.downloadResource(resourceID);
-        if (success.getKey().equals(resourceService.OK)) {
+        if (success.getKey().equals(ResourceService.OK)) {
             GridFsResource gridFsResource = success.getValue();
             try {
                 HttpHeaders headers = new HttpHeaders();
@@ -71,174 +71,214 @@ public class ResourceController {
     }
 
     @RequestMapping(path = "/deleteResource/{resourceID}", method = RequestMethod.DELETE)
-    public ResponseMessage deleteResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity deleteResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.deleteResource(resourceID);
-        if (success.equals(resourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+        if (success.equals(ResourceService.OK)) {
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null ).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null ).error(202, success));
     }
 
     @RequestMapping(path = "/resourceCategories", method = RequestMethod.GET)
-    public ResponseMessage resourceCategoriesController() {
+    public ResponseEntity resourceCategoriesController() {
         List<ResourceCategoryEntity> resourceCategoryEntities = resourceService.getResourceCategories();
-        return resourceCategoryEntities != null? new ResponseMessage<>(resourceCategoryEntities).success():
-                new ResponseMessage<>(null).error(202, "can't get category");
+        return resourceCategoryEntities != null?
+                ResponseEntity.ok(new ResponseMessage<>(resourceCategoryEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get category"));
     }
 
     @RequestMapping(path = "/resourceMajors", method = RequestMethod.GET)
-    public ResponseMessage resourceMajorsController() {
+    public ResponseEntity resourceMajorsController() {
         List<ResourceMajorEntity> resourceMajorEntities = resourceService.getResourceMajors();
-        return resourceMajorEntities != null? new ResponseMessage<>(resourceMajorEntities).success():
-                new ResponseMessage<>(null).error(202,"can't get majors");
+        return resourceMajorEntities != null?
+                ResponseEntity.ok(new ResponseMessage<>(resourceMajorEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"can't get majors"));
     }
 
     @RequestMapping(path = "/searchResource/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage keywordResourceController(@PathVariable("resourceMajorID") Integer resourceMajorID,
+    public ResponseEntity keywordSearchAllController(@PathVariable("resourceMajorID") Integer resourceMajorID,
+                                                        @PathVariable("categoryID") Integer categoryID,
+                                                        @RequestParam("keyword") String keyword,
+                                                        @PathVariable("pageID") Integer pageID) {
+        Page<ResourceEntity> resourceEntityList = resourceService.keywordSearchAll(keyword, categoryID, resourceMajorID, pageID);
+        if(resourceEntityList != null) {
+            return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
+        }
+        else {
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
+        }
+    }
+
+    @RequestMapping(path = "/searchResource/time/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
+    public ResponseEntity keywordSearchOnTimeController(@PathVariable("resourceMajorID") Integer resourceMajorID,
                                                      @PathVariable("categoryID") Integer categoryID,
                                                      @RequestParam("keyword") String keyword,
                                                      @PathVariable("pageID") Integer pageID) {
-        Page<ResourceEntity> resourceEntityList = resourceService.keywordSearchPage(keyword, categoryID, resourceMajorID, pageID);
+        List<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnTime(keyword, categoryID, resourceMajorID, pageID);
         if(resourceEntityList != null) {
-            return new ResponseMessage<>(resourceEntityList).success();
+            return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }
         else {
-            return new ResponseMessage<>(null).error(202,"file not found");
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
+        }
+    }
+
+    @RequestMapping(path = "/searchResource/score/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
+    public ResponseEntity keywordSearchOnScoreController(@PathVariable("resourceMajorID") Integer resourceMajorID,
+                                                    @PathVariable("categoryID") Integer categoryID,
+                                                    @RequestParam("keyword") String keyword,
+                                                    @PathVariable("pageID") Integer pageID) {
+        List<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnScore(keyword, categoryID, resourceMajorID, pageID);
+        if(resourceEntityList != null) {
+            return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
+        }
+        else {
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
         }
     }
 
     @RequestMapping(path = "/resource/recommend/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage recommendResourceController(@PathVariable("categoryID") Integer categoryID,
+    public ResponseEntity recommendResourceController(@PathVariable("categoryID") Integer categoryID,
                                                        @PathVariable("resourceMajorID") Integer resourceMajorID,
                                                        @PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.relativeRecommend(pageID, categoryID, resourceMajorID);
-        return resourceEntities != null? new ResponseMessage<>(resourceEntities).success():
-                new ResponseMessage<>(null).error(202, "recommend fail");
+        return resourceEntities != null?
+                ResponseEntity.ok(new ResponseMessage<>(resourceEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "recommend fail"));
     }
 
     @RequestMapping(path = "/resource/favourite/like/{resourceID}", method = RequestMethod.POST)
-    public ResponseMessage likeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity likeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.likeResource(resourceID);
        if(success.equals(ResourceService.OK)) {
-           return new ResponseMessage<>(null).success();
+           return ResponseEntity.ok(new ResponseMessage<>(null).success());
        }
-       return new ResponseMessage<>(null).error(202, success);
+       return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/favourite/dislike/{resourceID}", method = RequestMethod.DELETE)
-    public ResponseMessage unlikeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity unlikeFavouriteResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.dislikeResource(resourceID);
         if(success.equals(ResourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/suggest/make/{resourceID}", method = RequestMethod.POST)
-    public ResponseMessage suggestResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity suggestResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.suggestResource(resourceID, 1);
         if(success.equals(ResourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/suggest/dislike/{resourceID}", method = RequestMethod.POST)
-    public ResponseMessage disSuggestResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity disSuggestResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.suggestResource(resourceID, 0);
         if(success.equals(ResourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/suggest/undo/{resourceID}", method = RequestMethod.DELETE)
-    public ResponseMessage undoSuggestsResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity undoSuggestsResourceController(@PathVariable("resourceID") String resourceID) {
         String success = resourceService.undoSuggestResource(resourceID);
         if(success.equals(ResourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/comment/make", method = RequestMethod.POST)
-    public ResponseMessage commentResourceController(@RequestBody ResourceComment resourceComment) {
+    public ResponseEntity commentResourceController(@RequestBody ResourceComment resourceComment) {
         String success = resourceService.commentResource(resourceComment);
         if(success.equals(ResourceService.OK)) {
-            return new ResponseMessage<>(resourceComment).success();
+            return ResponseEntity.ok(new ResponseMessage<>(resourceComment).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/comment/delete/{commentID}", method = RequestMethod.DELETE)
-    public ResponseMessage deleteResourceCommentController(@PathVariable("commentID") Integer commentID) {
+    public ResponseEntity deleteResourceCommentController(@PathVariable("commentID") Integer commentID) {
         String success = resourceService.deleteResourceComment(commentID);
-        if(success.equals(resourceService.OK)) {
-            return new ResponseMessage<>(null).success();
+        if(success.equals(ResourceService.OK)) {
+            return ResponseEntity.ok(new ResponseMessage<>(null).success());
         }
-        return new ResponseMessage<>(null).error(202, success);
+        return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
     @RequestMapping(path = "/resource/myFavourite/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getMyFavouriteResourceController(@PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getMyFavouriteResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getFavouriteResources(pageID);
-        return resourceEntities != null? new ResponseMessage<>(resourceEntities).success():
-                new ResponseMessage<>(null).error(202, "can't get my favourite resource");
+        return resourceEntities != null?
+                ResponseEntity.ok(new ResponseMessage<>(resourceEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my favourite resource"));
     }
 
     @RequestMapping(path = "/resource/myDownload/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getMyDownloadResourceController(@PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getMyDownloadResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getDownloadResources(pageID);
-        return resourceEntities != null ? new ResponseMessage<>(resourceEntities).success():
-                new ResponseMessage<>(null).error(202, "can't get my download resource");
+        return resourceEntities != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my download resource"));
     }
 
     @RequestMapping(path = "/resource/myUpload/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getMyUploadResourceController(@PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getMyUploadResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceEntities = resourceService.getUploadResources(pageID);
-        return resourceEntities != null ? new ResponseMessage<>(resourceEntities).success():
-                new ResponseMessage<>(null).error(202, "can't get my upload resource");
+        return resourceEntities != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceEntities).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my upload resource"));
     }
 
     @RequestMapping(path = "/resource/comments/{resourceID}/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getResourceCommentsController(@PathVariable("resourceID") String resourceID, @PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getResourceCommentsController(@PathVariable("resourceID") String resourceID, @PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceComment> resourceComments = resourceService.getResourceComments(pageID, resourceID);
-        return resourceComments != null ? new ResponseMessage<>(resourceComments).success():
-                new ResponseMessage<>(null).error(202, "can't get resource comment");
+        return resourceComments != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceComments).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get resource comment"));
     }
 
     @RequestMapping(path = "/resource/myComment/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getMyCommentedResourceController(@PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getMyCommentedResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceComment> resourceComments = resourceService.getCommentResources(pageID);
-        return resourceComments != null ?new ResponseMessage<>(resourceComments).success():
-                new ResponseMessage<>(null).error(202, "can't get my comment");
+        return resourceComments != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceComments).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my comment"));
     }
 
     @RequestMapping(path = "/resource/mySuggest/{pageID}", method = RequestMethod.GET)
-    public ResponseMessage getMySuggestedResourceController(@PathVariable("pageID") Integer pageID) {
+    public ResponseEntity getMySuggestedResourceController(@PathVariable("pageID") Integer pageID) {
         PageInfo<ResourceEntity> resourceComments = resourceService.getSuggestedResources(pageID);
-        return resourceComments != null ? new ResponseMessage<>(resourceComments).success():
-                new ResponseMessage<>(null).error(202, "can't get my suggested resource");
+        return resourceComments != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceComments).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my suggested resource"));
     }
 
     @RequestMapping(path = "/resource/user/history/{resourceID}", method = RequestMethod.GET)
-    public ResponseMessage getUserHistoryOnResourceController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity getUserHistoryOnResourceController(@PathVariable("resourceID") String resourceID) {
         Map<String, Integer> map = resourceService.getUserHistoryOnResource(resourceID);
-        return map != null ? new ResponseMessage<>(map).success():
-                new ResponseMessage<>(null).error(202, "can't get my history on this resource");
+        return map != null ?
+                ResponseEntity.ok(new ResponseMessage<>(map).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my history on this resource"));
     }
 
     @RequestMapping(path ="/resource/detail/{resourceID}", method = RequestMethod.GET)
-    public ResponseMessage getResourceDetailController(@PathVariable("resourceID") String resourceID) {
+    public ResponseEntity getResourceDetailController(@PathVariable("resourceID") String resourceID) {
         ResourceDetail resourceDetail = resourceService.getResourceDetail(resourceID);
-        return resourceDetail != null ? new ResponseMessage<>(resourceDetail).success():
-                new ResponseMessage<>(null).error(202, "can't resource detail info");
+        return resourceDetail != null ?
+                ResponseEntity.ok(new ResponseMessage<>(resourceDetail).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't resource detail info"));
     }
 
     @RequestMapping(path ="/user/detail", method = RequestMethod.GET)
-    public ResponseMessage myDetailController() {
+    public ResponseEntity myDetailController() {
         UserDetail userDetail = resourceService.getMyDetail();
-        return userDetail != null ? new ResponseMessage<>(userDetail).success():
-                new ResponseMessage<>(null).error(202, "can't get my detail info");
+        return userDetail != null ?
+                ResponseEntity.ok(new ResponseMessage<>(userDetail).success()):
+                ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my detail info"));
     }
 }

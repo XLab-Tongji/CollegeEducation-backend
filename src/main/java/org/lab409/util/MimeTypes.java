@@ -72,7 +72,9 @@ public class MimeTypes {
     public static final String MIME_IMAGE_GIF         = "image/gif";
     public static final String MIME_IMAGE_IEF         = "image/ief";
     public static final String MIME_IMAGE_JPEG          = "image/jpeg";
+    public static final String MIME_IMAGE_JPG          = "image/jpg";
     public static final String MIME_IMAGE_TIFF          = "image/tiff";
+    public static final String MIME_IMAGE_TIF          = "image/tif";
     public static final String MIME_IMAGE_PNG         = "image/png";
     public static final String MIME_IMAGE_SVG_XML       = "image/svg+xml";
     public static final String MIME_IMAGE_VND_DJVU        = "image/vnd.djvu";
@@ -119,6 +121,10 @@ public class MimeTypes {
 
     private static final HashMap<String, String> mimeTypeMapping;
     private static final HashMap<String,String> validResourceMapping;
+    private static final HashMap<String, String> validIconMapping;
+
+    public static final Collection<String> valiedResourceTypes;
+    private static final Collection<String> validIconTypes;
 
     static {
         mimeTypeMapping = new HashMap<String, String>(200) {
@@ -275,10 +281,9 @@ public class MimeTypes {
                 put1("tar", MIME_APPLICATION_X_TAR);
                 put1("gif", MIME_IMAGE_GIF);
                 put1("jpeg", MIME_IMAGE_JPEG);
-                put1("jpg", MIME_IMAGE_JPEG);
-                put1("jpe", MIME_IMAGE_JPEG);
+                put1("jpg", MIME_IMAGE_JPG);
                 put1("tiff", MIME_IMAGE_TIFF);
-                put1("tif", MIME_IMAGE_TIFF);
+                put1("tif", MIME_IMAGE_TIF);
                 put1("png", MIME_IMAGE_PNG);
                 put1("au", MIME_AUDIO_BASIC);
                 put1("snd", MIME_AUDIO_BASIC);
@@ -339,13 +344,6 @@ public class MimeTypes {
                 put1("tar", MIME_APPLICATION_X_TAR);
                 put1("tar1",MIME_APPLICATION_TAR);
                 put1("tar2", MIME_APPLICATION_X_GTAR);
-                put1("gif", MIME_IMAGE_GIF);
-                put1("jpeg", MIME_IMAGE_JPEG);
-                put1("jpg", MIME_IMAGE_JPEG);
-                put1("jpe", MIME_IMAGE_JPEG);
-                put1("tiff", MIME_IMAGE_TIFF);
-                put1("tif", MIME_IMAGE_TIFF);
-                put1("png", MIME_IMAGE_PNG);
                 put1("json", MIME_APPLICATION_JSON);
                 put1("css", MIME_TEXT_CSS);
                 put1("xml", MIME_APPLICATION_XML);
@@ -354,16 +352,41 @@ public class MimeTypes {
                 put1("office", MIME_X_OFFICE);
             }
         };
+        validIconMapping = new HashMap<String, String>() {
+            private void put1(String key, String value) {
+                if(put(key,value) != null) {
+                    throw new IllegalArgumentException("Duplicated extension: " + key);
+                }
+            }
+            {
+                put1("jpeg", MIME_IMAGE_JPEG);
+                put1("jpg", MIME_IMAGE_JPG);
+                put1("tiff", MIME_IMAGE_TIFF);
+                put1("tif", MIME_IMAGE_TIF);
+                put1("png", MIME_IMAGE_PNG);
+                put1("icon", MIME_IMAGE_X_ICON);
+            }
+        };
+        {
+            valiedResourceTypes = validResourceMapping.values();
+            validIconTypes = validIconMapping.values();
+        }
     }
 
     public static boolean isResourceValid(String resourceType) {
-        Collection<String> values = validResourceMapping.values();
-        for(String validType: values) {
+        for(String validType: valiedResourceTypes) {
             if (validType.equals(resourceType)) {
                 return true;
             }
         }
         return false;
     }
-    //public static boolean isIconValid()
+    public static boolean isIconValid(String iconType) {
+        for(String validType: validIconTypes) {
+            if (validType.equals(iconType)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

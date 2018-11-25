@@ -1,5 +1,6 @@
 package org.lab409.service;
 
+import org.apache.tika.Tika;
 import org.lab409.entity.*;
 import org.springframework.data.domain.Page;
 import com.github.pagehelper.PageInfo;
@@ -28,6 +29,8 @@ public interface ResourceService {
 
     String OK = "OK";
 
+    Tika tika = new Tika();
+
     AbstractMap.SimpleEntry<String, String> uploadResource(MultipartFile resource);
     AbstractMap.SimpleEntry<String, GridFsResource> downloadResource(String resourceID);
     String uploadResourceMetaData(ResourceEntity resourceEntity);
@@ -52,6 +55,8 @@ public interface ResourceService {
     String undoSuggestResource(String resourceID);
     String commentResource(ResourceComment resourceComment);
     String deleteResourceComment(Integer commentID);
-    Page<ResourceEntity> keywordSearchPage(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    Page<ResourceEntity> keywordSearchAll(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    List<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    List<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
     PageInfo<ResourceEntity> relativeRecommend(Integer pageID, Integer categoryID, Integer resourceMajorID);
 }
