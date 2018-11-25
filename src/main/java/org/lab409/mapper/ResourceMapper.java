@@ -184,7 +184,7 @@ public interface ResourceMapper {
     @Select("SELECT COUNT(*) FROM (SELECT id FROM favouriteResource WHERE userID = #{userID}) as f")
     Integer getMyFavouriteNum(@Param("userID") Integer userID);
 
-    @Select("SELECT COUNT(*) FROM (SELECT id FROM suggestedResource WHERE userID = #{userID}) as s")
+    @Select("SELECT COUNT(*) FROM (SELECT id FROM suggestedResource WHERE userID = #{userID} AND suggested = 1) as s")
     Integer getMySuggestedNum(@Param("userID") Integer userID);
 
     @Select("SELECT COUNT(*) FROM (SELECT id FROM downloadResource WHERE userID = #{userID}) as d")
