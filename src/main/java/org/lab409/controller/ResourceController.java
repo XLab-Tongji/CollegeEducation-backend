@@ -105,7 +105,7 @@ public class ResourceController {
             return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }
         else {
-            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"resource not found"));
         }
     }
 
@@ -119,7 +119,7 @@ public class ResourceController {
             return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }
         else {
-            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"resource not found"));
         }
     }
 
@@ -133,7 +133,7 @@ public class ResourceController {
             return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }
         else {
-            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"file not found"));
+            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"resource not found"));
         }
     }
 

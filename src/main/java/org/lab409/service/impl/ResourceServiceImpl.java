@@ -445,7 +445,7 @@ public class ResourceServiceImpl implements ResourceService {
         }));
         callableList.add(Executors.callable(()->{
             SuggestedResource suggestedResource = resourceMapper.isUserSuggestedResource(resourceID, userID);
-            suggested.set(suggestedResource == null? 0:suggestedResource.getSuggested());
+            suggested.set(suggestedResource == null? -1:suggestedResource.getSuggested());
         }));
         try {
             executorService.invokeAll(callableList);
@@ -507,7 +507,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public List<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
         List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
-        if (ans == null) {
+        if (ans.isEmpty()) {
             return null;
         }
         ArrayList<ResourceEntity> entities = new ArrayList<>(ans);
@@ -518,7 +518,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public List<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
         List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
-        if (ans == null) {
+        if (ans.isEmpty()) {
             return null;
         }
         List<String> idList = new ArrayList<>();

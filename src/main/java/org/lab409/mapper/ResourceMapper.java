@@ -130,7 +130,7 @@ public interface ResourceMapper {
     @Select("SELECT r.* FROM resource r INNER JOIN downloadResource d ON (r.resourceID = d.resourceID AND d.userID = #{userID} ) ORDER BY d.downloadTime DESC")
     List<ResourceEntity> getDownloadResourceList(@Param("userID") Integer userID);
 
-    @Select("SELECT r.* FROM resource r INNER JOIN suggestedResource s ON (r.resourceID = s.resourceID AND s.userID = #{userID} ) ORDER BY s.suggestTime DESC")
+    @Select("SELECT r.* FROM resource r INNER JOIN suggestedResource s ON (r.resourceID = s.resourceID AND s.userID = #{userID} AND s.suggested = 1) ORDER BY s.suggestTime DESC")
     List<ResourceEntity> getSuggestedResourceList(@Param("userID") Integer userID);
 
     @Select("SELECT * FROM resourceComment WHERE resourceID = #{resourceID} ORDER BY commentTime DESC")

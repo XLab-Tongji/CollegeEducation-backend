@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, success));
     }
 
-    @RequestMapping(path = "/userLogout", method = RequestMethod.POST)
+    @RequestMapping(path = "/user/logout", method = RequestMethod.POST)
     public ResponseEntity userLogOutController() {
         //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         //new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
