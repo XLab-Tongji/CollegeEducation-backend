@@ -24,6 +24,7 @@ public interface PraiseMapper {
     int addPraise(Praise praise);
 
     //取消点赞
-    @Delete("DELETE FROM forum_praise WHERE type_id=#{type_id} AND user_id=#{user_id}")
+    @Delete("DELETE FROM forum_praise WHERE type_id=#{type_id} AND user_id=#{user_id} AND type=#{type}")
     int deletePraise(Praise praise);
+
 }

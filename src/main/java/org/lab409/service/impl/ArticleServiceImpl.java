@@ -116,8 +116,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
     //获取某篇文章的评论
     @Override
-    public List<Reply> getReply(Integer TopicId){
-        return replyMapper.getReply(TopicId);
+    public List<Reply> getReply(Integer TopicId,Integer type){
+        return replyMapper.getReply(TopicId,type);
     }
 }
 

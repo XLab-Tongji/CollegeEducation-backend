@@ -22,17 +22,19 @@ public interface ReplyMapper {
             "ReplyText," +
             "ReplyDate," +
             "ClickingRate," +
-            "PraiseCount) " +
+            "PraiseCount," +
+            "type) " +
             "VALUES " +
             "(#{TopicId}," +
             "#{UserId}," +
             "#{ReplyText}," +
             "#{ReplyDate}," +
             "#{ClickingRate}," +
-            "#{PraiseCount})")
+            "#{PraiseCount}," +
+            "#{type})")
     int replyTopic(Reply reply);
 
     //获取某篇文章的评论
-    @Select("SELECT * FROM forum_reply WHERE TopicId=#{TopicId}")
-    List<Reply> getReply(@Param("TopicId")Integer TopicId);
+    @Select("SELECT * FROM forum_reply WHERE TopicId=#{TopicId} AND type=#{type}")
+    List<Reply> getReply(@Param("TopicId")Integer TopicId,@Param("type")Integer type);
 }

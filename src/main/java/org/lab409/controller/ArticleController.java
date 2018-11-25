@@ -85,7 +85,7 @@ public class ArticleController {
     //delete collection
     @Transactional
     @RequestMapping(path = "article/collect/delete",method = RequestMethod.POST)
-    public ResponseMessage deleteReply(@RequestBody Favorite favorite){
+    public ResponseMessage deleteCollection(@RequestBody Favorite favorite){
         if(articleService.deleteCollection(favorite)){
             return new ResponseMessage<Favorite>(null).success();
         }
@@ -104,8 +104,8 @@ public class ArticleController {
 
     //获取某篇文章的所有评论
     @RequestMapping(path = "article/reply/get",method = RequestMethod.GET)
-    public ResponseMessage getReply(@RequestParam(value = "TopicId") Integer TopicId){
-        List<Reply> replies=articleService.getReply(TopicId);
+    public ResponseMessage getReply(@RequestParam(value = "TopicId") Integer TopicId,@RequestParam(value = "type",defaultValue = "0")Integer type){
+        List<Reply> replies=articleService.getReply(TopicId,type);
         return new ResponseMessage<>(replies).success();
     }
 }
