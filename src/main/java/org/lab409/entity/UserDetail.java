@@ -19,6 +19,8 @@ public class UserDetail {
     //我推荐的个数
     Integer mySuggestedNum;
 
+    Integer leftPoints;
+
     //我所有上传的资源获得的平均分
     Double avgScore;
 
@@ -31,7 +33,7 @@ public class UserDetail {
 
 
     public UserDetail(Integer userID, String username, Integer myUploadNum, Integer myDownloadNum, Integer myFavouriteNum,
-                      Integer mySuggestedNum, Double avgScore, Double suggestedRate) {
+                      Integer mySuggestedNum, Double avgScore, Double suggestedRate, Integer leftPoints) {
         this.userID = userID;
         this.username = username;
         this.myUploadNum = myUploadNum;
@@ -40,5 +42,6 @@ public class UserDetail {
         this.mySuggestedNum = mySuggestedNum;
         this.avgScore = avgScore;
         this.suggestedRate = suggestedRate;
+        this.leftPoints = leftPoints;
     }
 }

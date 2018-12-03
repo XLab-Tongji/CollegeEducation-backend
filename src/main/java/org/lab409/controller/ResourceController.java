@@ -22,7 +22,9 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
+
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
+    @CrossOrigin
     public ResponseEntity uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
 
         AbstractMap.SimpleEntry<String, String> success = resourceService.uploadResource(uploadResource);

@@ -417,7 +417,7 @@ public class ResourceServiceImpl implements ResourceService {
         try {
             executorService.invokeAll(callableList);
             return new UserDetail(userID, username.get(),uploadNum.get(), downloadNum.get(), favouriteNum.get(),
-                    suggestedNum.get(), myResourceAvgScore.get(), myResourceSuggestedRate.get());
+                    suggestedNum.get(), myResourceAvgScore.get(), myResourceSuggestedRate.get(), userUtil.getCurrentUser().getPoints());
         }
         catch (InterruptedException e) {
             e.printStackTrace();

@@ -61,6 +61,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/uploadIcon", method = RequestMethod.PUT)
+    @CrossOrigin
     public ResponseEntity uploadIcon(@RequestParam(name = "icon") MultipartFile icon) {
         String success = userService.uploadIcon(icon);
         if(success.equals(ResourceService.OK)) {
