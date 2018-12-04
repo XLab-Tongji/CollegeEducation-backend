@@ -29,6 +29,7 @@ public interface QuestionMapper {
             "a.clicking_rate," +
             "a.question_evaluation," +
             "a.question_follow," +
+            "a.question_participate," +
             "b.sector_name " +
             "FROM forum_question a,forum_question_sector b " +
             "WHERE a.question_sector_ID=b.sector_ID " +

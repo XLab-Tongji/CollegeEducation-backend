@@ -22,6 +22,7 @@ public class Question {
     private Integer clicking_rate;
     private Float question_evaluation;
     private Integer question_follow;
+    private Integer question_participate;
 
 
     public Integer getQuestion_ID() {
@@ -110,5 +111,13 @@ public class Question {
 
     public void setSector_name(String sector_name) {
         this.sector_name = sector_name;
+    }
+
+    public Integer getQuestion_participate() {
+        return question_participate;
+    }
+
+    public void setQuestion_participate(Integer question_participate) {
+        this.question_participate = question_participate;
     }
 }
