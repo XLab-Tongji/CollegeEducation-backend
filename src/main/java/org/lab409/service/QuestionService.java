@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface QuestionService {
     List<Question> getAllQuestions();                //get all questions
+    boolean saveQuestion(Question question);         //save question
+    boolean setPicturePath(Question question);       //set picture_path of a question
 }

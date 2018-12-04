@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class Question {
     private Integer question_ID;
+    private Integer question_sector_ID;
     private String question_title;
     private String sector_name;
     private Integer user_ID;
@@ -23,6 +24,7 @@ public class Question {
     private Float question_evaluation;
     private Integer question_follow;
     private Integer question_participate;
+    private String picture_path;
 
 
     public Integer getQuestion_ID() {
@@ -119,5 +121,21 @@ public class Question {
 
     public void setQuestion_participate(Integer question_participate) {
         this.question_participate = question_participate;
+    }
+
+    public String getPicture_path() {
+        return picture_path;
+    }
+
+    public void setPicture_path(String picture_path) {
+        this.picture_path = picture_path;
+    }
+
+    public Integer getQuestion_sector_ID() {
+        return question_sector_ID;
+    }
+
+    public void setQuestion_sector_ID(Integer question_sector_ID) {
+        this.question_sector_ID = question_sector_ID;
     }
 }

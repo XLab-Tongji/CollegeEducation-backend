@@ -21,4 +21,20 @@ public class QuestionServiceImpl implements QuestionService {
     public List<Question> getAllQuestions(){
         return questionMapper.getAllQuestions();
     }
+
+    @Override
+    public boolean saveQuestion(Question question){
+        if(questionMapper.saveQuestion(question)==1){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setPicturePath(Question question){
+        if(questionMapper.setPicturePath(question)==1){
+            return true;
+        }
+        return false;
+    }
 }
