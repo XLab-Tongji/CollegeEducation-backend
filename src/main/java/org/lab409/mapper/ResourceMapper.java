@@ -18,6 +18,9 @@ public interface ResourceMapper {
     @Select("SELECT * FROM resourceMajor")
     List<ResourceMajorEntity> getResourceMajors();
 
+    @Select("SELECT * FROM resource")
+    List<ResourceEntity> getAllResource();
+
     @Insert("INSERT IGNORE INTO resource (" +
             "resourceID, " +
             "uploaderID," +

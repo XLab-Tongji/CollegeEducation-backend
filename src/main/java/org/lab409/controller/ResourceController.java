@@ -116,7 +116,7 @@ public class ResourceController {
                                                      @PathVariable("categoryID") Integer categoryID,
                                                      @RequestParam("keyword") String keyword,
                                                      @PathVariable("pageID") Integer pageID) {
-        List<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnTime(keyword, categoryID, resourceMajorID, pageID);
+        Page<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnTime(keyword, categoryID, resourceMajorID, pageID);
         if(resourceEntityList != null) {
             return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }
@@ -130,7 +130,7 @@ public class ResourceController {
                                                     @PathVariable("categoryID") Integer categoryID,
                                                     @RequestParam("keyword") String keyword,
                                                     @PathVariable("pageID") Integer pageID) {
-        List<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnScore(keyword, categoryID, resourceMajorID, pageID);
+        PageInfo<ResourceEntity> resourceEntityList = resourceService.keywordSearchOnScore(keyword, categoryID, resourceMajorID, pageID);
         if(resourceEntityList != null) {
             return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
         }

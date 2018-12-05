@@ -2,14 +2,15 @@ package org.lab409.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import org.apache.tika.Tika;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.lab409.entity.*;
 import org.lab409.mapper.ResourceMapper;
 import org.lab409.mapper.UserMapper;
@@ -21,6 +22,7 @@ import org.lab409.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -31,9 +33,6 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
-import javax.swing.event.ListSelectionListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -465,6 +464,11 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public void saveAllDoc(List<ResourceEntity> resourceEntities) {
+        resourceElasticSearchRepo.saveAll(resourceEntities);
+    }
+
+    @Override
     public void deleteResourceDoc(String resourceID) {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         builder.must(QueryBuilders.termQuery("resourceID", resourceID));
@@ -475,21 +479,31 @@ public class ResourceServiceImpl implements ResourceService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.should(QueryBuilders.matchQuery("resourceName", keyword).fuzziness(Fuzziness.AUTO))
                 .should(QueryBuilders.matchQuery("description", keyword).fuzziness(Fuzziness.AUTO))
-                .should(QueryBuilders.matchQuery("tags", keyword).fuzziness(Fuzziness.AUTO))
-                .must(QueryBuilders.termQuery("categoryID", categoryID))
-                .must(QueryBuilders.termQuery("resourceMajorID", resourceMajorID));
+                .should(QueryBuilders.matchQuery("tags", keyword).fuzziness(Fuzziness.AUTO));
 
+        if(categoryID != 0) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("categoryID", categoryID));
+        }
+        if(resourceMajorID != 0) {
+            boolQueryBuilder.must(QueryBuilders.termQuery("resourceMajorID", resourceMajorID));
+        }
         if(keyword.equals("")) {
-            boolQueryBuilder.minimumShouldMatch(0);
+            boolQueryBuilder.must(QueryBuilders.rangeQuery("id").gt(0));
         }
         else {
             boolQueryBuilder.minimumShouldMatch(1);
         }
-        FunctionScoreQueryBuilder functionScoreQueryBuilder = QueryBuilders.functionScoreQuery(boolQueryBuilder).setMinScore(2);
+
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = keyword.equals("")?
+                QueryBuilders.functionScoreQuery(boolQueryBuilder):
+                QueryBuilders.functionScoreQuery(boolQueryBuilder).setMinScore(2);
+
+        FieldSortBuilder fieldSortBuilder = new FieldSortBuilder("uploadTime").order(SortOrder.DESC);
         PageRequest pageRequest = PageRequest.of(pageID, PAGE_SIZE);
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
                 .withQuery(functionScoreQueryBuilder)
-                .withPageable(pageRequest);
+                .withPageable(pageRequest)
+                .withSort(fieldSortBuilder);
         return nativeSearchQueryBuilder.build();
     }
 
@@ -505,18 +519,19 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-        List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
+    public Page<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        /*List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
         if (ans.isEmpty()) {
             return null;
         }
         ArrayList<ResourceEntity> entities = new ArrayList<>(ans);
         entities.sort((ResourceEntity entityA, ResourceEntity entityB)->entityB.getUploadTime().compareTo(entityA.getUploadTime()));
-        return entities;
+        return entities;*/
+        return keywordSearchAll(keyword, categoryID, resourceMajorID, pageID);
     }
 
     @Override
-    public List<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+    public PageInfo<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
         List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
         if (ans.isEmpty()) {
             return null;
@@ -527,7 +542,9 @@ public class ResourceServiceImpl implements ResourceService {
         }
         String beforeStrip = idList.toString();
         String searchList = idList.toString().substring(1, beforeStrip.length()-1);
-        return resourceMapper.getKeyWordResourceOrderByScore(searchList);
+        PageHelper.startPage(pageID, PAGE_SIZE);
+        List<ResourceEntity> resourceEntities = resourceMapper.getKeyWordResourceOrderByScore(searchList);
+        return new PageInfo<>(resourceEntities);
     }
 
     @Override

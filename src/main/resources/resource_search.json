@@ -7,25 +7,13 @@
             "description":{
                 "type":"text",
                 "analyzer":"ik_smart",
-                "search_analyzer":"ik_smart",
-                "fields":{
-                    "keyword":{
-                        "type":"keyword",
-                        "ignore_above":256
-                    }
-                }
+                "search_analyzer":"ik_smart"
             },
             "id":{
                 "type":"long"
             },
             "resourceID":{
-                "type":"text",
-                "fields":{
-                    "keyword":{
-                        "type":"keyword",
-                        "ignore_above":256
-                    }
-                }
+                "type":"text"
             },
             "resourceMajorID":{
                 "type":"long"
@@ -33,22 +21,10 @@
             "resourceName":{
                 "analyzer":"ik_smart",
                 "search_analyzer":"ik_smart",
-                "type":"text",
-                "fields":{
-                    "keyword":{
-                        "type":"keyword",
-                        "ignore_above":256
-                    }
-                }
+                "type":"text"
             },
             "uploadTime":{
-                "type":"text",
-                "fields":{
-                    "keyword":{
-                        "type":"keyword",
-                        "ignore_above":256
-                    }
-                }
+                "type":"keyword"
             },
             "uploaderID":{
                 "type":"long"
@@ -57,7 +33,9 @@
                 "type":"long"
             },
             "tags":{
-                "type":"text"
+                "type":"text",
+                "analyzer":"ik_smart",
+                "search_analyzer":"ik_smart"
             }
         }
     }

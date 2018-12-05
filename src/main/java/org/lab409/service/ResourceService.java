@@ -38,6 +38,7 @@ public interface ResourceService {
     List<ResourceCategoryEntity> getResourceCategories();
     List<ResourceMajorEntity> getResourceMajors();
     void saveResourceDoc(ResourceEntity resourceEntity);
+    void saveAllDoc(List<ResourceEntity> resourceEntities);
     void deleteResourceDoc(String resourceID);
     PageInfo<ResourceEntity> getFavouriteResources(Integer pageID);
     PageInfo<ResourceEntity> getDownloadResources(Integer pageID);
@@ -56,7 +57,7 @@ public interface ResourceService {
     String commentResource(ResourceComment resourceComment);
     String deleteResourceComment(Integer commentID);
     Page<ResourceEntity> keywordSearchAll(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
-    List<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
-    List<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    Page<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
+    PageInfo<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
     PageInfo<ResourceEntity> relativeRecommend(Integer pageID, Integer categoryID, Integer resourceMajorID);
 }
