@@ -24,7 +24,7 @@ public class ResourceController {
 
 
     @RequestMapping(path = "/uploadResource", method = RequestMethod.POST)
-    @CrossOrigin
+    @CrossOrigin(allowCredentials="true")
     public ResponseEntity uploadResourceController(@RequestParam(name = "resource") MultipartFile uploadResource) {
 
         AbstractMap.SimpleEntry<String, String> success = resourceService.uploadResource(uploadResource);
