@@ -9,7 +9,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.lab409.entity.*;
 import org.lab409.mapper.ResourceMapper;
@@ -28,6 +27,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     private static ConcurrentHashMap<DOCUMENT_SERVICE,ExecutorService> cachedDocThread;
     private static ConcurrentHashMap<RESOURCE_SERVICE, ExecutorService> cachedResourceThread;
-    //public static final Tika tika = new Tika();
 
     static {
         cachedDocThread = new ConcurrentHashMap<>();
@@ -165,8 +164,7 @@ public class ResourceServiceImpl implements ResourceService {
         }
         Integer uploaderID = resourceEntity.getUploaderID();
         String gridFileName = gridFSFile.getFilename();
-        GridFsResource[] gridFsResources = gridFsTemplate.getResources(gridFileName);
-
+        GridFsResource[] gridFsResources = gridFsTemplate.getResources("*"+gridFileName+"*");
         for(GridFsResource gridFsResource : gridFsResources ) {
             if (gridFsResource.getId().toString().equals(gridFSFile.getId().toString())){
                 if (resourceMapper.isUserDownloadResource(resourceID, currentUser.getUserID()) == 0) {
@@ -475,7 +473,7 @@ public class ResourceServiceImpl implements ResourceService {
         resourceElasticSearchRepo.deleteAll(resourceElasticSearchRepo.search(builder));
     }
 
-    private NativeSearchQuery keywordSearch(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+    private FunctionScoreQueryBuilder basicKeywordSearch(String keyword, Integer categoryID, Integer resourceMajorID) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.should(QueryBuilders.matchQuery("resourceName", keyword).fuzziness(Fuzziness.AUTO))
                 .should(QueryBuilders.matchQuery("description", keyword).fuzziness(Fuzziness.AUTO))
@@ -497,7 +495,11 @@ public class ResourceServiceImpl implements ResourceService {
         FunctionScoreQueryBuilder functionScoreQueryBuilder = keyword.equals("")?
                 QueryBuilders.functionScoreQuery(boolQueryBuilder):
                 QueryBuilders.functionScoreQuery(boolQueryBuilder).setMinScore(2);
+        return functionScoreQueryBuilder;
+    }
 
+    private NativeSearchQuery keywordSearchWithPagingAndSorting(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = basicKeywordSearch(keyword, categoryID, resourceMajorID);
         FieldSortBuilder fieldSortBuilder = new FieldSortBuilder("uploadTime").order(SortOrder.DESC);
         PageRequest pageRequest = PageRequest.of(pageID, PAGE_SIZE);
         NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
@@ -507,37 +509,23 @@ public class ResourceServiceImpl implements ResourceService {
         return nativeSearchQueryBuilder.build();
     }
 
-    private List<ResourceEntity> keywordSearchList(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-        NativeSearchQuery nativeSearchQuery = keywordSearch(keyword, categoryID, resourceMajorID, pageID);
-        return elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class).getContent();
-    }
-
     @Override
-    public Page<ResourceEntity> keywordSearchAll(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-        NativeSearchQuery nativeSearchQuery = keywordSearch(keyword, categoryID, resourceMajorID, pageID);
+    public Page<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
+        NativeSearchQuery nativeSearchQuery = keywordSearchWithPagingAndSorting(keyword, categoryID, resourceMajorID, pageID);
         return elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class);
     }
 
     @Override
-    public Page<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-        /*List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
-        if (ans.isEmpty()) {
-            return null;
-        }
-        ArrayList<ResourceEntity> entities = new ArrayList<>(ans);
-        entities.sort((ResourceEntity entityA, ResourceEntity entityB)->entityB.getUploadTime().compareTo(entityA.getUploadTime()));
-        return entities;*/
-        return keywordSearchAll(keyword, categoryID, resourceMajorID, pageID);
-    }
-
-    @Override
     public PageInfo<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
-        List<ResourceEntity> ans = keywordSearchList(keyword, categoryID, resourceMajorID, pageID);
-        if (ans.isEmpty()) {
+        FunctionScoreQueryBuilder functionScoreQueryBuilder = basicKeywordSearch(keyword, categoryID, resourceMajorID);
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(functionScoreQueryBuilder);
+        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.build();
+        List<ResourceEntity> target = elasticsearchTemplate.queryForList(nativeSearchQuery, ResourceEntity.class);
+        if (target.isEmpty()) {
             return null;
         }
         List<String> idList = new ArrayList<>();
-        for(ResourceEntity resourceEntity: ans) {
+        for(ResourceEntity resourceEntity: target) {
             idList.add("\""+resourceEntity.getResourceID()+"\"");
         }
         String beforeStrip = idList.toString();
