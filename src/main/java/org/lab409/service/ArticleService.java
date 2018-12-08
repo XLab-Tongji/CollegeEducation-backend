@@ -17,4 +17,5 @@ public interface ArticleService {
     boolean collectTopic(Favorite favorite);//收藏
     boolean deleteCollection(Favorite favorite);//delete collection
     boolean replyTopic(Reply reply);        //评论
+    boolean browseTopic(ArticleOutput articleOutput);//browse an article
 }

@@ -109,15 +109,23 @@ public class ArticleServiceImpl implements ArticleService {
     //评论文章
     @Override
     public boolean replyTopic(Reply reply){
-        if(replyMapper.replyTopic(reply)!=1){
-            return false;
+        if(replyMapper.replyTopic(reply)==1&&articleMapper.replyTopic(reply)==1){
+            return true;
         }
-        return true;
+        return false;
     }
     //获取某篇文章的评论
     @Override
     public List<Reply> getReply(Integer TopicId,Integer type){
         return replyMapper.getReply(TopicId,type);
+    }
+    //browse an article
+    @Override
+    public boolean browseTopic(ArticleOutput articleOutput){
+        if(articleMapper.browseTopic(articleOutput)==1){
+            return true;
+        }
+        return false;
     }
 }
 

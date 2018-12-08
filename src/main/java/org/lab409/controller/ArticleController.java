@@ -94,6 +94,7 @@ public class ArticleController {
 
 
     //评论 forum_topic 表中的某条内容
+    @Transactional
     @RequestMapping(path = "article/reply",method = RequestMethod.POST)
     public ResponseMessage replyTopic(@RequestBody Reply reply){
         if(articleService.replyTopic(reply)){
@@ -107,5 +108,14 @@ public class ArticleController {
     public ResponseMessage getReply(@RequestParam(value = "TopicId") Integer TopicId,@RequestParam(value = "type",defaultValue = "0")Integer type){
         List<Reply> replies=articleService.getReply(TopicId,type);
         return new ResponseMessage<>(replies).success();
+    }
+
+    //browse an article(add ClickingRate)
+    @RequestMapping(path = "article/browse",method = RequestMethod.POST)
+    public ResponseMessage browseTopic(@RequestBody ArticleOutput articleOutput){
+        if(articleService.browseTopic(articleOutput)){
+            return new ResponseMessage<ArticleOutput>(null).success();
+        }
+        return new ResponseMessage<ArticleOutput>(null).error(202,"fail to increase ClickintRate");
     }
 }

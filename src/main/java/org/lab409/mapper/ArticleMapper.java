@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.lab409.entity.Article;
 import org.lab409.entity.ArticleOutput;
 import org.lab409.entity.Favorite;
+import org.lab409.entity.Reply;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -113,10 +114,18 @@ public interface ArticleMapper {
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount-1 WHERE TopicId=#{TopicId}")
     int deletePraise(ArticleOutput articleOutput);
 
-    //collect a article
+    //collect an article
     @Update("UPDATE forum_topic SET favorite_count=favorite_count+1 WHERE TopicId=#{topic_id}")
     int collectTopic(Favorite favorite);
     //delete collection
     @Update("UPDATE forum_topic SET favorite_count=favorite_count-1 WHERE TopicId=#{topic_id}")
     int deleteCollection(Favorite favorite);
+
+    //reply an article(increase ReplyCount)
+    @Update("UPDATE forum_topic SET ReplyCount=ReplyCount+1 WHERE TopicId=#{TopicId}")
+    int replyTopic(Reply reply);
+
+    //browse an article(increase ClickingRate)
+    @Update("UPDATE forum_topic SET ClickingRate=ClickingRate+1 WHERE TopicId=#{TopicId}")
+    int browseTopic(ArticleOutput articleOutput);
 }
