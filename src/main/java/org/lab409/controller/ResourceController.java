@@ -97,20 +97,6 @@ public class ResourceController {
                 ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"can't get majors"));
     }
 
-    @RequestMapping(path = "/searchResource/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
-    public ResponseEntity keywordSearchAllController(@PathVariable("resourceMajorID") Integer resourceMajorID,
-                                                        @PathVariable("categoryID") Integer categoryID,
-                                                        @RequestParam("keyword") String keyword,
-                                                        @PathVariable("pageID") Integer pageID) {
-        Page<ResourceEntity> resourceEntityList = resourceService.keywordSearchAll(keyword, categoryID, resourceMajorID, pageID);
-        if(resourceEntityList != null) {
-            return ResponseEntity.ok(new ResponseMessage<>(resourceEntityList).success());
-        }
-        else {
-            return ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202,"resource not found"));
-        }
-    }
-
     @RequestMapping(path = "/searchResource/time/{resourceMajorID}/{categoryID}/{pageID}", method = RequestMethod.GET)
     public ResponseEntity keywordSearchOnTimeController(@PathVariable("resourceMajorID") Integer resourceMajorID,
                                                      @PathVariable("categoryID") Integer categoryID,
@@ -283,4 +269,5 @@ public class ResourceController {
                 ResponseEntity.ok(new ResponseMessage<>(userDetail).success()):
                 ResponseEntity.status(202).body(new ResponseMessage<>(null).error(202, "can't get my detail info"));
     }
+
 }

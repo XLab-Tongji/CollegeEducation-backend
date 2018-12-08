@@ -56,7 +56,6 @@ public interface ResourceService {
     String undoSuggestResource(String resourceID);
     String commentResource(ResourceComment resourceComment);
     String deleteResourceComment(Integer commentID);
-    Page<ResourceEntity> keywordSearchAll(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
     Page<ResourceEntity> keywordSearchOnTime(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
     PageInfo<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID);
     PageInfo<ResourceEntity> relativeRecommend(Integer pageID, Integer categoryID, Integer resourceMajorID);
