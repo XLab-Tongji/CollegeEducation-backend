@@ -107,7 +107,8 @@ public interface ArticleMapper {
             "#{ClickingRate}," +
             "#{PraiseCount}," +
             "#{favorite_count})")
-    int saveTopic(Article article);
+    @Options(useGeneratedKeys = true,keyProperty = "TopicId",keyColumn = "TopicId")
+    int saveTopic(ArticleOutput articleoutput);
 
     //点赞某篇文章
     @Update("UPDATE forum_topic SET PraiseCount=PraiseCount+1 WHERE TopicId=#{TopicId}")

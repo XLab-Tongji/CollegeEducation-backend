@@ -42,9 +42,10 @@ public class ArticleController {
     }
 
     //向 forum_topic 表中添加数据
+    @Transactional
     @RequestMapping(path="article/save",method = RequestMethod.POST)
-    public ResponseMessage saveTopic(@RequestBody Article article){
-        if(articleService.saveTopic(article)){
+    public ResponseMessage saveTopic(@RequestBody ArticleOutput articleoutput){
+        if(articleService.saveTopic(articleoutput)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"can't save");

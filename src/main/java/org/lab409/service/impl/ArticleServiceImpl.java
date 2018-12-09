@@ -1,10 +1,7 @@
 package org.lab409.service.impl;
 
 import org.lab409.entity.*;
-import org.lab409.mapper.ArticleMapper;
-import org.lab409.mapper.FavoriteMapper;
-import org.lab409.mapper.PraiseMapper;
-import org.lab409.mapper.ReplyMapper;
+import org.lab409.mapper.*;
 import org.lab409.service.ArticleService;
 import org.lab409.util.Converter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,8 @@ public class ArticleServiceImpl implements ArticleService {
     ReplyMapper replyMapper;
     @Autowired
     PraiseMapper praiseMapper;
+    @Autowired
+    SectorMapper sectorMapper;
 
     @Override
     public List<ArticleOutput> getArticleBySectorAndKeyword(String[] SectorName, String SectorState, Integer userID, Integer SectorId, String keywords) {
@@ -50,13 +49,19 @@ public class ArticleServiceImpl implements ArticleService {
 
     //保存文章
     @Override
-    public boolean saveTopic(Article article){
+    public boolean saveTopic(ArticleOutput articleoutput){
         //emoji表情转换器，避免 Emoji 存储出现问题
         EmojiConverter emojiConverter=EmojiConverter.getInstance();
         //将article中的TopicText转换
-        article.setTopicText(emojiConverter.toHtml(article.getTopicText()));
-        if(articleMapper.saveTopic(article)!=1){
-            return false;
+        articleoutput.setTopicText(emojiConverter.toHtml(articleoutput.getTopicText()));
+        //将 article 存入 forum_topic 表
+        articleMapper.saveTopic(articleoutput);
+        //将 article 的标签信息存入 forum_sector_use 表
+        for(int i=0;i<articleoutput.getSectorName().size();i++) {
+            Integer sector_id=sectorMapper.getSectorIdBySectorName(articleoutput.getSectorName().get(i));
+            if(sectorMapper.addAssociation(articleoutput.getTopicId(),sector_id)!=1){
+                return false;
+            }
         }
         return true;
     }

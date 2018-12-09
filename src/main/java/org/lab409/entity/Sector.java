@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Sector {
     private Integer SectorId;
     private String SectorName;
+    private Integer topic_id;
 
     @JsonProperty(value = "SectorId")
     public Integer getSectorId() {
@@ -25,5 +26,14 @@ public class Sector {
 
     public void setSectorName(String sectorName) {
         SectorName = sectorName;
+    }
+
+    @JsonProperty(value = "topic_id")
+    public Integer getTopic_id() {
+        return topic_id;
+    }
+
+    public void setTopic_id(Integer topic_id) {
+        this.topic_id = topic_id;
     }
 }
