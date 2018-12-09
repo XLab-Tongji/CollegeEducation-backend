@@ -4,6 +4,7 @@ import java.util.Date;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /*
@@ -28,6 +29,7 @@ public class Blackboard {
     private Integer praise_id=-1;          //用来表示该黑板报是否被当前用户点赞，默认值为-1，代表没有被点赞
     private Integer favourite_id=-1;       //用来表示该黑板报是否被当前用户收藏，默认值为-1，代表没有被收藏
     private String SectorName;
+    private String USERNAME;
 
     public String getBlackboard_text() {
         return blackboard_text;
@@ -146,5 +148,14 @@ public class Blackboard {
 
     public void setSectorName(String sectorName) {
         SectorName = sectorName;
+    }
+
+    @JsonProperty(value = "USERNAME")
+    public String getUSERNAME() {
+        return USERNAME;
+    }
+
+    public void setUSERNAME(String USERNAME) {
+        this.USERNAME = USERNAME;
     }
 }

@@ -44,8 +44,9 @@ public interface BlackboardMapper {
 
     @Select("<script>"
             + "SELECT "
-            + "a.blackboard_id,a.user_id,a.sector_id,a.blackboard_name,a.blackboard_text,a.blackboard_date,a.reply_count,a.clicking_rate,a.praise_count,a.favorite_count,c.SectorName,d.praise_id,e.favourite_id "
+            + "a.blackboard_id,a.user_id,a.sector_id,a.blackboard_name,a.blackboard_text,a.blackboard_date,a.reply_count,a.clicking_rate,a.praise_count,a.favorite_count,c.SectorName,d.praise_id,e.favourite_id,f.USERNAME "
             + "FROM (forum_blackboard a,forum_sector c) "
+            + "LEFT JOIN USER f ON (a.user_id=f.ID) "
             + "LEFT JOIN forum_praise d ON (a.blackboard_id=d.type_id AND d.user_id=#{userID} AND d.type=1) "
             + "LEFT JOIN forum_favorite e ON (a.blackboard_id=e.topic_id AND e.user_id=#{userID} AND d.type=1) "
             + "WHERE a.sector_id=c.SectorId "
