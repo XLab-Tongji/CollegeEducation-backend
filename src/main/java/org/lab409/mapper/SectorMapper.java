@@ -20,11 +20,17 @@ public interface SectorMapper {
     @Select("SELECT a.SectorId,a.SectorName FROM forum_sector a")
     List<Sector> getSectors();
 
-    //add association between sectorName and Topic
+    //add association between sectorName and Topic to 'forum_sector_use' table
     @Insert("INSERT INTO forum_sector_use (topic_id,sector_id) VALUES(#{topic_id},#{sector_id}) ")
     int addAssociation(@Param(value = "topic_id")Integer topic_id,@Param(value = "sector_id")Integer sector_id);
+
+    //add association between sectorName and Draft to 'forum_sector_use_draft' table
+    @Insert("INSERT INTO forum_sector_use_draft (draft_id,sector_id) VALUES(#{draft_id},#{sector_id}) ")
+    int addAssociationToDraft(@Param(value = "draft_id")Integer draft_id,@Param(value = "sector_id")Integer sector_id);
 
     //get SectorId by SectorName
     @Select("SELECT a.SectorId FROM forum_sector a WHERE a.SectorName=#{SectorName}")
     int getSectorIdBySectorName(@Param(value = "SectorName")String SectorName);
+
+
 }

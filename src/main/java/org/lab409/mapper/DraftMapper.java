@@ -2,6 +2,7 @@ package org.lab409.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.stereotype.Repository;
 import org.lab409.entity.Draft;
 
@@ -28,5 +29,6 @@ public interface DraftMapper {
             "#{draft_name}," +
             "#{draft_text}," +
             "#{write_date})")
+    @Options(useGeneratedKeys = true,keyProperty = "draft_id",keyColumn = "draft_id")
     int saveDraft(Draft draft);
 }
