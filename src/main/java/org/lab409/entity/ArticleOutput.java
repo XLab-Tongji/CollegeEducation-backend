@@ -20,7 +20,7 @@ public class ArticleOutput {
     private Integer UserId;
     private String TopicTitle;
     private String TopicText;
-
+    private String USERNAME;
 
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private Date TopicDate;
@@ -167,5 +167,14 @@ public class ArticleOutput {
 
     public void setFavourite_id(Integer favourite_id) {
         this.favourite_id = favourite_id;
+    }
+
+    @JsonProperty(value = "USERNAME")
+    public String getUSERNAME() {
+        return USERNAME;
+    }
+
+    public void setUSERNAME(String USERNAME) {
+        this.USERNAME = USERNAME;
     }
 }

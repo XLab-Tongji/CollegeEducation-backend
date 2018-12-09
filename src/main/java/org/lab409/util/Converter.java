@@ -35,6 +35,7 @@ public class Converter {
                 articleOutput.setTopicTitle(articles.get(i).getTopicTitle());
                 articleOutput.setUserId(articles.get(i).getUserId());
                 articleOutput.setSectorState(articles.get(i).getSectorState());
+                articleOutput.setUSERNAME(articles.get(i).getUSERNAME());
                 articleOutput.getSectorName().add(articles.get(i).getSectorName());
 
                 articlesOutput.add(articleOutput);
@@ -61,6 +62,7 @@ public class Converter {
                     articleOutput.setTopicTitle(articles.get(i).getTopicTitle());
                     articleOutput.setUserId(articles.get(i).getUserId());
                     articleOutput.setSectorState(articles.get(i).getSectorState());
+                    articleOutput.setUSERNAME(articles.get(i).getUSERNAME());
                     articleOutput.getSectorName().add(articles.get(i).getSectorName());
 
                     articlesOutput.add(articleOutput);
