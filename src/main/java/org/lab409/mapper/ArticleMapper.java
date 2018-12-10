@@ -137,6 +137,6 @@ public interface ArticleMapper {
     String getUrlOfUserImage(@Param(value = "userID")Integer userID);
 
     //update url of user image
-    @Update("UPDATE USER SET a.IMAGE=#{image} WHERE a.ID=#{userID}")
+    @Update("UPDATE USER a SET a.IMAGE=#{image} WHERE a.ID=#{userID}")
     int updateUrlOfUserImage(@Param(value = "image")String image,@Param(value = "userID")Integer userID);
 }
