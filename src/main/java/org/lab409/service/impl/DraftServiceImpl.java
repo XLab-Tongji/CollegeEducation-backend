@@ -32,8 +32,18 @@ public class DraftServiceImpl implements DraftService {
             //将 draft 的标签信息存入 forum_sector_use_draft 表
             for(int i=0;i<draft.getSectorName().size();i++) {
                 Integer sector_id=sectorMapper.getSectorIdBySectorName(draft.getSectorName().get(i));
-                if(sectorMapper.addAssociationToDraft(draft.getDraft_id(),sector_id)!=1){
-                    return false;
+                if(sector_id==-1){
+                    Sector sector=new Sector();
+                    sector.setSectorName(draft.getSectorName().get(i));
+                    sectorMapper.addNewSector(sector);
+                    if(sectorMapper.addAssociationToDraft(draft.getDraft_id(),sector.getSectorId())!=1){
+                        return false;
+                    }
+                }
+                else {
+                    if (sectorMapper.addAssociationToDraft(draft.getDraft_id(), sector_id) != 1) {
+                        return false;
+                    }
                 }
             }
             return true;
