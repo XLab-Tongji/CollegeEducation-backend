@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
-
+import javax.xml.ws.Response;
 import java.util.*;
 
 /**
@@ -42,9 +42,10 @@ public class ArticleController {
     }
 
     //向 forum_topic 表中添加数据
+    @Transactional
     @RequestMapping(path="article/save",method = RequestMethod.POST)
-    public ResponseMessage saveTopic(@RequestBody Article article){
-        if(articleService.saveTopic(article)){
+    public ResponseMessage saveTopic(@RequestBody ArticleOutput articleoutput){
+        if(articleService.saveTopic(articleoutput)){
             return new ResponseMessage<Article>(null).success();
         }
         return new ResponseMessage<Article>(null).error(202,"can't save");
@@ -94,6 +95,7 @@ public class ArticleController {
 
 
     //评论 forum_topic 表中的某条内容
+    @Transactional
     @RequestMapping(path = "article/reply",method = RequestMethod.POST)
     public ResponseMessage replyTopic(@RequestBody Reply reply){
         if(articleService.replyTopic(reply)){
@@ -107,5 +109,30 @@ public class ArticleController {
     public ResponseMessage getReply(@RequestParam(value = "TopicId") Integer TopicId,@RequestParam(value = "type",defaultValue = "0")Integer type){
         List<Reply> replies=articleService.getReply(TopicId,type);
         return new ResponseMessage<>(replies).success();
+    }
+
+    //browse an article(add ClickingRate)
+    @RequestMapping(path = "article/browse",method = RequestMethod.POST)
+    public ResponseMessage browseTopic(@RequestBody ArticleOutput articleOutput){
+        if(articleService.browseTopic(articleOutput)){
+            return new ResponseMessage<ArticleOutput>(null).success();
+        }
+        return new ResponseMessage<ArticleOutput>(null).error(202,"fail to increase ClickintRate");
+    }
+
+    //update url of user image
+    @RequestMapping(path = "user/image/update",method = RequestMethod.POST)
+    public ResponseMessage updateUrlOfUserImage(@RequestParam(value = "image")String image,@RequestParam(value = "userID")Integer userID){
+        if(articleService.updateUrlOfUserImage(image,userID)){
+            return new ResponseMessage<>(null).success();
+        }
+        return new ResponseMessage<>(null).error(202,"update failed");
+    }
+
+    //get url of user image
+    @RequestMapping(path = "user/image/get",method = RequestMethod.GET)
+    public ResponseMessage getUrlOfUserImage(@RequestParam(value = "userID")Integer userID){
+        String url=articleService.getUrlOfUserImage(userID);
+        return new ResponseMessage<>(url).success();
     }
 }

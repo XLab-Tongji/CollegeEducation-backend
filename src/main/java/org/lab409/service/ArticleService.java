@@ -11,10 +11,13 @@ public interface ArticleService {
     List<ArticleOutput> getArticleBySectorAndKeyword(String[] SectorName, String SectorState, Integer userID, Integer SectorId, String keywords);
     List<Article> getArticle();
     List<Reply> getReply(Integer TopicId,Integer type);  //获取某篇文章的评论
-    boolean saveTopic(Article article);     //存文章
+    boolean saveTopic(ArticleOutput articleoutput);     //存文章
     boolean likeTopic(ArticleOutput articleOutput,Integer userID);     //点赞
     boolean deletePraise(ArticleOutput articleOutput,Integer userID);  //取消点赞
     boolean collectTopic(Favorite favorite);//收藏
     boolean deleteCollection(Favorite favorite);//delete collection
     boolean replyTopic(Reply reply);        //评论
+    boolean browseTopic(ArticleOutput articleOutput);//browse an article
+    String getUrlOfUserImage(Integer userID);                   //get url of user image
+    boolean updateUrlOfUserImage(String image,Integer userID);  //update url of user image
 }
