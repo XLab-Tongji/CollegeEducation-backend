@@ -18,4 +18,5 @@ public interface BlackboardService {
     boolean deleteCollection(Favorite favorite);                    //delete collection of blackboard
     boolean replyBlackboard(Reply reply);                           //reply blackboard
     List<Reply> getReply(Integer TopicId,Integer type);             //get reply of a blackboard
+    boolean browseBlackboard(Blackboard blackboard);                //browse a blackboard
 }
