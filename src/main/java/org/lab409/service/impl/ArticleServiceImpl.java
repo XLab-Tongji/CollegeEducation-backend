@@ -132,5 +132,20 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return false;
     }
+
+    //get url of user image
+    @Override
+    public String getUrlOfUserImage(Integer userID){
+        return articleMapper.getUrlOfUserImage(userID);
+    }
+
+    //update url of user image
+    @Override
+    public boolean updateUrlOfUserImage(String image,Integer userID){
+        if(articleMapper.updateUrlOfUserImage(image,userID)==1){
+            return true;
+        }
+        return false;
+    }
 }
 

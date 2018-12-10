@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
-
+import javax.xml.ws.Response;
 import java.util.*;
 
 /**
@@ -118,5 +118,21 @@ public class ArticleController {
             return new ResponseMessage<ArticleOutput>(null).success();
         }
         return new ResponseMessage<ArticleOutput>(null).error(202,"fail to increase ClickintRate");
+    }
+
+    //update url of user image
+    @RequestMapping(path = "user/image/update",method = RequestMethod.POST)
+    public ResponseMessage updateUrlOfUserImage(@RequestParam(value = "image")String image,@RequestParam(value = "userID")Integer userID){
+        if(articleService.updateUrlOfUserImage(image,userID)){
+            return new ResponseMessage<>(null).success();
+        }
+        return new ResponseMessage<>(null).error(202,"update failed");
+    }
+
+    //get url of user image
+    @RequestMapping(path = "user/image/get",method = RequestMethod.GET)
+    public ResponseMessage getUrlOfUserImage(@RequestParam(value = "userID")Integer userID){
+        String url=articleService.getUrlOfUserImage(userID);
+        return new ResponseMessage<>(url).success();
     }
 }

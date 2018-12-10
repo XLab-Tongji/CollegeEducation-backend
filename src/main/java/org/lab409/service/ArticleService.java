@@ -18,4 +18,6 @@ public interface ArticleService {
     boolean deleteCollection(Favorite favorite);//delete collection
     boolean replyTopic(Reply reply);        //评论
     boolean browseTopic(ArticleOutput articleOutput);//browse an article
+    String getUrlOfUserImage(Integer userID);                   //get url of user image
+    boolean updateUrlOfUserImage(String image,Integer userID);  //update url of user image
 }

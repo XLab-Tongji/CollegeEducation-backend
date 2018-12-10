@@ -131,4 +131,12 @@ public interface ArticleMapper {
     //browse an article(increase ClickingRate)
     @Update("UPDATE forum_topic SET ClickingRate=ClickingRate+1 WHERE TopicId=#{TopicId}")
     int browseTopic(ArticleOutput articleOutput);
+
+    //get url of user image
+    @Select("SELECT a.IMAGE FROM USER a WHERE a.ID=#{userID}")
+    String getUrlOfUserImage(@Param(value = "userID")Integer userID);
+
+    //update url of user image
+    @Update("UPDATE USER SET a.IMAGE=#{image} WHERE a.ID=#{userID}")
+    int updateUrlOfUserImage(@Param(value = "image")String image,@Param(value = "userID")Integer userID);
 }
