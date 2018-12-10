@@ -18,7 +18,6 @@ public class Question {
     private String question_text;
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private Date question_date;
-    private Integer answer_ID;
     private Integer answer_count;
     private Integer clicking_rate;
     private Float question_evaluation;
@@ -65,14 +64,6 @@ public class Question {
 
     public void setQuestion_date(Date question_date) {
         this.question_date = question_date;
-    }
-
-    public Integer getAnswer_ID() {
-        return answer_ID;
-    }
-
-    public void setAnswer_ID(Integer answer_ID) {
-        this.answer_ID = answer_ID;
     }
 
     public Integer getAnswer_count() {
