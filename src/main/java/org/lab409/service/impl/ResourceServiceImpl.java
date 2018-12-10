@@ -518,9 +518,12 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public PageInfo<ResourceEntity> keywordSearchOnScore(String keyword, Integer categoryID, Integer resourceMajorID, Integer pageID) {
         FunctionScoreQueryBuilder functionScoreQueryBuilder = basicKeywordSearch(keyword, categoryID, resourceMajorID);
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder().withQuery(functionScoreQueryBuilder);
-        NativeSearchQuery nativeSearchQuery = nativeSearchQueryBuilder.build();
-        List<ResourceEntity> target = elasticsearchTemplate.queryForList(nativeSearchQuery, ResourceEntity.class);
+        PageRequest pageRequest = PageRequest.of(0, (int)resourceElasticSearchRepo.count());
+        NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder()
+                .withQuery(functionScoreQueryBuilder)
+                .withPageable(pageRequest)
+                .build();
+        List<ResourceEntity> target = elasticsearchTemplate.queryForPage(nativeSearchQuery, ResourceEntity.class).getContent();
         if (target.isEmpty()) {
             return null;
         }
