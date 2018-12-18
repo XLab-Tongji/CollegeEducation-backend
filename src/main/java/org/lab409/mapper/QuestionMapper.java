@@ -28,7 +28,6 @@ public interface QuestionMapper {
             "a.user_ID," +
             "a.question_text," +
             "a.question_date," +
-            "a.answer_ID," +
             "a.answer_count," +
             "a.clicking_rate," +
             "a.question_evaluation," +
@@ -48,7 +47,6 @@ public interface QuestionMapper {
             "question_sector_ID," +
             "question_text," +
             "question_date," +
-            "answer_ID," +
             "answer_count," +
             "clicking_rate," +
             "question_evaluation," +
@@ -61,7 +59,6 @@ public interface QuestionMapper {
             "#{question_sector_ID}," +
             "#{question_text}," +
             "#{question_date}," +
-            "#{answer_ID}," +
             "#{answer_count}," +
             "#{clicking_rate}," +
             "#{question_evaluation}," +

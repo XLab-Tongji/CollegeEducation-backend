@@ -59,8 +59,19 @@ public class ArticleServiceImpl implements ArticleService {
         //将 article 的标签信息存入 forum_sector_use 表
         for(int i=0;i<articleoutput.getSectorName().size();i++) {
             Integer sector_id=sectorMapper.getSectorIdBySectorName(articleoutput.getSectorName().get(i));
-            if(sectorMapper.addAssociation(articleoutput.getTopicId(),sector_id)!=1){
-                return false;
+            if(sector_id==-1)
+            {
+                Sector sector=new Sector();
+                sector.setSectorName(articleoutput.getSectorName().get(i));
+                sectorMapper.addNewSector(sector);
+                if (sectorMapper.addAssociation(articleoutput.getTopicId(), sector.getSectorId()) != 1) {
+                    return false;
+                }
+            }
+            else {
+                if (sectorMapper.addAssociation(articleoutput.getTopicId(), sector_id) != 1) {
+                    return false;
+                }
             }
         }
         return true;

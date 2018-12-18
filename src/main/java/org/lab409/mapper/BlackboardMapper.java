@@ -1,8 +1,10 @@
 package org.lab409.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.lab409.entity.ArticleOutput;
 import org.lab409.entity.Blackboard;
 import org.lab409.entity.Favorite;
+import org.lab409.entity.Reply;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -91,4 +93,12 @@ public interface BlackboardMapper {
 
     @Update("UPDATE forum_blackboard SET favorite_count=favorite_count-1 WHERE blackboard_id=#{topic_id}")
     int deleteCollection(Favorite favorite);
+
+    //reply a blackboard(increase reply_count)
+    @Update("UPDATE forum_blackboard SET reply_count=reply_count+1 WHERE blackboard_id=#{TopicId}")
+    int replyTopic(Reply reply);
+
+    //browse a blackboard(increase clicking_rate)
+    @Update("UPDATE forum_blackboard SET clicking_rate=clicking_rate+1 WHERE blackboard_id=#{blackboard_id}")
+    int browseBlackboard(Blackboard blackboard);
 }

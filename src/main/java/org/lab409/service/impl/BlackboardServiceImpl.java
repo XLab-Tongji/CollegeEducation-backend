@@ -100,16 +100,25 @@ public class BlackboardServiceImpl implements BlackboardService {
     //reply blackboard
     @Override
     public boolean replyBlackboard(Reply reply){
-        if(replyMapper.replyTopic(reply)!=1){
-            return false;
+        if(replyMapper.replyTopic(reply)==1&&blackboardMapper.replyTopic(reply)==1){
+            return true;
         }
-        return true;
+        return false;
     }
 
     //get reply of a blackboard
     @Override
     public List<Reply> getReply(Integer TopicId,Integer type){
         return replyMapper.getReply(TopicId,type);
+    }
+
+    //browse a blackboard(increase clicking_rate)
+    @Override
+    public boolean browseBlackboard(Blackboard blackboard){
+        if(blackboardMapper.browseBlackboard(blackboard)==1){
+            return true;
+        }
+        return false;
     }
 
 }

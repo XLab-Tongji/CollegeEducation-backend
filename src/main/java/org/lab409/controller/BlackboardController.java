@@ -79,6 +79,7 @@ public class BlackboardController {
     }
 
     //reply blackboard
+    @Transactional
     @RequestMapping(path = "blackboard/reply",method = RequestMethod.POST)
     public ResponseMessage replyBlackboard(@RequestBody Reply reply){
         if(blackboardService.replyBlackboard(reply)){
@@ -92,5 +93,14 @@ public class BlackboardController {
     public ResponseMessage getReply(@RequestParam(value = "TopicId") Integer TopicId,@RequestParam(value = "type",defaultValue = "1")Integer type){
         List<Reply> replies=blackboardService.getReply(TopicId,type);
         return new ResponseMessage<>(replies).success();
+    }
+
+    //browse a blackboard(increase clicking_rate)
+    @RequestMapping(path = "blackboard/browse",method = RequestMethod.POST)
+    public ResponseMessage browseBlackboard(@RequestBody Blackboard blackboard){
+        if(blackboardService.browseBlackboard(blackboard)){
+            return new ResponseMessage<>(null).success();
+        }
+        return new ResponseMessage<>(null).error(202,"fail to increase clicking_rate");
     }
 }

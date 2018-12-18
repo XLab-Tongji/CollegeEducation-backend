@@ -11,6 +11,8 @@ import java.util.Date;
 @Repository
 public class Reply {
 
+    private String USERNAME;        //回复用户的用户名
+
     private Integer ReplyId;        //自增主键
 
     private Integer TopicId;        //关联的文章Id
@@ -89,5 +91,21 @@ public class Reply {
 
     public void setPraiseCount(Integer praiseCount) {
         PraiseCount = praiseCount;
+    }
+
+    public String getUSERNAME() {
+        return USERNAME;
+    }
+
+    public void setUSERNAME(String USERNAME) {
+        this.USERNAME = USERNAME;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

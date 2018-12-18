@@ -35,6 +35,9 @@ public interface ReplyMapper {
     int replyTopic(Reply reply);
 
     //获取某篇文章的评论
-    @Select("SELECT * FROM forum_reply WHERE TopicId=#{TopicId} AND type=#{type}")
+    @Select("SELECT a.*,b.USERNAME " +
+            "FROM forum_reply a " +
+            "LEFT JOIN USER b ON (a.UserId=b.ID) " +
+            "WHERE a.TopicId=#{TopicId} AND a.type=#{type}")
     List<Reply> getReply(@Param("TopicId")Integer TopicId,@Param("type")Integer type);
 }

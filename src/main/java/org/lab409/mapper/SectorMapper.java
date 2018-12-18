@@ -1,9 +1,6 @@
 package org.lab409.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.lab409.entity.Sector;
 import org.springframework.stereotype.Repository;
 
@@ -29,8 +26,11 @@ public interface SectorMapper {
     int addAssociationToDraft(@Param(value = "draft_id")Integer draft_id,@Param(value = "sector_id")Integer sector_id);
 
     //get SectorId by SectorName
-    @Select("SELECT a.SectorId FROM forum_sector a WHERE a.SectorName=#{SectorName}")
+    @Select("SELECT IFNULL((SELECT a.SectorId FROM forum_sector a WHERE a.SectorName=#{SectorName}),-1)")
     int getSectorIdBySectorName(@Param(value = "SectorName")String SectorName);
 
-
+    //save new Sector
+    @Insert("INSERT INTO forum_sector (SectorName) VALUES(#{SectorName})")
+    @Options(useGeneratedKeys = true,keyProperty = "SectorId",keyColumn = "SectorId")
+    int addNewSector(Sector sector);
 }
