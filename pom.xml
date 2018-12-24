@@ -40,7 +40,11 @@
             <artifactId>java-emoji-converter</artifactId>
             <version>0.1.1</version>
         </dependency>
-
+        <!--java mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <!--spring boot test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -3,6 +3,7 @@ package org.lab409.controller;
 
 import org.lab409.entity.*;
 import org.lab409.service.ArticleService;
+import org.lab409.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,8 @@ public class ArticleController {
 
     @Autowired
     ArticleService articleService;
-
+    @Autowired
+    EmailService emailService;
 
     //获取文章
     //userID 当前用户ID
@@ -134,5 +136,12 @@ public class ArticleController {
     public ResponseMessage getUrlOfUserImage(@RequestParam(value = "userID")Integer userID){
         String url=articleService.getUrlOfUserImage(userID);
         return new ResponseMessage<>(url).success();
+    }
+
+    //send email
+    @RequestMapping(path = "email",method = RequestMethod.POST)
+    public ResponseMessage sendEmail(@RequestParam(value ="receiver")String receiver){
+        emailService.sendSimpleEmail(receiver);
+        return new ResponseMessage<>(null).success();
     }
 }

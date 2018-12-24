@@ -25,7 +25,6 @@ public class ArticleOutput {
     @JsonFormat(timezone = "GMT+8",pattern="yyyy-MM-dd HH:mm:ss")
     private Date TopicDate;
 
-
     private Integer ReplyCount;
 
     private Integer ClickingRate;
