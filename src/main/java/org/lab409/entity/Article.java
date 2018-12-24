@@ -1,8 +1,7 @@
 package org.lab409.entity;
 
 import java.util.Date;
-import java.sql.Timestamp;
-import java.util.List;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
