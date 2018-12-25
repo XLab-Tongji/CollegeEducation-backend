@@ -30,7 +30,9 @@ public interface ClazzMapper {
             "course_class_link," +
             "course_instructor_self_signup," +
             "course_class_status," +
-            "course_credit) " +
+            "course_credit," +
+            "course_university," +
+            "course_major) " +
             "VALUES" +
             "(#{course_no}," +
             "#{course_name}," +
@@ -41,7 +43,9 @@ public interface ClazzMapper {
             "#{course_class_link}," +
             "#{course_instructor_self_signup}," +
             "#{course_class_status}," +
-            "#{course_credit})")
+            "#{course_credit}," +
+            "#{course_university}," +
+            "#{course_major})")
     @Options(useGeneratedKeys = true,keyProperty = "course_id",keyColumn = "course_id")
     int createClazz(Clazz clazz);
 
@@ -81,4 +85,13 @@ public interface ClazzMapper {
 
     @Select("SELECT IFNULL((SELECT a.student_id FROM course_students a WHERE a.student_email=#{student_email}),'0')")
     int getStudentIdByStudentEmail(@Param(value = "student_email")String student_email);
+
+    @Select("SELECT c.student_no,c.student_name,c.student_sex,c.student_birthday,c.student_school,c.student_major,c.student_email,c.student_id " +
+            "FROM course_class a,course_score b,course_students c " +
+            "WHERE a.course_no=b.course_no " +
+            "AND b.student_id=c.student_id " +
+            "AND a.course_no=#{course_no}")
+    List<Student> getClazzMemberByCourseNo(@Param(value = "course_no")String course_no);
+
+
 }

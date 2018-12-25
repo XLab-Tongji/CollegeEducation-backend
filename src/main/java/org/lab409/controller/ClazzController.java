@@ -66,4 +66,19 @@ public class ClazzController {
             return new ResponseMessage<>(null).success();
         return new ResponseMessage<>(null).error(202,"fail to enter the class");
     }
+
+    //get class members as teacher
+    @RequestMapping(value = "teacher/class/member",method = RequestMethod.GET)
+    public ResponseMessage getClazzMemberAsTeacher(@RequestParam(value = "course_no")String course_no){
+        List<Student> students=clazzService.getClazzMemberAsTeacher(course_no);
+        return new ResponseMessage<>(students).success();
+    }
+
+    //get class members as student
+    @RequestMapping(value = "student/class/member",method = RequestMethod.GET)
+    public ResponseMessage getClazzMemberAsStudent(@RequestParam(value = "course_no")String course_no){
+        List<Student> students=clazzService.getClazzMemberAsStudent(course_no);
+        return new ResponseMessage<>(students).success();
+    }
+
 }

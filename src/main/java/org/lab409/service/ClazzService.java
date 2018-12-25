@@ -15,5 +15,7 @@ public interface ClazzService {
     boolean deleteStudent(Student student,String course_no);                    //delete association between student and class
     boolean enterClazz(Student student,String course_access_code);              //enter a class by providing student_email and course_access_code
     List<Clazz> getClazzAsTeacher(Integer userid);                              //get class as teacher
-    List<Clazz> getClazzAsStudent(String student_email);                                            //get class as student
+    List<Clazz> getClazzAsStudent(String student_email);                        //get class as student
+    List<Student> getClazzMemberAsTeacher(String course_no);                    //get class members as teacher
+    List<Student> getClazzMemberAsStudent(String course_no);                    //get class members as student
 }

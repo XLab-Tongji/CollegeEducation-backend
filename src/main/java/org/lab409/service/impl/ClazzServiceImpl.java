@@ -73,4 +73,15 @@ public class ClazzServiceImpl implements ClazzService {
     public List<Clazz> getClazzAsStudent(String student_email){
         return clazzMapper.getClazzAsStudent(student_email);
     }
+
+    @Override
+    public List<Student> getClazzMemberAsTeacher(String course_no){
+        return clazzMapper.getClazzMemberByCourseNo(course_no);
+    }
+
+    @Override
+    public List<Student> getClazzMemberAsStudent(String course_no){
+        return clazzMapper.getClazzMemberByCourseNo(course_no);
+    }
+
 }

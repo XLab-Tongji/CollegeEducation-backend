@@ -19,12 +19,30 @@ public class Clazz {
     private Integer course_instructor_self_signup;
     private Integer course_class_status;
     private String course_credit;
+    private String course_university;
+    private String course_major;
 
     private Integer admin_id;
     private String admin_name;
     private String admin_class;
 
     private Integer admin_userid;
+
+    public String getCourse_university() {
+        return course_university;
+    }
+
+    public void setCourse_university(String course_university) {
+        this.course_university = course_university;
+    }
+
+    public String getCourse_major() {
+        return course_major;
+    }
+
+    public void setCourse_major(String course_major) {
+        this.course_major = course_major;
+    }
 
     public Integer getAdmin_userid() {
         return admin_userid;
