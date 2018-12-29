@@ -20,4 +20,12 @@ public class UserEntity {
 
     //data url base64
     private String icon;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

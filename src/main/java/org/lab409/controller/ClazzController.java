@@ -3,6 +3,7 @@ package org.lab409.controller;
 import org.lab409.entity.Clazz;
 import org.lab409.entity.ResponseMessage;
 import org.lab409.entity.Student;
+import org.lab409.entity.UserEntity;
 import org.lab409.service.ClazzService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +62,8 @@ public class ClazzController {
     //enter a class by providing student_email and course_access_code
     @Transactional
     @RequestMapping(value = "student/class",method = RequestMethod.POST)
-    public ResponseMessage enterClazz(@RequestBody Student student,@RequestParam(value = "course_access_code") String course_access_code){
-        if(clazzService.enterClazz(student,course_access_code))
+    public ResponseMessage enterClazz(@RequestBody UserEntity userEntity, @RequestParam(value = "course_access_code") String course_access_code){
+        if(clazzService.enterClazz(userEntity,course_access_code))
             return new ResponseMessage<>(null).success();
         return new ResponseMessage<>(null).error(202,"fail to enter the class");
     }

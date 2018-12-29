@@ -2,6 +2,7 @@ package org.lab409.service.impl;
 
 import org.lab409.entity.Clazz;
 import org.lab409.entity.Student;
+import org.lab409.entity.UserEntity;
 import org.lab409.mapper.ClazzMapper;
 import org.lab409.service.ClazzService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,9 @@ public class ClazzServiceImpl implements ClazzService {
     }
 
     @Override
-    public boolean enterClazz(Student student,String course_access_code){
+    public boolean enterClazz(UserEntity userEntity, String course_access_code){
+        Student student=new Student();//create student
+        student.setStudent_email(userEntity.getEmail());
         String course_no=clazzMapper.getCourseNoByCourseAccessCode(course_access_code);
         if(course_no.equals("0"))
             return false;
