@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+      <html>
+      <head>
+      <title>Edushare接口规约</title>
+      <meta charset="utf-8" />
+      <style>@charset "UTF-8";
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* 外层轨道 */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset006pxrgba(255, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+  font-size: 13px;
+  line-height: 25px;
+  color: #393838;
+  position: relative;
+}
+
+table {
+  margin: 10px 0 15px 0;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid #ddd;
+  padding: 3px 10px;
+}
+
+th {
+  padding: 5px 10px;
+}
+
+a, a:link, a:visited {
+  color: #34495e;
+  text-decoration: none;
+}
+
+a:hover, a:focus {
+  color: #59d69d;
+  text-decoration: none;
+}
+
+a img {
+  border: none;
+}
+
+p {
+  padding-left: 10px;
+  margin-bottom: 9px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #404040;
+  line-height: 36px;
+}
+
+h1 {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+  line-height: 50px;
+}
+
+h2 {
+  font-size: 28px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+h3 {
+  clear: both;
+  font-weight: 400;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-left: 3px solid #59d69d;
+  padding-left: 8px;
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  font-size: 13px;
+}
+
+hr {
+  margin: 0 0 19px;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+blockquote {
+  padding: 13px 13px 21px 15px;
+  margin-bottom: 18px;
+  font-family: georgia, serif;
+  font-style: italic;
+}
+
+blockquote:before {
+  font-size: 40px;
+  margin-left: -10px;
+  font-family: georgia, serif;
+  color: #eee;
+}
+
+blockquote p {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  margin-bottom: 0;
+  font-style: italic;
+}
+
+code,
+pre {
+  font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+
+code {
+  background-color: #fee9cc;
+  color: rgba(0, 0, 0, 0.75);
+  padding: 1px 3px;
+  font-size: 12px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+pre {
+  display: block;
+  padding: 14px;
+  margin: 0 0 18px;
+  line-height: 16px;
+  font-size: 11px;
+  border: 1px solid #d9d9d9;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background: #f6f6f6;
+}
+
+pre code {
+  background-color: #f6f6f6;
+  color: #737373;
+  font-size: 11px;
+  padding: 0;
+}
+
+sup {
+  font-size: 0.83em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+* {
+  -webkit-print-color-adjust: exact;
+}
+
+@media print {
+  body,
+  code,
+  pre code,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: black;
+  }
+
+  table,
+  pre {
+    page-break-inside: avoid;
+  }
+}
+html,
+body {
+  height: 100%;
+}
+
+.table-of-contents {
+  position: fixed;
+  top: 61px;
+  left: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 260px;
+}
+
+.table-of-contents > ul > li > a {
+  font-size: 20px;
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+.table-of-contents ul {
+  overflow: auto;
+  margin: 0px;
+  height: 100%;
+  padding: 0px 0px;
+  box-sizing: border-box;
+  list-style-type: none;
+}
+
+.table-of-contents ul li {
+  padding-left: 20px;
+}
+
+.table-of-contents a {
+  padding: 2px 0px;
+  display: block;
+  text-decoration: none;
+}
+
+.content-right {
+  max-width: 700px;
+  margin-left: 290px;
+  padding-left: 70px;
+  flex-grow: 1;
+}
+.content-right h2:target {
+  padding-top: 80px;
+}
+
+body > p {
+  margin-left: 30px;
+}
+
+body > table {
+  margin-left: 30px;
+}
+
+body > pre {
+  margin-left: 30px;
+}
+
+.curProject {
+  position: fixed;
+  top: 20px;
+  font-size: 25px;
+  color: black;
+  margin-left: -240px;
+  width: 240px;
+  padding: 5px;
+  line-height: 25px;
+  box-sizing: border-box;
+}
+
+.g-doc {
+  margin-top: 56px;
+  padding-top: 24px;
+  display: flex;
+}
+
+.curproject-name {
+  font-size: 42px;
+}
+
+.m-header {
+  background: #32363a;
+  height: 56px;
+  line-height: 56px;
+  padding-left: 60px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.m-header .title {
+  font-size: 22px;
+  color: #fff;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  margin-left: 16px;
+  padding: 0;
+  line-height: 56px;
+  border: none;
+}
+.m-header .nav {
+  color: #fff;
+  font-size: 16px;
+  position: absolute;
+  right: 32px;
+  top: 0;
+}
+.m-header .nav a {
+  color: #fff;
+  margin-left: 16px;
+  padding: 8px;
+  transition: color .2s;
+}
+.m-header .nav a:hover {
+  color: #59d69d;
+}
+
+.m-footer {
+  border-top: 1px solid #ddd;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+/*# sourceMappingURL=defaultTheme.css.map */
+</style>
+      </head>
+      <body>
+        <div class="m-header">
+          <a href="#"><h1 class="title" style="position: absolute;left: 0;top:0px">教育平台接口文档</h1></a>
+          <div class="nav">
+            王嘉成 殷在浩 陈浩宇 杨弈辰
+          </div>
+        </div>
+        <div class="g-doc">
+          <div class="table-of-contents"><ul><li><a href="#u516cu5171u5206u7c7b">公共分类</a><ul><li><a href="#u4e0au4f20u5934u50cf0a3ca20id3du4e0au4f20u5934u50cf3e203ca3e">上传头像
+<a id=上传头像> </a></a></li><li><a href="#u4feeu6539u5bc6u78010a3ca20id3du4feeu6539u5bc6u78013e203ca3e">修改密码
+<a id=修改密码> </a></a></li><li><a href="#u4feeu6539u7528u6237u4fe1u606f0a3ca20id3du4feeu6539u7528u6237u4fe1u606f3e203ca3e">修改用户信息
+<a id=修改用户信息> </a></a></li><li><a href="#u6839u636eu5927u5b66u83b7u5f97u4e13u4e1au4fe1u606f0a3ca20id3du6839u636eu5927u5b66u83b7u5f97u4e13u4e1au4fe1u606f3e203ca3e">根据大学获得专业信息
+<a id=根据大学获得专业信息> </a></a></li><li><a href="#u6ce8u518c0a3ca20id3du6ce8u518c3e203ca3e">注册
+<a id=注册> </a></a></li><li><a href="#u7528u6237u767bu51fa0a3ca20id3du7528u6237u767bu51fa3e203ca3e">用户登出
+<a id=用户登出> </a></a></li><li><a href="#u767bu96460a3ca20id3du767bu96463e203ca3e">登陆
+<a id=登陆> </a></a></li><li><a href="#u83b7u5f97u5927u5b66u4fe1u606f0a3ca20id3du83b7u5f97u5927u5b66u4fe1u606f3e203ca3e">获得大学信息
+<a id=获得大学信息> </a></a></li><li><a href="#u83b7u5f97u5934u50cf0a3ca20id3du83b7u5f97u5934u50cf3e203ca3e">获得头像
+<a id=获得头像> </a></a></li></ul></li><li><a href="#u8d44u6e90">资源</a><ul><li><a href="#u83b7u53d6u6211u7684u6536u85cfu8d44u6e90uff08u6839u636eu6536u85cfu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u53d6u6211u7684u6536u85cfu8d44u6e90uff08u6839u636eu6536u85cfu65f6u95f4u6392u5e8fuff093e203ca3e">获取我的收藏资源（时间序）
+<a id=获取我的收藏资源（根据收藏时间排序）> </a></a></li><li><a href="#u4e0au4f20u8d44u6e900a3ca20id3du4e0au4f20u8d44u6e903e203ca3e">上传资源
+<a id=上传资源> </a></a></li><li><a href="#u4e0bu8f7du8d44u6e900a3ca20id3du4e0bu8f7du8d44u6e903e203ca3e">下载资源
+<a id=下载资源> </a></a></li><li><a href="#u5220u9664u8bc4u8bba0a3ca20id3du5220u9664u8bc4u8bba3e203ca3e">删除评论
+<a id=删除评论> </a></a></li><li><a href="#u5220u9664u8d44u6e900a3ca20id3du5220u9664u8d44u6e903e203ca3e">删除资源
+<a id=删除资源> </a></a></li><li><a href="#u53d6u6d88u6536u85cf0a3ca20id3du53d6u6d88u6536u85cf3e203ca3e">取消收藏
+<a id=取消收藏> </a></a></li><li><a href="#u53d6u6d88u70b9u8d5eu8d44u6e900a3ca20id3du53d6u6d88u70b9u8d5eu8d44u6e903e203ca3e">取消点赞资源
+<a id=取消点赞资源> </a></a></li><li><a href="#u6536u85cfu8d44u6e900a3ca20id3du6536u85cfu8d44u6e903e203ca3e">收藏资源
+<a id=收藏资源> </a></a></li><li><a href="#u67d0u4e2au8d44u6e90u7684u8be6u7ec6u4fe1u606f0a3ca20id3du67d0u4e2au8d44u6e90u7684u8be6u7ec6u4fe1u606f3e203ca3e">某个资源的详细信息
+<a id=某个资源的详细信息> </a></a></li><li><a href="#u70b9u8d5eu8d44u6e900a3ca20id3du70b9u8d5eu8d44u6e903e203ca3e">点赞资源
+<a id=点赞资源> </a></a></li><li><a href="#u7528u6237u5bf9u67d0u4e2au8d44u6e90u7684u5386u53f2u8bb0u5f550a3ca20id3du7528u6237u5bf9u67d0u4e2au8d44u6e90u7684u5386u53f2u8bb0u5f553e203ca3e">用户对某个资源的历史记录
+<a id=用户对某个资源的历史记录> </a></a></li><li><a href="#u83b7u53d6u6211u7684u4e0bu8f7du8d44u6e90uff08u6839u636eu4e0bu8f7du65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u53d6u6211u7684u4e0bu8f7du8d44u6e90uff08u6839u636eu4e0bu8f7du65f6u95f4u6392u5e8fuff093e203ca3e">获取我的下载资源（时间序）
+<a id=获取我的下载资源（下载时间排序）> </a></a></li><li><a href="#u4e0au4f20u8d44u6e90metadata0a3ca20id3du4e0au4f20u8d44u6e90metadata3e203ca3e">上传资源metadata
+<a id=上传资源metadata> </a></a></li><li><a href="#u83b7u5f97u6211u70b9u8d5eu7684u8d44u6e9028u6839u636eu70b9u8d5eu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u70b9u8d5eu7684u8d44u6e9028u6839u636eu70b9u8d5eu65f6u95f4u6392u5e8fuff093e203ca3e">获得我点赞的资源(时间序）
+<a id=获得我点赞的资源(点赞时间排序）> </a></a></li><li><a href="#u83b7u5f97u6211u7684u4e0au4f20u8d44u6e90uff08u6839u636eu4e0au4f20u65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u7684u4e0au4f20u8d44u6e90uff08u6839u636eu4e0au4f20u65f6u95f4u6392u5e8fuff093e203ca3e">获得我的上传资源（时间排）
+<a id=获得我的上传资源（上传时间排序）> </a></a></li><li><a href="#u83b7u5f97u6211u7684u6240u6709u8bc4u8bba28u6309u8bc4u8bbau65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u7684u6240u6709u8bc4u8bba28u6309u8bc4u8bbau65f6u95f4u6392u5e8fuff093e203ca3e">获得我的所有评论(按评论时间排序）
+<a id=获得我的所有评论(评论时间排序）> </a></a></li><li><a href="#u83b7u5f97u6240u6709u8d44u6e90u5206u7c7b0a3ca20id3du83b7u5f97u6240u6709u8d44u6e90u5206u7c7b3e203ca3e">获得所有资源分类
+<a id=获得所有资源分类> </a></a></li><li><a href="#u83b7u5f97u6240u6709u8d44u6e90u7684u7c7bu578b0a3ca20id3du83b7u5f97u6240u6709u8d44u6e90u7684u7c7bu578b3e203ca3e">获得所有资源的类型
+<a id=获得所有资源的类型> </a></a></li><li><a href="#u83b7u5f97u67d0u4e2au8d44u6e90u4e0bu7684u8bc4u8bbauff08u6839u636eu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u67d0u4e2au8d44u6e90u4e0bu7684u8bc4u8bbauff08u6839u636eu65f6u95f4u6392u5e8fuff093e203ca3e">获得某个资源下的评论（时间序）
+<a id=获得某个资源下的评论（根据时间排序）> </a></a></li><li><a href="#u83b7u5f97u81eau5df1u7684u4e0au4f20u8d44u6e90u7684u4fe1u606f0a3ca20id3du83b7u5f97u81eau5df1u7684u4e0au4f20u8d44u6e90u7684u4fe1u606f3e203ca3e">获得自己的上传资源的信息
+<a id=获得自己的上传资源的信息> </a></a></li><li><a href="#u8bc4u8bbau8d44u6e900a3ca20id3du8bc4u8bbau8d44u6e903e203ca3e">评论资源
+<a id=评论资源> </a></a></li><li><a href="#u8d44u6e90u63a8u8350uff08u6839u636eu5206u6570u6392u5e8fuff090a3ca20id3du8d44u6e90u63a8u8350uff08u6839u636eu5206u6570u6392u5e8fuff093e203ca3e">资源推荐（根据分数排序）
+<a id=资源推荐（根据分数排序）> </a></a></li><li><a href="#u8d44u6e90u67e5u627euff08u6839u636eu5206u6570u6392u540duff090a3ca20id3du8d44u6e90u67e5u627euff08u6839u636eu5206u6570u6392u540duff093e203ca3e">资源查找（根据分数排名）
+<a id=资源查找（根据分数排名）> </a></a></li><li><a href="#u8d44u6e90u67e5u627euff08u6839u636eu65f6u95f4u6392u5e8fuff090a3ca20id3du8d44u6e90u67e5u627euff08u6839u636eu65f6u95f4u6392u5e8fuff093e203ca3e">资源查找（根据时间排序）
+<a id=资源查找（根据时间排序）> </a></a></li><li><a href="#u8e29u8d44u6e900a3ca20id3du8e29u8d44u6e903e203ca3e">踩资源
+</ul></li></ul></div>
+          <div id="right" class="content-right">
+<p></p>
+<h2 id="u4e0au4f20u5934u50cf0a3ca20id3du4e0au4f20u5934u50cf3e203ca3e">上传头像
+<a id=上传头像> </a></h2>
+<p></p>
+<h3 id="">基本信息</h3>
+<p><strong>Path：</strong> /user/uploadIcon</p>
+<p><strong>Method：</strong> PUT</p>
+<p><strong>接口描述：</strong></p>
+<p>注意限制一下大小，我会验证图片格式，png jpg jpeg应该可以，但是可能会被过滤掉（很迷的问题，同一个格式解析出来不同。。。）</p>
+<h3 id="-2">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>multipart/form-data</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>icon</td>
+<td>file</td>
+<td>是</td>
+<td></td>
+<td>2.4k可以，大了会报错，限制一下大小</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-3">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u4feeu6539u5bc6u78010a3ca20id3du4feeu6539u5bc6u78013e203ca3e">修改密码
+<a id=修改密码> </a></h2>
+<p></p>
+<h3 id="-4">基本信息</h3>
+<p><strong>Path：</strong> /user/updatePassword</p>
+<p><strong>Method：</strong> PUT</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-5">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;oldPassword&quot;: &quot;123456&quot;,
+   &quot;newPassword&quot;: &quot;1234&quot;
+}
+</code></pre>
+<h3 id="-6">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u4feeu6539u7528u6237u4fe1u606f0a3ca20id3du4feeu6539u7528u6237u4fe1u606f3e203ca3e">修改用户信息
+<a id=修改用户信息> </a></h2>
+<p></p>
+<h3 id="-7">基本信息</h3>
+<p><strong>Path：</strong> /user/update</p>
+<p><strong>Method：</strong> PUT</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-8">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;username&quot;: &quot;qibatu&quot;,
+   &quot;email&quot;: &quot;qibatu@outlook.com&quot;,
+   &quot;gender&quot;: &quot;male&quot;,
+   &quot;universityID&quot;: 1,
+   &quot;majorID&quot;: 2,
+   &quot;birthday&quot;: &quot;2018-09-09&quot;,
+   &quot;studentID&quot;: &quot;1655555&quot;,
+   &quot;auth&quot;: 1,
+   &quot;admissionYear&quot;: &quot;2016&quot;
+}
+</code></pre>
+<h3 id="-9">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u6839u636eu5927u5b66u83b7u5f97u4e13u4e1au4fe1u606f0a3ca20id3du6839u636eu5927u5b66u83b7u5f97u4e13u4e1au4fe1u606f3e203ca3e">根据大学获得专业信息
+<a id=根据大学获得专业信息> </a></h2>
+<p></p>
+<h3 id="-10">基本信息</h3>
+<p><strong>Path：</strong> /register/{universityID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>返回给我的是那个id而不是majorid，majorID我看了下在库里不是unique的</p>
+<h3 id="-11">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>universityID</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-12">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: [
+      {
+         &quot;id&quot;: 238,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;船舶与海洋工程&quot;
+      },
+      {
+         &quot;id&quot;: 239,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;交通运输&quot;
+      },
+      {
+         &quot;id&quot;: 240,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;土木工程&quot;
+      },
+      {
+         &quot;id&quot;: 241,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;工程力学&quot;
+      },
+      {
+         &quot;id&quot;: 242,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;海洋工程类&quot;
+      },
+      {
+         &quot;id&quot;: 243,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;机械类&quot;
+      },
+      {
+         &quot;id&quot;: 244,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;土木类&quot;
+      },
+      {
+         &quot;id&quot;: 245,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;机械工程&quot;
+      },
+      {
+         &quot;id&quot;: 246,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;能源与动力工程&quot;
+      },
+      {
+         &quot;id&quot;: 247,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;工业工程&quot;
+      },
+      {
+         &quot;id&quot;: 248,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;新能源科学与工程&quot;
+      },
+      {
+         &quot;id&quot;: 249,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;核工程与核技术&quot;
+      },
+      {
+         &quot;id&quot;: 250,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;机械类(国际化人才培养试点班)&quot;
+      },
+      {
+         &quot;id&quot;: 251,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子信息类&quot;
+      },
+      {
+         &quot;id&quot;: 252,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;自动化&quot;
+      },
+      {
+         &quot;id&quot;: 253,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;信息工程&quot;
+      },
+      {
+         &quot;id&quot;: 254,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子科学与技术&quot;
+      },
+      {
+         &quot;id&quot;: 255,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;计算机科学与技术&quot;
+      },
+      {
+         &quot;id&quot;: 256,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;测控技术与仪器&quot;
+      },
+      {
+         &quot;id&quot;: 257,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电气工程及其自动化&quot;
+      },
+      {
+         &quot;id&quot;: 258,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;信息安全&quot;
+      },
+      {
+         &quot;id&quot;: 259,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;软件工程&quot;
+      },
+      {
+         &quot;id&quot;: 260,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;微电子科学与工程&quot;
+      },
+      {
+         &quot;id&quot;: 261,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子信息类(IEEE试点班)&quot;
+      },
+      {
+         &quot;id&quot;: 262,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;材料科学与工程&quot;
+      },
+      {
+         &quot;id&quot;: 263,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;环境科学与工程&quot;
+      },
+      {
+         &quot;id&quot;: 264,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;生物医学工程&quot;
+      },
+      {
+         &quot;id&quot;: 265,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;航空航天工程&quot;
+      },
+      {
+         &quot;id&quot;: 266,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;化学类&quot;
+      },
+      {
+         &quot;id&quot;: 267,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;化学工程与工艺&quot;
+      },
+      {
+         &quot;id&quot;: 268,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;化学&quot;
+      },
+      {
+         &quot;id&quot;: 269,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;数学与应用数学&quot;
+      },
+      {
+         &quot;id&quot;: 270,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;物理学&quot;
+      },
+      {
+         &quot;id&quot;: 271,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;生物科学类&quot;
+      },
+      {
+         &quot;id&quot;: 272,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;生物技术&quot;
+      },
+      {
+         &quot;id&quot;: 273,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;生物工程&quot;
+      },
+      {
+         &quot;id&quot;: 274,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;计算机科学与技术(人工智能方向)&quot;
+      },
+      {
+         &quot;id&quot;: 275,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;自动化(人工智能方向)&quot;
+      },
+      {
+         &quot;id&quot;: 276,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;信息工程(人工智能方向)&quot;
+      },
+      {
+         &quot;id&quot;: 277,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;自然保护与环境生态类&quot;
+      },
+      {
+         &quot;id&quot;: 278,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;资源环境科学&quot;
+      },
+      {
+         &quot;id&quot;: 279,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;动物科学&quot;
+      },
+      {
+         &quot;id&quot;: 280,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;植物科学与技术&quot;
+      },
+      {
+         &quot;id&quot;: 281,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;药学类&quot;
+      },
+      {
+         &quot;id&quot;: 282,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;药学&quot;
+      },
+      {
+         &quot;id&quot;: 283,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床药学(五年制)&quot;
+      },
+      {
+         &quot;id&quot;: 284,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;经济管理试验班&quot;
+      },
+      {
+         &quot;id&quot;: 285,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;金融学&quot;
+      },
+      {
+         &quot;id&quot;: 286,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;国际经济与贸易&quot;
+      },
+      {
+         &quot;id&quot;: 287,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;经济学&quot;
+      },
+      {
+         &quot;id&quot;: 288,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;工商管理&quot;
+      },
+      {
+         &quot;id&quot;: 289,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;会计学&quot;
+      },
+      {
+         &quot;id&quot;: 290,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;人力资源管理&quot;
+      },
+      {
+         &quot;id&quot;: 291,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;信息管理与信息系统&quot;
+      },
+      {
+         &quot;id&quot;: 292,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;法学&quot;
+      },
+      {
+         &quot;id&quot;: 293,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;英语&quot;
+      },
+      {
+         &quot;id&quot;: 294,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;日语&quot;
+      },
+      {
+         &quot;id&quot;: 295,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;德语&quot;
+      },
+      {
+         &quot;id&quot;: 296,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;汉语言文学(中外文化交流)&quot;
+      },
+      {
+         &quot;id&quot;: 297,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;行政管理&quot;
+      },
+      {
+         &quot;id&quot;: 298,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;传播学&quot;
+      },
+      {
+         &quot;id&quot;: 299,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;广播电视编导&quot;
+      },
+      {
+         &quot;id&quot;: 300,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;文化产业管理&quot;
+      },
+      {
+         &quot;id&quot;: 301,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;工业设计&quot;
+      },
+      {
+         &quot;id&quot;: 302,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;建筑学&quot;
+      },
+      {
+         &quot;id&quot;: 303,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;视觉传达设计(含环境设计)&quot;
+      },
+      {
+         &quot;id&quot;: 304,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;园林&quot;
+      },
+      {
+         &quot;id&quot;: 305,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子信息类(全英语授课)&quot;
+      },
+      {
+         &quot;id&quot;: 306,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子与计算机工程&quot;
+      },
+      {
+         &quot;id&quot;: 307,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;机械类(全英语授课)&quot;
+      },
+      {
+         &quot;id&quot;: 308,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;材料类(全英语授课)&quot;
+      },
+      {
+         &quot;id&quot;: 309,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;电子信息类(零法语基础,英语+法语授课)&quot;
+      },
+      {
+         &quot;id&quot;: 310,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;机械类(零法语基础,英语+法语授课)&quot;
+      },
+      {
+         &quot;id&quot;: 311,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;法语&quot;
+      },
+      {
+         &quot;id&quot;: 312,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;工科试验班类&quot;
+      },
+      {
+         &quot;id&quot;: 313,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;理科试验班类&quot;
+      },
+      {
+         &quot;id&quot;: 314,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;自然科学试验班(生命与环境交叉平台)&quot;
+      },
+      {
+         &quot;id&quot;: 315,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;统计学&quot;
+      },
+      {
+         &quot;id&quot;: 316,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;应用物理学&quot;
+      },
+      {
+         &quot;id&quot;: 317,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;天文学&quot;
+      },
+      {
+         &quot;id&quot;: 318,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;食品科学与工程&quot;
+      },
+      {
+         &quot;id&quot;: 319,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学(本博连读)&quot;
+      },
+      {
+         &quot;id&quot;: 320,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学(本博连读法语班)&quot;
+      },
+      {
+         &quot;id&quot;: 321,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学&quot;
+      },
+      {
+         &quot;id&quot;: 322,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学(儿科方向5+3)&quot;
+      },
+      {
+         &quot;id&quot;: 323,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学(英语班)&quot;
+      },
+      {
+         &quot;id&quot;: 324,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;临床医学(本博连读口腔医学方向)&quot;
+      },
+      {
+         &quot;id&quot;: 325,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;口腔医学&quot;
+      },
+      {
+         &quot;id&quot;: 326,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;预防医学&quot;
+      },
+      {
+         &quot;id&quot;: 327,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;医学技术类&quot;
+      },
+      {
+         &quot;id&quot;: 328,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;医学检验技术&quot;
+      },
+      {
+         &quot;id&quot;: 329,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;食品卫生与营养学&quot;
+      },
+      {
+         &quot;id&quot;: 330,
+         &quot;universityID&quot;: 0,
+         &quot;majorID&quot;: null,
+         &quot;majorName&quot;: &quot;护理学&quot;
+      }
+   ]
+}
+</code></pre>
+<h2 id="u6ce8u518c0a3ca20id3du6ce8u518c3e203ca3e">注册
+<a id=注册> </a></h2>
+<p></p>
+<h3 id="-13">基本信息</h3>
+<p><strong>Path：</strong> /register</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<p>接口暂定，随便写的<br>
+//重名时无法注册<br>
+{<br>
+&nbsp;&nbsp;&nbsp; "status": 202,<br>
+&nbsp;&nbsp;&nbsp; "message": "can't register",<br>
+&nbsp;&nbsp;&nbsp; "data": null<br>
+}</p>
+<h3 id="-14">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;username&quot;: &quot;qibatu&quot;,
+   &quot;password&quot;: &quot;123456&quot;,
+   &quot;email&quot;: &quot;qibatu@outlook.com&quot;,
+   &quot;gender&quot;: &quot;male&quot;,
+   &quot;universityID&quot;: 1,
+   &quot;majorID&quot;: 2,
+   &quot;birthday&quot;: &quot;2018-09-09&quot;,
+   &quot;studentID&quot;: &quot;1655555&quot;,
+   &quot;auth&quot;: 1,
+   &quot;admissionYear&quot;: &quot;2016&quot;
+}
+</code></pre>
+<h3 id="-15">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u7528u6237u767bu51fa0a3ca20id3du7528u6237u767bu51fa3e203ca3e">用户登出
+<a id=用户登出> </a></h2>
+<p></p>
+<h3 id="-16">基本信息</h3>
+<p><strong>Path：</strong> /user/logout</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<p>先别用，我还没搞懂jwt的token怎么登出。。。</p>
+<h3 id="-17">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/x-www-form-urlencoded</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="u767bu96460a3ca20id3du767bu96463e203ca3e">登陆
+<a id=登陆> </a></h2>
+<p></p>
+<h3 id="-18">基本信息</h3>
+<p><strong>Path：</strong> /auth</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<p>以后每次调用接口基本上都要token，验证需要token在header里面</p>
+<h3 id="-19">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;username&quot;: &quot;qibatu&quot;,
+   &quot;password&quot;: &quot;123456&quot;
+}
+</code></pre>
+<h3 id="-20">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;token&quot;: &quot;eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk1MjkyNjEsImlhdCI6MTUzODkyNDQ2MX0.Ji_6bJ8O0bzO_6Oo9tOB80CCpI5NaQVc2ZUL65KtlK1kmTyWBoG1MTiHpqNW1A3RLBn4jwmTcjGFQVI1CbAyyQ&quot;
+}
+</code></pre>
+<h2 id="u83b7u5f97u5927u5b66u4fe1u606f0a3ca20id3du83b7u5f97u5927u5b66u4fe1u606f3e203ca3e">获得大学信息
+<a id=获得大学信息> </a></h2>
+<p></p>
+<h3 id="-21">基本信息</h3>
+<p><strong>Path：</strong> /register/university</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>发送给我universityID</p>
+<h3 id="-22">请求参数</h3>
+<h3 id="-23">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: [
+      {
+         &quot;universityID&quot;: 1,
+         &quot;universityName&quot;: &quot;同济大学&quot;
+      },
+      {
+         &quot;universityID&quot;: 2,
+         &quot;universityName&quot;: &quot;复旦大学&quot;
+      },
+      {
+         &quot;universityID&quot;: 3,
+         &quot;universityName&quot;: &quot;上海交通大学&quot;
+      }
+   ]
+}
+</code></pre>
+<h2 id="u83b7u5f97u5934u50cf0a3ca20id3du83b7u5f97u5934u50cf3e203ca3e">获得头像
+<a id=获得头像> </a></h2>
+<p></p>
+<h3 id="-24">基本信息</h3>
+<p><strong>Path：</strong> /user/getIcon</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong><br>
+undefined</p>
+<h3 id="-25">请求参数</h3>
+
+<p></p>
+<h2 id="u83b7u53d6u6211u7684u6536u85cfu8d44u6e90uff08u6839u636eu6536u85cfu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u53d6u6211u7684u6536u85cfu8d44u6e90uff08u6839u636eu6536u85cfu65f6u95f4u6392u5e8fuff093e203ca3e">获取我的收藏资源（根据收藏时间排序）
+<a id=获取我的收藏资源（根据收藏时间排序）> </a></h2>
+<p></p>
+<h3 id="-26">基本信息</h3>
+<p><strong>Path：</strong> /resource/myFavourite/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>data可能为空，</p>
+<h3 id="-27">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageID</td>
+<td>1</td>
+<td>这个分页好像是从1开始的，search的分页好像是从0开始的。。。我再看看</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-28">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 3,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bd6dd6737bb13570da2d318&quot;,
+            &quot;id&quot;: 17,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;chubby&quot;,
+            &quot;description&quot;: &quot; Google Chubby 是一个大名鼎鼎的分布式锁服务，GFS和Big Table等大型系统都用他来解决分布式协作、元数据存储和Master选择等一系列与分布式锁服务相关的问题。Chubby的底层一致性实现就是以Paxos算法为基础的。Chubby是一个面向松耦合分布式系统的锁服务，通常用于为一个由大量小型计算机构成的松耦合分布式系统提供高可用的分布式锁服务。一个分布式锁服务的目的是允许他的客户端进程同步彼此的操作，并对当前所处环境的基本状态信息达成一致。针对这个目的，Chubby提供了粗粒度的分布式锁服务，开发人员不需要使用复杂的同步协议，而是直接调用Chubby的锁服务接口即可实现分布式系统中多个进程之间粗粒度的同步控制，从而保证分布式数据的一致性。Chubby的客户端接口设计非常类似于UNIX文件系统结构，应用程序通过Chubby的客户端接口，不仅能够对Chubby服务器上的整个文件进行读写操作，还能添加对文件节点的锁控制，并且能够订阅Chubby服务端发出的一系列文件变动的事件通知。&quot;,
+            &quot;points&quot;: 3,
+            &quot;uploadTime&quot;: &quot;2018-10-29 06:14:26&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bdb1c223cd8755c778a8afb&quot;,
+            &quot;id&quot;: 19,
+            &quot;uploaderID&quot;: 13,
+            &quot;categoryID&quot;: 1,
+            &quot;resourceMajorID&quot;: 38,
+            &quot;resourceName&quot;: &quot;naiad&quot;,
+            &quot;description&quot;: &quot;Naiad is a distributed system for executing data parallel, cyclic dataflow programs. It offers the high throughput of batch processors, the low latency of stream ...&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-01 11:30:51&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bebfd149438d9de03d96c0e&quot;,
+            &quot;id&quot;: 21,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;spark&quot;,
+            &quot;description&quot;: &quot;Apache Spark 是专为大规模数据处理而设计的快速通用的计算引擎。Spark是UC Berkeley AMP lab (加州大学伯克利分校的AMP实验室)所开源的类Hadoop MapReduce的通用并行框架&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-14 06:46:46&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 0,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 3,
+      &quot;startRow&quot;: 1,
+      &quot;endRow&quot;: 3,
+      &quot;pages&quot;: 1,
+      &quot;prePage&quot;: 0,
+      &quot;nextPage&quot;: 1,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: false,
+      &quot;hasPreviousPage&quot;: false,
+      &quot;hasNextPage&quot;: true,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 1
+   }
+}
+</code></pre>
+<h2 id="u4e0au4f20u8d44u6e900a3ca20id3du4e0au4f20u8d44u6e903e203ca3e">上传资源
+<a id=上传资源> </a></h2>
+<p></p>
+<h3 id="-29">基本信息</h3>
+<p><strong>Path：</strong> /uploadResource</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<p>data为文件在mongodb的唯一序列号<br>
+会过滤文件，压缩文件，源文件等文本，office类（不保证，过滤器比较坑。。。有问题再说），pdf可以。<br>
+sh脚本，可执行文件等其他的应该都不行</p>
+<h3 id="-30">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>multipart/form-data</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td>以后都要这个，就不写了</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数类型</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resource</td>
+<td>file</td>
+<td>是</td>
+<td>backpropogation.pdf</td>
+<td>&lt;128M</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-31">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: &quot;5bbf5bc8231f0216ddb21c3a&quot;
+}
+</code></pre>
+<h2 id="u4e0bu8f7du8d44u6e900a3ca20id3du4e0bu8f7du8d44u6e903e203ca3e">下载资源
+<a id=下载资源> </a></h2>
+<p></p>
+<h3 id="-32">基本信息</h3>
+<p><strong>Path：</strong> /downloadResource/{resourceID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-33">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td></td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bbf4ccb231f027854348615</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="u5220u9664u8bc4u8bba0a3ca20id3du5220u9664u8bc4u8bba3e203ca3e">删除评论
+<a id=删除评论> </a></h2>
+<p></p>
+<h3 id="-34">基本信息</h3>
+<p><strong>Path：</strong> /resource/comment/delete/{commentID}</p>
+<p><strong>Method：</strong> DELETE</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-35">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/x-www-form-urlencoded</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>commentID</td>
+<td>4</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-36">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u5220u9664u8d44u6e900a3ca20id3du5220u9664u8d44u6e903e203ca3e">删除资源
+<a id=删除资源> </a></h2>
+<p></p>
+<h3 id="-37">基本信息</h3>
+<p><strong>Path：</strong> /deleteResource/{resourceID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-38">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bbf5bc8231f0216ddb21c3a</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-39">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u53d6u6d88u6536u85cf0a3ca20id3du53d6u6d88u6536u85cf3e203ca3e">取消收藏
+<a id=取消收藏> </a></h2>
+<p></p>
+<h3 id="-40">基本信息</h3>
+<p><strong>Path：</strong> /resource/favourite/dislike/{resourceID}</p>
+<p><strong>Method：</strong> DELETE</p>
+<p><strong>接口描述：</strong></p>
+<p>注意检查状态码</p>
+<h3 id="-41">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bcb2992a7536f4c1f0513f0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-42">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u53d6u6d88u70b9u8d5eu8d44u6e900a3ca20id3du53d6u6d88u70b9u8d5eu8d44u6e903e203ca3e">取消点赞资源
+<a id=取消点赞资源> </a></h2>
+<p></p>
+<h3 id="-43">基本信息</h3>
+<p><strong>Path：</strong> /resource/suggest/undo/{resourceID}</p>
+<p><strong>Method：</strong> DELETE</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-44">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/x-www-form-urlencoded</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bebfd149438d9de03d96c0e</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-45">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u6536u85cfu8d44u6e900a3ca20id3du6536u85cfu8d44u6e903e203ca3e">收藏资源
+<a id=收藏资源> </a></h2>
+<p></p>
+<h3 id="-46">基本信息</h3>
+<p><strong>Path：</strong> /resource/favourite/like/{resourceID}</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<p>注意查看状态码，如果收藏两次，插入会失败。<br>
+{<br>
+&nbsp;&nbsp;&nbsp; "timestamp": "2018-11-01T15:20:13.899+0000",<br>
+&nbsp;&nbsp;&nbsp; "status": 500,<br>
+&nbsp;&nbsp;&nbsp; "error": "Internal Server Error",<br>
+&nbsp;&nbsp;&nbsp; "message": "\n### Error updating database.&nbsp; Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '135bcb2992a7536f4c1f0513f0' for key 'PRIMARY'\n### The error may involve org.lab409.mapper.ResourceMapper.insertIntoFavouriteResource-Inline\n### The error occurred while setting parameters\n### SQL: INSERT INTO favouriteResource(id, userID,resourceID) VALUES (?, ?,?)\n### Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '135bcb2992a7536f4c1f0513f0' for key 'PRIMARY'\n; ]; Duplicate entry '135bcb2992a7536f4c1f0513f0' for key 'PRIMARY'; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '135bcb2992a7536f4c1f0513f0' for key 'PRIMARY'",<br>
+&nbsp;&nbsp;&nbsp; "path": "/resource/favourite/like/5bcb2992a7536f4c1f0513f0"<br>
+}</p>
+<h3 id="-47">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bcb2992a7536f4c1f0513f0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-48">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u67d0u4e2au8d44u6e90u7684u8be6u7ec6u4fe1u606f0a3ca20id3du67d0u4e2au8d44u6e90u7684u8be6u7ec6u4fe1u606f3e203ca3e">某个资源的详细信息
+<a id=某个资源的详细信息> </a></h2>
+<p></p>
+<h3 id="-49">基本信息</h3>
+<p><strong>Path：</strong> /resource/detail/{resourceID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>可能有空值，比如评论信息，表明没有过评论<br>
+favourite表明收藏<br>
+suggested表明点赞（踩也是suggested，但是值为0，不过应该不用知道自己踩了哪些吧）<br>
+点赞率=点赞数/（点赞数+踩数）<br>
+上传人平均分=他所有上传资源的平均分<br>
+上传人获赞率=他所有上传的资源的点赞数/（所有资源的点赞数+踩数）</p>
+<h3 id="-50">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bf684209438d9f772c537fd</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-51">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;uploaderInfo&quot;: {
+         &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+         &quot;uploaderName&quot;: &quot;chloe&quot;,
+         &quot;uploaderID&quot;: 13
+      },
+      &quot;downloadTimes&quot;: 1,
+      &quot;favouriteNum&quot;: 1,
+      &quot;suggestInfo&quot;: {
+         &quot;suggestedNum&quot;: 1,
+         &quot;resourceSuggestedRate&quot;: 1
+      },
+      &quot;commentInfo&quot;: {
+         &quot;commentNum&quot;: 8,
+         &quot;resourceAvgScore&quot;: 4.75
+      },
+      &quot;uploaderAvgScore&quot;: 3,
+      &quot;uploaderSuggestedRate&quot;: 0.8
+   }
+}
+</code></pre>
+<h2 id="u70b9u8d5eu8d44u6e900a3ca20id3du70b9u8d5eu8d44u6e903e203ca3e">点赞资源
+<a id=点赞资源> </a></h2>
+<p></p>
+<h3 id="-52">基本信息</h3>
+<p><strong>Path：</strong> /resource/suggest/make/{resourceID}</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-53">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/x-www-form-urlencoded</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bebfd149438d9de03d96c0e</td>
+<td>资源id</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-54">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u7528u6237u5bf9u67d0u4e2au8d44u6e90u7684u5386u53f2u8bb0u5f550a3ca20id3du7528u6237u5bf9u67d0u4e2au8d44u6e90u7684u5386u53f2u8bb0u5f553e203ca3e">用户对某个资源的历史记录
+<a id=用户对某个资源的历史记录> </a></h2>
+<p></p>
+<h3 id="-55">基本信息</h3>
+<p><strong>Path：</strong> /resource/user/history/{resourceID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>suggested 为：-1 表明没有赞/踩<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 表明踩过，<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1表明赞过<br>
+favourite为：0表明没有收藏过，<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ：1表明收藏过</p>
+<h3 id="-56">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bf684209438d9f772c537fd</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-57">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;suggested&quot;: -1,
+      &quot;favourite&quot;: 0
+   }
+}
+</code></pre>
+<h2 id="u83b7u53d6u6211u7684u4e0bu8f7du8d44u6e90uff08u6839u636eu4e0bu8f7du65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u53d6u6211u7684u4e0bu8f7du8d44u6e90uff08u6839u636eu4e0bu8f7du65f6u95f4u6392u5e8fuff093e203ca3e">获取我的下载资源（根据下载时间排序）
+<a id=获取我的下载资源（根据下载时间排序）> </a></h2>
+<p></p>
+<h3 id="-58">基本信息</h3>
+<p><strong>Path：</strong> /resource/myDownload</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-59">请求参数</h3>
+<h3 id="-60">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 4,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bebfd149438d9de03d96c0e&quot;,
+            &quot;id&quot;: 21,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;spark&quot;,
+            &quot;description&quot;: &quot;Apache Spark 是专为大规模数据处理而设计的快速通用的计算引擎。Spark是UC Berkeley AMP lab (加州大学伯克利分校的AMP实验室)所开源的类Hadoop MapReduce的通用并行框架&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-14 06:46:46&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 2,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 1,
+      &quot;startRow&quot;: 4,
+      &quot;endRow&quot;: 4,
+      &quot;pages&quot;: 2,
+      &quot;prePage&quot;: 1,
+      &quot;nextPage&quot;: 0,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: true,
+      &quot;hasPreviousPage&quot;: true,
+      &quot;hasNextPage&quot;: false,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1,
+         2
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 2
+   }
+}
+</code></pre>
+<h2 id="u4e0au4f20u8d44u6e90metadata0a3ca20id3du4e0au4f20u8d44u6e90metadata3e203ca3e">上传资源metadata
+<a id=上传资源metadata> </a></h2>
+<p></p>
+<h3 id="-61">基本信息</h3>
+<p><strong>Path：</strong> /uploadResourceMetaData</p>
+<p><strong>Method：</strong> PUT</p>
+<p><strong>接口描述：</strong></p>
+<p>tags 最多五个，每个tag最多10个字符，空字符分开</p>
+<h3 id="-62">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td></td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;resourceID&quot;: &quot;5bf794fb9438d91a388e7c53&quot;,
+   &quot;categoryID&quot;: 4,
+   &quot;resourceMajorID&quot;: 52,
+   &quot;resourceName&quot;: &quot;Byzantine Generals Problem&quot;,
+   &quot;description&quot;: &quot;拜占庭将军问题（Byzantine Generals Problem），是由莱斯利·兰波特在其同名论文[1]中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算器通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。&quot;,
+   &quot;points&quot;: 4,
+   &quot;tags&quot;: &quot;consensus byzantine&quot;
+}
+</code></pre>
+<h3 id="-63">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+<h2 id="u83b7u5f97u6211u70b9u8d5eu7684u8d44u6e9028u6839u636eu70b9u8d5eu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u70b9u8d5eu7684u8d44u6e9028u6839u636eu70b9u8d5eu65f6u95f4u6392u5e8fuff093e203ca3e">获得我点赞的资源(根据点赞时间排序）
+<a id=获得我点赞的资源(根据点赞时间排序）> </a></h2>
+<p></p>
+<h3 id="-64">基本信息</h3>
+<p><strong>Path：</strong> /resource/mySuggest/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>不会还要知道我踩过哪些资源吧。。。。</p>
+<h3 id="-65">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageID</td>
+<td>2</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-66">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 4,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bebfd149438d9de03d96c0e&quot;,
+            &quot;id&quot;: 21,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;spark&quot;,
+            &quot;description&quot;: &quot;Apache Spark 是专为大规模数据处理而设计的快速通用的计算引擎。Spark是UC Berkeley AMP lab (加州大学伯克利分校的AMP实验室)所开源的类Hadoop MapReduce的通用并行框架&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-14 06:46:46&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 2,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 1,
+      &quot;startRow&quot;: 4,
+      &quot;endRow&quot;: 4,
+      &quot;pages&quot;: 2,
+      &quot;prePage&quot;: 1,
+      &quot;nextPage&quot;: 0,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: true,
+      &quot;hasPreviousPage&quot;: true,
+      &quot;hasNextPage&quot;: false,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1,
+         2
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 2
+   }
+}
+</code></pre>
+<h2 id="u83b7u5f97u6211u7684u4e0au4f20u8d44u6e90uff08u6839u636eu4e0au4f20u65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u7684u4e0au4f20u8d44u6e90uff08u6839u636eu4e0au4f20u65f6u95f4u6392u5e8fuff093e203ca3e">获得我的上传资源（根据上传时间排序）
+<a id=获得我的上传资源（根据上传时间排序）> </a></h2>
+<p></p>
+<h3 id="-67">基本信息</h3>
+<p><strong>Path：</strong> /resource/myUpload/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-68">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageID</td>
+<td>3</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-69">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 10,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bcb2992a7536f4c1f0513f0&quot;,
+            &quot;id&quot;: 12,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;paxos&quot;,
+            &quot;description&quot;: &quot;Paxos算法是莱斯利·兰伯特（Leslie Lamport)1990年提出的一种基于消息传递的一致性算法。 这个算法被认为是类似算法中最有效的。Paxos 算法解决的问题是一个分布式系统如何就某个值（决议）达成一致。一个典型的场景是，在一个分布式数据库系统中，如果各节点的初始状态一致，每个节点执行相同的操作序列，那么他们最后能得到一个一致的状态。为保证每个节点执行相同的命令序列，需要在每一条指令上执行一个“一致性算法”以保证每个节点看到的指令一致。一个通用的一致性算法可以应用在许多场景中，是分布式计算中的重要问题。因此从20世纪80年代起对于一致性算法的研究就没有停止过。节点通信存在两种模型：共享内存（Shared memory）和消息传递（Messages passing）。Paxos 算法就是一种基于消息传递模型的一致性算法。&quot;,
+            &quot;points&quot;: 5,
+            &quot;uploadTime&quot;: &quot;2018-10-20 09:12:06&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bcc1118fc39df4b05e9fa43&quot;,
+            &quot;id&quot;: 15,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;raft&quot;,
+            &quot;description&quot;: &quot;Raft是一种共识算法，旨在替代Paxos。 它通过逻辑分离比Paxos更容易理解，但它也被正式证明是安全的，并提供了一些额外的功能. Raft提供了一种在计算系统集群中分布状态机的通用方法，确保集群中的每个节点都同意一系列相同的状态转换。 它有许多开源参考实现，具有Go，C ++，Java和Scala中的完整规范实现。Raft通过当选的领导者达成共识。筏集群中的服务器是领导者或追随者，并且在选举的精确情况下可以是候选者（领导者不可用）。领导者负责将日志复制到关注者。它通过发送心跳消息定期通知追随者它的存在。每个跟随者都有一个超时（通常在150到300毫秒之间），它期望领导者的心跳。接收心跳时重置超时。如果没有收到心跳，则关注者将其状态更改为候选人并开始领导选举。&quot;,
+            &quot;points&quot;: 2,
+            &quot;uploadTime&quot;: &quot;2018-10-21 01:39:45&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bd6dd6737bb13570da2d318&quot;,
+            &quot;id&quot;: 17,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;chubby&quot;,
+            &quot;description&quot;: &quot; Google Chubby 是一个大名鼎鼎的分布式锁服务，GFS和Big Table等大型系统都用他来解决分布式协作、元数据存储和Master选择等一系列与分布式锁服务相关的问题。Chubby的底层一致性实现就是以Paxos算法为基础的。Chubby是一个面向松耦合分布式系统的锁服务，通常用于为一个由大量小型计算机构成的松耦合分布式系统提供高可用的分布式锁服务。一个分布式锁服务的目的是允许他的客户端进程同步彼此的操作，并对当前所处环境的基本状态信息达成一致。针对这个目的，Chubby提供了粗粒度的分布式锁服务，开发人员不需要使用复杂的同步协议，而是直接调用Chubby的锁服务接口即可实现分布式系统中多个进程之间粗粒度的同步控制，从而保证分布式数据的一致性。Chubby的客户端接口设计非常类似于UNIX文件系统结构，应用程序通过Chubby的客户端接口，不仅能够对Chubby服务器上的整个文件进行读写操作，还能添加对文件节点的锁控制，并且能够订阅Chubby服务端发出的一系列文件变动的事件通知。&quot;,
+            &quot;points&quot;: 3,
+            &quot;uploadTime&quot;: &quot;2018-10-29 06:14:26&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 3,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 3,
+      &quot;startRow&quot;: 7,
+      &quot;endRow&quot;: 9,
+      &quot;pages&quot;: 4,
+      &quot;prePage&quot;: 2,
+      &quot;nextPage&quot;: 4,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: false,
+      &quot;hasPreviousPage&quot;: true,
+      &quot;hasNextPage&quot;: true,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1,
+         2,
+         3,
+         4
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 4
+   }
+}
+</code></pre>
+<h2 id="u83b7u5f97u6211u7684u6240u6709u8bc4u8bba28u6309u8bc4u8bbau65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u6211u7684u6240u6709u8bc4u8bba28u6309u8bc4u8bbau65f6u95f4u6392u5e8fuff093e203ca3e">获得我的所有评论(按评论时间排序）
+<a id=获得我的所有评论(按评论时间排序）> </a></h2>
+<p></p>
+<h3 id="-70">基本信息</h3>
+<p><strong>Path：</strong> /resource/myComment/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-71">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pageID</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-72">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 2,
+      &quot;list&quot;: [
+         {
+            &quot;id&quot;: 2,
+            &quot;userID&quot;: 13,
+            &quot;resourceID&quot;: &quot;5bcc1118fc39df4b05e9fa43&quot;,
+            &quot;commentTitle&quot;: &quot;test&quot;,
+            &quot;comment&quot;: &quot;raft 写起来还是很简单的，严格参考第五节的图即可&quot;,
+            &quot;commentTime&quot;: &quot;2018-11-14 04:06:23&quot;,
+            &quot;score&quot;: 3
+         },
+         {
+            &quot;id&quot;: 1,
+            &quot;userID&quot;: 13,
+            &quot;resourceID&quot;: &quot;5bbf26ae231f020d3d004864&quot;,
+            &quot;commentTitle&quot;: &quot;test&quot;,
+            &quot;comment&quot;: &quot;我就试试看&quot;,
+            &quot;commentTime&quot;: &quot;2018-11-14 04:03:41&quot;,
+            &quot;score&quot;: 3
+         }
+      ],
+      &quot;pageNum&quot;: 0,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 2,
+      &quot;startRow&quot;: 1,
+      &quot;endRow&quot;: 2,
+      &quot;pages&quot;: 1,
+      &quot;prePage&quot;: 0,
+      &quot;nextPage&quot;: 1,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: false,
+      &quot;hasPreviousPage&quot;: false,
+      &quot;hasNextPage&quot;: true,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 1
+   }
+}
+</code></pre>
+<h2 id="u83b7u5f97u6240u6709u8d44u6e90u5206u7c7b0a3ca20id3du83b7u5f97u6240u6709u8d44u6e90u5206u7c7b3e203ca3e">获得所有资源分类
+<a id=获得所有资源分类> </a></h2>
+<p></p>
+<h3 id="-73">基本信息</h3>
+<p><strong>Path：</strong> /resourceMajors</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-74">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-75">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: [
+      {
+         &quot;id&quot;: 86,
+         &quot;resourceMajorName&quot;: &quot;临床医学&quot;
+      },
+      {
+         &quot;id&quot;: 87,
+         &quot;resourceMajorName&quot;: &quot;交通工程&quot;
+      },
+      {
+         &quot;id&quot;: 75,
+         &quot;resourceMajorName&quot;: &quot;会计学&quot;
+      },
+      {
+         &quot;id&quot;: 73,
+         &quot;resourceMajorName&quot;: &quot;传播学&quot;
+      },
+      {
+         &quot;id&quot;: 70,
+         &quot;resourceMajorName&quot;: &quot;俄语&quot;
+      },
+      {
+         &quot;id&quot;: 81,
+         &quot;resourceMajorName&quot;: &quot;信息安全&quot;
+      },
+      {
+         &quot;id&quot;: 66,
+         &quot;resourceMajorName&quot;: &quot;历史学&quot;
+      },
+      {
+         &quot;id&quot;: 84,
+         &quot;resourceMajorName&quot;: &quot;口腔医学&quot;
+      },
+      {
+         &quot;id&quot;: 67,
+         &quot;resourceMajorName&quot;: &quot;哲学&quot;
+      },
+      {
+         &quot;id&quot;: 45,
+         &quot;resourceMajorName&quot;: &quot;土木工程&quot;
+      },
+      {
+         &quot;id&quot;: 61,
+         &quot;resourceMajorName&quot;: &quot;地球物理学&quot;
+      },
+      {
+         &quot;id&quot;: 46,
+         &quot;resourceMajorName&quot;: &quot;地质工程&quot;
+      },
+      {
+         &quot;id&quot;: 77,
+         &quot;resourceMajorName&quot;: &quot;大气科学&quot;
+      },
+      {
+         &quot;id&quot;: 63,
+         &quot;resourceMajorName&quot;: &quot;工程力学&quot;
+      },
+      {
+         &quot;id&quot;: 74,
+         &quot;resourceMajorName&quot;: &quot;广告学&quot;
+      },
+      {
+         &quot;id&quot;: 42,
+         &quot;resourceMajorName&quot;: &quot;应用化学&quot;
+      },
+      {
+         &quot;id&quot;: 44,
+         &quot;resourceMajorName&quot;: &quot;建筑学&quot;
+      },
+      {
+         &quot;id&quot;: 55,
+         &quot;resourceMajorName&quot;: &quot;德语&quot;
+      },
+      {
+         &quot;id&quot;: 57,
+         &quot;resourceMajorName&quot;: &quot;护理学&quot;
+      },
+      {
+         &quot;id&quot;: 39,
+         &quot;resourceMajorName&quot;: &quot;数学&quot;
+      },
+      {
+         &quot;id&quot;: 69,
+         &quot;resourceMajorName&quot;: &quot;日语&quot;
+      },
+      {
+         &quot;id&quot;: 72,
+         &quot;resourceMajorName&quot;: &quot;朝鲜语&quot;
+      },
+      {
+         &quot;id&quot;: 47,
+         &quot;resourceMajorName&quot;: &quot;机械工程&quot;
+      },
+      {
+         &quot;id&quot;: 78,
+         &quot;resourceMajorName&quot;: &quot;材料化学&quot;
+      },
+      {
+         &quot;id&quot;: 79,
+         &quot;resourceMajorName&quot;: &quot;材料物理&quot;
+      },
+      {
+         &quot;id&quot;: 76,
+         &quot;resourceMajorName&quot;: &quot;核工程与核技术&quot;
+      },
+      {
+         &quot;id&quot;: 54,
+         &quot;resourceMajorName&quot;: &quot;汉语言&quot;
+      },
+      {
+         &quot;id&quot;: 83,
+         &quot;resourceMajorName&quot;: &quot;法学&quot;
+      },
+      {
+         &quot;id&quot;: 68,
+         &quot;resourceMajorName&quot;: &quot;法语&quot;
+      },
+      {
+         &quot;id&quot;: 62,
+         &quot;resourceMajorName&quot;: &quot;测绘工程&quot;
+      },
+      {
+         &quot;id&quot;: 64,
+         &quot;resourceMajorName&quot;: &quot;物理学&quot;
+      },
+      {
+         &quot;id&quot;: 48,
+         &quot;resourceMajorName&quot;: &quot;环境工程&quot;
+      },
+      {
+         &quot;id&quot;: 59,
+         &quot;resourceMajorName&quot;: &quot;生物科学&quot;
+      },
+      {
+         &quot;id&quot;: 49,
+         &quot;resourceMajorName&quot;: &quot;电子信息工程&quot;
+      },
+      {
+         &quot;id&quot;: 51,
+         &quot;resourceMajorName&quot;: &quot;电子科学与技术&quot;
+      },
+      {
+         &quot;id&quot;: 50,
+         &quot;resourceMajorName&quot;: &quot;电气信息工程&quot;
+      },
+      {
+         &quot;id&quot;: 41,
+         &quot;resourceMajorName&quot;: &quot;经济学&quot;
+      },
+      {
+         &quot;id&quot;: 40,
+         &quot;resourceMajorName&quot;: &quot;统计学&quot;
+      },
+      {
+         &quot;id&quot;: 65,
+         &quot;resourceMajorName&quot;: &quot;船舶工程&quot;
+      },
+      {
+         &quot;id&quot;: 53,
+         &quot;resourceMajorName&quot;: &quot;英语&quot;
+      },
+      {
+         &quot;id&quot;: 82,
+         &quot;resourceMajorName&quot;: &quot;药学&quot;
+      },
+      {
+         &quot;id&quot;: 71,
+         &quot;resourceMajorName&quot;: &quot;西班牙语&quot;
+      },
+      {
+         &quot;id&quot;: 52,
+         &quot;resourceMajorName&quot;: &quot;计算机科学与技术&quot;
+      },
+      {
+         &quot;id&quot;: 60,
+         &quot;resourceMajorName&quot;: &quot;车辆工程&quot;
+      },
+      {
+         &quot;id&quot;: 38,
+         &quot;resourceMajorName&quot;: &quot;软件工程&quot;
+      },
+      {
+         &quot;id&quot;: 80,
+         &quot;resourceMajorName&quot;: &quot;通信工程&quot;
+      },
+      {
+         &quot;id&quot;: 43,
+         &quot;resourceMajorName&quot;: &quot;金融学&quot;
+      },
+      {
+         &quot;id&quot;: 85,
+         &quot;resourceMajorName&quot;: &quot;预防医学&quot;
+      }
+   ]
+}
+</code></pre>
+<h2 id="u83b7u5f97u6240u6709u8d44u6e90u7684u7c7bu578b0a3ca20id3du83b7u5f97u6240u6709u8d44u6e90u7684u7c7bu578b3e203ca3e">获得所有资源的类型
+<a id=获得所有资源的类型> </a></h2>
+<p></p>
+<h3 id="-76">基本信息</h3>
+<p><strong>Path：</strong> /resourceCategories</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-77">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authorization</td>
+<td></td>
+<td>是</td>
+<td>Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaWJhdHUiLCJleHAiOjE1Mzk4NTEyMzksImlhdCI6MTUzOTI0NjQzOX0.L0i_uqSjfXvcgNIyP_zKWde8FZ9nQT0xQB2pbslPuMIGDYTptthB4f4sqJLZP2bramTtWPdO1mELRy1zA_Yicw</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-78">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: [
+      {
+         &quot;id&quot;: 6,
+         &quot;resourceCategoryName&quot;: &quot;学生笔记&quot;
+      },
+      {
+         &quot;id&quot;: 5,
+         &quot;resourceCategoryName&quot;: &quot;教材&quot;
+      },
+      {
+         &quot;id&quot;: 4,
+         &quot;resourceCategoryName&quot;: &quot;科研文献&quot;
+      },
+      {
+         &quot;id&quot;: 3,
+         &quot;resourceCategoryName&quot;: &quot;考试试卷&quot;
+      },
+      {
+         &quot;id&quot;: 2,
+         &quot;resourceCategoryName&quot;: &quot;课堂练习&quot;
+      },
+      {
+         &quot;id&quot;: 1,
+         &quot;resourceCategoryName&quot;: &quot;课堂讲义&quot;
+      }
+   ]
+}
+</code></pre>
+<h2 id="u83b7u5f97u67d0u4e2au8d44u6e90u4e0bu7684u8bc4u8bbauff08u6839u636eu65f6u95f4u6392u5e8fuff090a3ca20id3du83b7u5f97u67d0u4e2au8d44u6e90u4e0bu7684u8bc4u8bbauff08u6839u636eu65f6u95f4u6392u5e8fuff093e203ca3e">获得某个资源下的评论（根据时间排序）
+<a id=获得某个资源下的评论（根据时间排序）> </a></h2>
+<p></p>
+<h3 id="-79">基本信息</h3>
+<p><strong>Path：</strong> /resource/comments/{resourceID}/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>根据评论时间排序</p>
+<h3 id="-80">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bebfd149438d9de03d96c0e</td>
+<td></td>
+</tr>
+<tr>
+<td>pageID</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-81">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 8,
+      &quot;list&quot;: [
+         {
+            &quot;id&quot;: 15,
+            &quot;userID&quot;: 31,
+            &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+            &quot;commentTitle&quot;: &quot;zab&quot;,
+            &quot;comment&quot;: &quot;应该失败&quot;,
+            &quot;commentTime&quot;: &quot;2018-11-23 08:08:38&quot;,
+            &quot;score&quot;: 5
+         },
+         {
+            &quot;id&quot;: 14,
+            &quot;userID&quot;: 31,
+            &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+            &quot;commentTitle&quot;: &quot;zab&quot;,
+            &quot;comment&quot;: &quot;应该失败&quot;,
+            &quot;commentTime&quot;: &quot;2018-11-23 08:06:11&quot;,
+            &quot;score&quot;: 5
+         },
+         {
+            &quot;id&quot;: 13,
+            &quot;userID&quot;: 31,
+            &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+            &quot;commentTitle&quot;: &quot;zab&quot;,
+            &quot;comment&quot;: &quot;应该失败&quot;,
+            &quot;commentTime&quot;: &quot;2018-11-23 08:05:54&quot;,
+            &quot;score&quot;: 5
+         }
+      ],
+      &quot;pageNum&quot;: 0,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 3,
+      &quot;startRow&quot;: 1,
+      &quot;endRow&quot;: 3,
+      &quot;pages&quot;: 3,
+      &quot;prePage&quot;: 0,
+      &quot;nextPage&quot;: 1,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: false,
+      &quot;hasPreviousPage&quot;: false,
+      &quot;hasNextPage&quot;: true,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1,
+         2,
+         3
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 3
+   }
+}
+</code></pre>
+<h2 id="u83b7u5f97u81eau5df1u7684u4e0au4f20u8d44u6e90u7684u4fe1u606f0a3ca20id3du83b7u5f97u81eau5df1u7684u4e0au4f20u8d44u6e90u7684u4fe1u606f3e203ca3e">获得自己的上传资源的信息
+<a id=获得自己的上传资源的信息> </a></h2>
+<p></p>
+<h3 id="-82">基本信息</h3>
+<p><strong>Path：</strong> /user/detail</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-83">请求参数</h3>
+<h3 id="-84">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;userID&quot;: 13,
+      &quot;username&quot;: &quot;chloe&quot;,
+      &quot;myUploadNum&quot;: 4,
+      &quot;myDownloadNum&quot;: 5,
+      &quot;myFavouriteNum&quot;: 2,
+      &quot;mySuggestedNum&quot;: 3,
+      &quot;avgScore&quot;: 3,
+      &quot;suggestedRate&quot;: 0.8
+   }
+}
+</code></pre>
+<h2 id="u8bc4u8bbau8d44u6e900a3ca20id3du8bc4u8bbau8d44u6e903e203ca3e">评论资源
+<a id=评论资源> </a></h2>
+<p></p>
+<h3 id="-85">基本信息</h3>
+<p><strong>Path：</strong> /resource/comment/make</p>
+<p><strong>Method：</strong> POST</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-86">请求参数</h3>
+<p><strong>Headers</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数值</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Body</strong></p>
+<pre><code class="language-javascript">{
+   &quot;resourceID&quot;: &quot;5bf7942c9438d91a388e7c4e&quot;,
+   &quot;comment&quot;: &quot;我就测测看&quot;,
+   &quot;score&quot;: 5,
+   &quot;commentTitle&quot;: &quot;zab&quot;
+}
+</code></pre>
+<h3 id="-87">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;id&quot;: 16,
+      &quot;userID&quot;: 35,
+      &quot;resourceID&quot;: &quot;5bf7942c9438d91a388e7c4e&quot;,
+      &quot;commentTitle&quot;: &quot;zab&quot;,
+      &quot;comment&quot;: &quot;我就测测看&quot;,
+      &quot;commentTime&quot;: &quot;2018-11-25 08:03:08&quot;,
+      &quot;score&quot;: 5
+   }
+}
+</code></pre>
+<h2 id="u8d44u6e90u63a8u8350uff08u6839u636eu5206u6570u6392u5e8fuff090a3ca20id3du8d44u6e90u63a8u8350uff08u6839u636eu5206u6570u6392u5e8fuff093e203ca3e">资源推荐（根据分数排序）
+<a id=资源推荐（根据分数排序）> </a></h2>
+<p></p>
+<h3 id="-88">基本信息</h3>
+<p><strong>Path：</strong> /resource/recommend/{resourceMajorID}/{categoryID}/{pageID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>同类资源按照分数排名， 没评分不会搜到</p>
+<h3 id="-89">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceMajorID</td>
+<td>52</td>
+<td></td>
+</tr>
+<tr>
+<td>categoryID</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>pageID</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-90">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 3,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+            &quot;id&quot;: 22,
+            &quot;uploaderID&quot;: 13,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;zab&quot;,
+            &quot;description&quot;: &quot;ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-22 06:25:42&quot;,
+            &quot;tags&quot;: &quot;zab 一致性 数据 分布式 zookeeper&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bcc1118fc39df4b05e9fa43&quot;,
+            &quot;id&quot;: 15,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;raft&quot;,
+            &quot;description&quot;: &quot;Raft是一种共识算法，旨在替代Paxos。 它通过逻辑分离比Paxos更容易理解，但它也被正式证明是安全的，并提供了一些额外的功能. Raft提供了一种在计算系统集群中分布状态机的通用方法，确保集群中的每个节点都同意一系列相同的状态转换。 它有许多开源参考实现，具有Go，C ++，Java和Scala中的完整规范实现。Raft通过当选的领导者达成共识。筏集群中的服务器是领导者或追随者，并且在选举的精确情况下可以是候选者（领导者不可用）。领导者负责将日志复制到关注者。它通过发送心跳消息定期通知追随者它的存在。每个跟随者都有一个超时（通常在150到300毫秒之间），它期望领导者的心跳。接收心跳时重置超时。如果没有收到心跳，则关注者将其状态更改为候选人并开始领导选举。&quot;,
+            &quot;points&quot;: 2,
+            &quot;uploadTime&quot;: &quot;2018-10-21 01:39:45&quot;,
+            &quot;tags&quot;: &quot;raft&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bbf26ae231f020d3d004864&quot;,
+            &quot;id&quot;: 4,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;inceptionV4&quot;,
+            &quot;description&quot;: &quot;微软亚洲研究院的何恺明在2015年提出了震惊业界的ResNet结构，这种结构和以往的Inception结构走了两条不同的道路：前者主要关注加大网络深度后的收敛问题，而Inception更关注特征维度上的利用。如果把这两种方法结合起来会有什么效果呢？Szegedy在2016年就试验了一把，把这两种 最顶尖的结构混合到一起提出了Inception-ResNet，它的收敛速度更快但在错误率上和同层次的Inception相同；Szegedy还对自己以前提出的Inception-v3进行了一番改良，提出了Inception-v4。。。&quot;,
+            &quot;points&quot;: 1,
+            &quot;uploadTime&quot;: &quot;2018-09-08 19:19:19&quot;,
+            &quot;tags&quot;: &quot;msra&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 0,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 3,
+      &quot;startRow&quot;: 1,
+      &quot;endRow&quot;: 3,
+      &quot;pages&quot;: 1,
+      &quot;prePage&quot;: 0,
+      &quot;nextPage&quot;: 1,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: false,
+      &quot;hasPreviousPage&quot;: false,
+      &quot;hasNextPage&quot;: true,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 1
+   }
+}
+</code></pre>
+<h2 id="u8d44u6e90u67e5u627euff08u6839u636eu5206u6570u6392u540duff090a3ca20id3du8d44u6e90u67e5u627euff08u6839u636eu5206u6570u6392u540duff093e203ca3e">资源查找（根据分数排名）
+<a id=资源查找（根据分数排名）> </a></h2>
+<p></p>
+<h3 id="-91">基本信息</h3>
+<p><strong>Path：</strong> /searchResource/score/{resourceMajorID}/{categoryID}/{pageID}?keyword=</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>只能搜索到有评分的<br>
+pages是总页数，pageSize是一页大小，<br>
+这里可以看到总页数是2，搜索页号为2不会返回空列表，除了按时间搜索的都是这种分页格式<br>
+第0页和第1页是一样的<br>
+最后一页=总页数。。。</p>
+<p><br data-tomark-pass=""><br>
+这是0页<br>
+{<br>
+&nbsp;&nbsp;&nbsp; "status": 200,<br>
+&nbsp;&nbsp;&nbsp; "message": "OK",<br>
+&nbsp;&nbsp;&nbsp; "data": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "total": 6,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "list": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5bf794fb9438d91a388e7c53",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 32,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 13,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 52,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "Byzantine Generals Problem",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "拜占庭将军问题（Byzantine Generals Problem），是由莱斯利·兰波特在其同名论文[1]中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算器通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-11-23 01:49:53",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "consensus byzantine"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5c0a1a541a8709255c4022c9",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 60,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 72,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 38,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "软件工程课件Chapter11",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "同济大学杜庆峰老师软件工程课程课件Chapter11",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 5,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-12-07 02:59:34",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "软件工程 同济大学"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5bf684209438d9f772c537fd",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 22,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 13,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 52,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "zab",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-11-22 06:25:42",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "zab 一致性 数据 分布式 zookeeper"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pageNum": 0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pageSize": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "size": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "startRow": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "endRow": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pages": 2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "prePage": 0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "nextPage": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "isFirstPage": false,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "isLastPage": false,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "hasPreviousPage": false,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "hasNextPage": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigatePages": 8,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigatepageNums": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigateFirstPage": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigateLastPage": 2<br>
+&nbsp;&nbsp;&nbsp; }<br>
+}</p>
+<p>这是1页<br>
+{<br>
+&nbsp;&nbsp;&nbsp; "status": 200,<br>
+&nbsp;&nbsp;&nbsp; "message": "OK",<br>
+&nbsp;&nbsp;&nbsp; "data": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "total": 6,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "list": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5bf794fb9438d91a388e7c53",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 32,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 13,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 52,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "Byzantine Generals Problem",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "拜占庭将军问题（Byzantine Generals Problem），是由莱斯利·兰波特在其同名论文[1]中提出的分布式对等网络通信容错问题。在分布式计算中，不同的计算器通过通讯交换信息达成共识而按照同一套协作策略行动。但有时候，系统中的成员计算机可能出错而发送错误的信息，用于传递信息的通讯网络也可能导致信息损坏，使得网络中不同的成员关于全体协作的策略得出不同结论，从而破坏系统一致性。拜占庭将军问题被认为是容错性问题中最难的问题类型之一。",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-11-23 01:49:53",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "consensus byzantine"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5c0a1a541a8709255c4022c9",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 60,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 72,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 38,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "软件工程课件Chapter11",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "同济大学杜庆峰老师软件工程课程课件Chapter11",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 5,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-12-07 02:59:34",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "软件工程 同济大学"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceID": "5bf684209438d9f772c537fd",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": 22,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploaderID": 13,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "categoryID": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceMajorID": 52,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "resourceName": "zab",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "description": "ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "points": 4,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "uploadTime": "2018-11-22 06:25:42",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "tags": "zab 一致性 数据 分布式 zookeeper"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pageNum": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pageSize": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "size": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "startRow": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "endRow": 3,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "pages": 2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "prePage": 0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "nextPage": 2,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "isFirstPage": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "isLastPage": false,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "hasPreviousPage": false,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "hasNextPage": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigatePages": 8,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigatepageNums": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigateFirstPage": 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "navigateLastPage": 2<br>
+&nbsp;&nbsp;&nbsp; }<br>
+}</p>
+<h3 id="-92">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceMajorID</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>categoryID</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>pageID</td>
+<td>2</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Query</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>keyword</td>
+<td>是</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-93">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;total&quot;: 6,
+      &quot;list&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bbf26ae231f020d3d004864&quot;,
+            &quot;id&quot;: 4,
+            &quot;uploaderID&quot;: 12,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;inceptionV4&quot;,
+            &quot;description&quot;: &quot;微软亚洲研究院的何恺明在2015年提出了震惊业界的ResNet结构，这种结构和以往的Inception结构走了两条不同的道路：前者主要关注加大网络深度后的收敛问题，而Inception更关注特征维度上的利用。如果把这两种方法结合起来会有什么效果呢？Szegedy在2016年就试验了一把，把这两种 最顶尖的结构混合到一起提出了Inception-ResNet，它的收敛速度更快但在错误率上和同层次的Inception相同；Szegedy还对自己以前提出的Inception-v3进行了一番改良，提出了Inception-v4。。。&quot;,
+            &quot;points&quot;: 1,
+            &quot;uploadTime&quot;: &quot;2018-09-08 19:19:19&quot;,
+            &quot;tags&quot;: &quot;msra&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5c0a12931a8709255c4022bf&quot;,
+            &quot;id&quot;: 59,
+            &quot;uploaderID&quot;: 72,
+            &quot;categoryID&quot;: 1,
+            &quot;resourceMajorID&quot;: 38,
+            &quot;resourceName&quot;: &quot;计算机网络课件Lecture10&quot;,
+            &quot;description&quot;: &quot;这是计算机网络Lecture10课件，由同济大学金伟祖老师呈现。&quot;,
+            &quot;points&quot;: 3,
+            &quot;uploadTime&quot;: &quot;2018-12-07 02:26:33&quot;,
+            &quot;tags&quot;: &quot;软件工程 计算机网络 课件 Lecture10&quot;
+         },
+         {
+            &quot;resourceID&quot;: &quot;5bdb1c223cd8755c778a8afb&quot;,
+            &quot;id&quot;: 19,
+            &quot;uploaderID&quot;: 13,
+            &quot;categoryID&quot;: 1,
+            &quot;resourceMajorID&quot;: 38,
+            &quot;resourceName&quot;: &quot;naiad&quot;,
+            &quot;description&quot;: &quot;Naiad is a distributed system for executing data parallel, cyclic dataflow programs. It offers the high throughput of batch processors, the low latency of stream ...&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-01 11:30:51&quot;,
+            &quot;tags&quot;: &quot;naiad&quot;
+         }
+      ],
+      &quot;pageNum&quot;: 2,
+      &quot;pageSize&quot;: 3,
+      &quot;size&quot;: 3,
+      &quot;startRow&quot;: 4,
+      &quot;endRow&quot;: 6,
+      &quot;pages&quot;: 2,
+      &quot;prePage&quot;: 1,
+      &quot;nextPage&quot;: 0,
+      &quot;isFirstPage&quot;: false,
+      &quot;isLastPage&quot;: true,
+      &quot;hasPreviousPage&quot;: true,
+      &quot;hasNextPage&quot;: false,
+      &quot;navigatePages&quot;: 8,
+      &quot;navigatepageNums&quot;: [
+         1,
+         2
+      ],
+      &quot;navigateFirstPage&quot;: 1,
+      &quot;navigateLastPage&quot;: 2
+   }
+}
+</code></pre>
+<h2 id="u8d44u6e90u67e5u627euff08u6839u636eu65f6u95f4u6392u5e8fuff090a3ca20id3du8d44u6e90u67e5u627euff08u6839u636eu65f6u95f4u6392u5e8fuff093e203ca3e">资源查找（根据时间排序）
+<a id=资源查找（根据时间排序）> </a></h2>
+<p></p>
+<h3 id="-94">基本信息</h3>
+<p><strong>Path：</strong> /searchResource/time/{resourceMajorID}/{categoryID}/{pageID}?keyword=</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<p>没有关键字就全文搜索<br>
+totalPages是总页数，size是一页大小 应该只有这个是从0开始的，最后一页=总页数-1<br>
+其他的分页0页和1页一样的，最后一页=总页数</p>
+<h3 id="-95">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceMajorID</td>
+<td>52</td>
+<td></td>
+</tr>
+<tr>
+<td>categoryID</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>pageID</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Query</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>是否必须</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>keyword</td>
+<td>是</td>
+<td>zab</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-96">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: {
+      &quot;content&quot;: [
+         {
+            &quot;resourceID&quot;: &quot;5bf684209438d9f772c537fd&quot;,
+            &quot;id&quot;: 22,
+            &quot;uploaderID&quot;: 13,
+            &quot;categoryID&quot;: 4,
+            &quot;resourceMajorID&quot;: 52,
+            &quot;resourceName&quot;: &quot;zab&quot;,
+            &quot;description&quot;: &quot;ZAB 协议是为分布式协调服务 ZooKeeper 专门设计的一种支持崩溃恢复的原子广播协议。在 ZooKeeper 中，主要依赖 ZAB 协议来实现分布式数据一致性，基于该协议，ZooKeeper 实现了一种主备模式的系统架构来保持集群中各个副本之间的数据一致性。&quot;,
+            &quot;points&quot;: 4,
+            &quot;uploadTime&quot;: &quot;2018-11-22 06:25:42&quot;,
+            &quot;tags&quot;: &quot;zab 一致性 数据 分布式 zookeeper&quot;
+         }
+      ],
+      &quot;pageable&quot;: {
+         &quot;sort&quot;: {
+            &quot;sorted&quot;: false,
+            &quot;unsorted&quot;: true
+         },
+         &quot;offset&quot;: 0,
+         &quot;pageSize&quot;: 3,
+         &quot;pageNumber&quot;: 0,
+         &quot;paged&quot;: true,
+         &quot;unpaged&quot;: false
+      },
+      &quot;facets&quot;: [],
+      &quot;aggregations&quot;: null,
+      &quot;scrollId&quot;: null,
+      &quot;totalElements&quot;: 1,
+      &quot;totalPages&quot;: 1,
+      &quot;size&quot;: 3,
+      &quot;number&quot;: 0,
+      &quot;numberOfElements&quot;: 1,
+      &quot;first&quot;: true,
+      &quot;sort&quot;: {
+         &quot;sorted&quot;: false,
+         &quot;unsorted&quot;: true
+      },
+      &quot;last&quot;: true
+   }
+}
+</code></pre>
+<h2 id="u8e29u8d44u6e900a3ca20id3du8e29u8d44u6e903e203ca3e">踩资源
+<a id=踩资源> </a></h2>
+<p></p>
+<h3 id="-97">基本信息</h3>
+<p><strong>Path：</strong> /resource/suggest/dislike/{resourceID}</p>
+<p><strong>Method：</strong> GET</p>
+<p><strong>接口描述：</strong></p>
+<h3 id="-98">请求参数</h3>
+<p><strong>路径参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>示例</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>resourceID</td>
+<td>5bbe2d4d231f02a92961b5cd</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="-99">返回数据</h3>
+<pre><code class="language-javascript">{
+   &quot;status&quot;: 200,
+   &quot;message&quot;: &quot;OK&quot;,
+   &quot;data&quot;: null
+}
+</code></pre>
+
+<p></p>
+
+
+            <footer class="m-footer">
+              <p>Software Engineering · 2018 Fall</p>
+            </footer>
+          </div>
+        </div>
+      </body>
+      </html>
+      
